@@ -63,7 +63,7 @@ export default {
       default: false
     },
     /**
-     * v-model 的值。传入后会优先使用
+     * The v-model value. Takes priority when passed in
      */
     form: {
       type: Object,
@@ -86,19 +86,19 @@ export default {
     return {
       GROUP,
       /**
-       * inputFormat 让整个输入机制复杂了很多。value 有以下输入路径:
-       * 1. 传入的 form => inputFormat 处理
-       * 2. updateForm => inputFormat 处理
-       * 3. 但 content 中的 default 没法经过 inputFormat 处理，因为 inputFormat 要接受整个 value 作为参数
-       * 4. 组件内部更新 value，不需要走 inputFormat
+       * inputFormat makes the whole input mechanism a lot more complex. value has the following input paths:
+       * 1. the passed-in form => processed by inputFormat
+       * 2. updateForm => processed by inputFormat
+       * 3. but the default in content can't go through inputFormat, because inputFormat needs to accept the whole value as a parameter
+       * 4. when the component internally updates value, it doesn't go through inputFormat
        */
-      value: {}, // 表单数据对象
+      value: {}, // form data object
       options: {},
       initValue: null
     }
   },
   computed: {
-    // 用于兼容数据操作
+    // used for data-operation compatibility
     innerContent: ({ content }) => transformContent(content)
   },
   watch: {
@@ -124,7 +124,7 @@ export default {
         this.$emit('input', transformOutputValue(v, this.innerContent))
         this.$emit('update:form', transformOutputValue(v, this.innerContent))
       }
-      // deep: true, // 应该是没有必要的
+      // deep: true, // should not be necessary
     }
   },
   mounted() {
@@ -134,7 +134,7 @@ export default {
     this.formRendererContext.getElForm = () => this.$refs.elForm
 
     /**
-     * 与 element 相同，在 mounted 阶段存储 initValue
+     * Same as element: store initValue during the mounted phase
      * @see https://github.com/ElemeFE/element/blob/6ec5f8e900ff698cf30e9479d692784af836a108/packages/form/src/form-item.vue#L304
      */
     this.initValue = _clonedeep(this.value)
@@ -147,8 +147,8 @@ export default {
         this[item] = this.$refs.elForm[item]
       })
       /**
-       * 有些组件会 created 阶段更新初始值为合法值，这会触发 validate。目前已知的情况有：
-       * - el-select 开启 multiple 时，会更新初始值 undefined 为 []
+       * Some components update the initial value to a valid one during the created phase, which triggers validate. Known cases so far:
+       * - el-select updates the initial value from undefined to [] when multiple is enabled
        * @hack
        */
       this.clearValidate()
@@ -173,22 +173,22 @@ export default {
       return this.$refs.elForm?.scrollToField?.(...args)
     },
     /**
-     * 重置表单为初始值
+     * Reset the form to its initial value
      *
      * @public
      */
     resetFields() {
       /**
-       * 之所以不用 el-form 的 resetFields 机制，有以下原因：
-       * - el-form 的 resetFields 无视 el-form-renderer 的自定义组件
-       * - el-form 的 resetFields 不会触发 input & change 事件，无法监听
+       * Reasons for not using el-form's resetFields mechanism:
+       * - el-form's resetFields ignores el-form-renderer's custom components
+       * - el-form's resetFields doesn't trigger input & change events, so they can't be listened to
        * - bug1: https://github.com/FEMessage/el-data-table/issues/176#issuecomment-587280825
        * - bug2:
-       *   0. 建议先在监听器 watch.value 里 // debug(v.name, oldV.name)
-       *   1. 打开 basic 示例
-       *   2. 在 label 为 name 的输入框里输入 1，此时 log：'1' ''
-       *   3. 点击 reset 按钮，此时 log 两条数据： '1' '1', '' ''
-       *   4. 因为 _isequal(v, oldV)，所以没有触发 v-model 更新
+       *   0. suggest first adding // debug(v.name, oldV.name) in the watch.value listener
+       *   1. open the basic example
+       *   2. type 1 into the input whose label is name; the log at this point is: '1' ''
+       *   3. click the reset button; the log now shows two entries: '1' '1', '' ''
+       *   4. because _isequal(v, oldV), the v-model update wasn't triggered
        */
       this.value = _clonedeep(this.initValue)
       this.$nextTick(this.clearValidate)
@@ -196,9 +196,9 @@ export default {
     setValueFromModel() {
       if (!this.innerContent.length) return
       /**
-       * 没使用 v-model 时才从 default 采集数据
-       * default 值没法考虑 inputFormat
-       * 参考 value-format.md 的案例。那种情况下，default 该传什么？
+       * Only collect data from default when v-model isn't used
+       * the default value can't take inputFormat into account
+       * see the case in value-format.md. In that case, what should default be set to?
        */
       const newValue = this.form
         ? transformInputValue(this.form, this.innerContent)
@@ -207,9 +207,9 @@ export default {
       if (!_isequal(this.value, newValue)) this.value = newValue
     },
     /**
-     * 更新表单数据
-     * @param  {String} options.id 表单ID
-     * @param  {All} options.value 表单数据
+     * Update the form data
+     * @param  {String} options.id form ID
+     * @param  {All} options.value form data
      */
     updateValue({ id, value }) {
       this.value = { ...this.value, [id]: value }
@@ -242,7 +242,7 @@ export default {
      */
     setOptions(id, options) {
       _set(this.options, id, options)
-      this.options = { ...this.options } // 设置之前不存在的 options 时需要重新设置响应式更新
+      this.options = { ...this.options } // Reassign to trigger a reactive update when setting options that didn't exist before
     },
     isHidden(item) {
       if (!item.el || !item.el['hiddenGroup']) {

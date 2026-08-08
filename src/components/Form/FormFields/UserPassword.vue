@@ -21,7 +21,7 @@ export default {
   },
   rules(item) {
     let userIsOrgAdmin = item.el.userIsOrgAdmin
-    // undefined 个人信息更新或用户更改密码页面，使用当前用户；否则使用更新用户表单中传递的值
+    // undefined means the personal info update or change-password page, using the current user; otherwise use the value passed in the update-user form
     userIsOrgAdmin =
       userIsOrgAdmin === undefined ? store.getters.currentUserIsAdmin : userIsOrgAdmin
 

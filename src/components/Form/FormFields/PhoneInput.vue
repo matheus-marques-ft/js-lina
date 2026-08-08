@@ -106,15 +106,15 @@ export default {
 
 <style lang="scss" scoped>
 /*
- * 边框方案见全局 .compound-field（element-form-controls.scss）。
- * PhoneInput 聚焦时只高亮当前号码段，不影响左侧区号段的外边框。
+ * See the global .compound-field (element-form-controls.scss) for the border scheme.
+ * When PhoneInput is focused, only the current number segment is highlighted, without affecting the outer border of the area-code segment on the left.
  */
 .phone-input {
   position: relative;
 }
 
 .phone-input--number-focused {
-  // Element Plus 内层会覆盖外容器的顶部边框，因此两个分段都在前景层明确描边。
+  // Element Plus's inner layer overrides the outer container's top border, so both segments explicitly draw their border on the foreground layer.
   overflow: visible !important;
 
   &::before,
@@ -127,7 +127,7 @@ export default {
     pointer-events: none;
   }
 
-  // 号码输入段：四边及左侧分隔线均使用主色，避免顶部被内部 wrapper 遮住。
+  // Number input segment: all four sides and the left divider use the primary color, avoiding the top being covered by the inner wrapper.
   &::before {
     z-index: 2;
     right: -1px;
@@ -135,7 +135,7 @@ export default {
     border: 1px solid var(--el-color-primary);
   }
 
-  // 区号段：上、左、下保持灰色，仅右侧分隔线使用主色。
+  // Area code segment: top, left, and bottom stay gray, only the right divider uses the primary color.
   &::after {
     z-index: 1;
     left: -1px;
@@ -165,7 +165,7 @@ export default {
   flex: 1 1 auto;
   min-width: 0;
 
-  // 覆盖 EP 的高度变量，避免内部再按默认高度撑出额外尺寸
+  // Override EP's height variable to avoid the inner element stretching to an extra size based on the default height
   :deep(.el-input) {
     --el-input-height: 28px;
     height: 28px;

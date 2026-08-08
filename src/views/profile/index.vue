@@ -500,7 +500,7 @@ export default {
           this.$axios.post(url).then(() => {
             this.$message.success(this.$tc('UpdateSuccessMsg'))
             this.$store.dispatch('users/getProfile')
-            // 此处对子组件使用 key 或 $forceUpdate 都无法使得子组件中 button 文本更新
+            // Neither using key nor $forceUpdate on the child component here updates the button text inside it
             window.location.reload()
           })
         }
@@ -515,11 +515,11 @@ export default {
 <style lang="scss" scoped>
 .update-info {
   .update-info-form {
-    // 不沿用全局 .el-card__body .el-form 的 margin-top/right，改为 flex 纵向布局自控间距
+    // Don't inherit the global .el-card__body .el-form margin-top/right; use flex column layout to control spacing instead
     margin: 0 !important;
     display: flex;
     flex-direction: column;
-    gap: 20px; // FormItem 间距统一 20px
+    gap: 20px; // Unified 20px spacing between FormItems
 
     :deep(.el-form-item) {
       margin-bottom: 0;

@@ -90,7 +90,7 @@ export default {
     getIntervalDays(date) {
       const dateExpired = new Date(date)
       const dateNow = new Date()
-      // 只保留年月日，去掉时分秒
+      // Keep only year/month/day, drop hours/minutes/seconds
       const expiredDay = new Date(
         dateExpired.getFullYear(),
         dateExpired.getMonth(),

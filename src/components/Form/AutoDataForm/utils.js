@@ -19,7 +19,7 @@ export class FormFieldGenerator {
     switch (type) {
       case 'labeled_choice':
       case 'choice':
-        // Value 处理事在 AutoDataForm 中处理的
+        // Value handling is done in AutoDataForm
         if (!fieldRemoteMeta['read_only']) {
           field.options = fieldRemoteMeta.choices
         }
@@ -81,10 +81,11 @@ export class FormFieldGenerator {
         field.el.label = field.label
         break
       case 'nested object':
-        // 属性映射这类字段后端类型是 nested object，但没有 children。调用方通过
-        // fieldMeta.component（如 JsonEditor）指定用自定义组件渲染整个 JSON 值，
-        // 而非展开成嵌套子表单。此时不走 nestedField 逻辑：保留 label，按普通
-        // 自定义组件字段处理（type 置空，由后续 Object.assign 注入的 component 渲染）。
+        // Fields like attribute mapping have a backend type of nested object but no children. The caller
+        // specifies a custom component (e.g. JsonEditor) via fieldMeta.component to render the whole JSON
+        // value, instead of expanding it into a nested sub-form. In this case the nestedField logic is
+        // skipped: keep the label and treat it as a regular custom-component field (type is cleared, and
+        // the component injected later via Object.assign renders it).
         if (fieldMeta.component) {
           type = ''
           break
@@ -109,7 +110,7 @@ export class FormFieldGenerator {
         type = 'input'
         break
     }
-    // 上面重写了 type
+    // type was overwritten above
     if (type === 'radio-group') {
       if (field.options.length > 4) {
         type = 'select'
@@ -161,7 +162,7 @@ export class FormFieldGenerator {
         filedRules.push(rules.RequiredChange)
       }
     }
-    // 一些 field 有 choices 但不是 choiceField
+    // Some fields have choices but aren't a choiceField
     if (fieldRemoteMeta.choices && field.type.indexOf('choice') === -1) {
       field.el.choices = fieldRemoteMeta.choices
     }
@@ -212,7 +213,7 @@ export class FormFieldGenerator {
   }
 
   setChoicesTips(field, fieldMeta, fieldRemoteMeta) {
-    // 设置 checkbox 的 tips
+    // Set tips for the checkbox
     if (['checkbox-group', 'radio-group'].indexOf(field.type) !== -1) {
       field.options.map((option) => {
         if (!option.tip && field.tips) {

@@ -72,7 +72,7 @@
         <div v-if="!nav" class="title-right">
           <RightAction :name="name" :editor-only="true" :delete-only="true" />
           <!--
-            绑定当前 Page 的标题栏；全局选择器会让缓存报表把按钮投到同一个目标。
+            Binds to the current Page's title bar; the global selector lets cached reports project the button onto the same target.
           -->
           <Teleport v-if="headingTarget && !nav && url && showReportExportBtn" :to="headingTarget">
             <el-button link class="report-export-btn" @click="openNewWindow">
@@ -523,8 +523,8 @@ export default {
         }
         this.win.focus()
       } catch (error) {
-        console.error('打开新窗口失败:', error)
-        // 降级处理：在当前窗口打开
+        console.error('Failed to open new window:', error)
+        // Fallback: open in the current window
         window.location.href = this.url
       }
     }
@@ -632,7 +632,7 @@ export default {
 }
 
 .report-export-btn {
-  // teleport 到 page-heading 右侧插槽（本身 flex 靠右），这里只管字号/颜色/去内凹
+  // Teleported into the page-heading right-side slot (itself flex-aligned right); this only controls font size/color/removing the inset look
   font-size: 13px;
   font-weight: 500;
   color: var(--color-primary);
@@ -641,7 +641,7 @@ export default {
     color: var(--el-color-primary-light-3) !important;
   }
 
-  // 点击/聚焦时 el-button 的 inset 阴影和 focus 轮廓会造成“内凹”外观，去掉它们（不改颜色）
+  // On click/focus, el-button's inset shadow and focus outline create an “indented” appearance; remove them (without changing color)
   &:focus,
   &:focus-visible,
   &:active {
@@ -747,7 +747,7 @@ export default {
     }
   }
 
-  /* 强制打印时保留 checkbox 颜色，避免浏览器剥离背景 */
+  /* Force-preserve checkbox colors when printing, to prevent the browser from stripping the background */
   .report-visibility-panel {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -777,19 +777,19 @@ export default {
 .charts-zone {
   padding: 16px 30px;
   margin: 0 auto;
-  // max-width: 1046px; 不能设置，因为 dashboard 中会引用
+  // max-width: 1046px; cannot be set, because it's referenced from the dashboard
   box-sizing: border-box;
-  min-height: 100px; // 添加最小高度确保容器始终存在
+  min-height: 100px; // Add a minimum height to ensure the container always exists
 
   :deep(.full-width-chart) {
     width: 100%;
     margin-bottom: 32px;
-    position: relative; // 添加相对定位
+    position: relative; // Add relative positioning
   }
 
   :deep(.chart) {
     height: 260px;
-    position: relative; // 添加相对定位
+    position: relative; // Add relative positioning
   }
 
   :deep(.charts-grid) {

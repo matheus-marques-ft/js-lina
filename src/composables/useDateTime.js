@@ -4,20 +4,20 @@ import moment from 'moment'
 import { getDayFuture, safeDate } from '@/utils/common/time'
 
 /**
- * 根据浏览器时区获取日期格式
- * @returns {string} 'YYYY-MM-DD' 或 'MM/DD/YYYY'
+ * Get the date format based on the browser timezone
+ * @returns {string} 'YYYY-MM-DD' or 'MM/DD/YYYY'
  */
 function getDateFormatByTimezone() {
   try {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-    // 美洲地区使用 MM/DD/YYYY 格式
+    // Use MM/DD/YYYY format for the Americas
     if (timezone && (timezone.startsWith('America/') || timezone.startsWith('US/'))) {
       return 'MM/DD/YYYY'
     }
-    // 其他地区（含 Asia、Europe 等）使用 YYYY-MM-DD 格式
+    // Use YYYY-MM-DD format for other regions (including Asia, Europe, etc.)
     return 'YYYY-MM-DD'
   } catch (e) {
-    // 浏览器不支持获取时区时 fallback
+    // Fallback if the browser doesn't support timezone lookup
     return 'YYYY-MM-DD'
   }
 }
@@ -106,7 +106,7 @@ export function parseTime(time, cFormat) {
   return format.replace(/{([ymdhisa])+}/g, (result, key) => {
     const value = formatObj[key]
     if (key === 'a') {
-      return ['日', '一', '二', '三', '四', '五', '六'][value]
+      return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][value]
     }
     return value.toString().padStart(2, '0')
   })
@@ -123,21 +123,21 @@ export function formatTime(time, option) {
   const diff = (now - date) / 1000
 
   if (diff < 30) {
-    return '刚刚'
+    return 'just now'
   }
   if (diff < 3600) {
-    return `${Math.ceil(diff / 60)}分钟前`
+    return `${Math.ceil(diff / 60)} minutes ago`
   }
   if (diff < 3600 * 24) {
-    return `${Math.ceil(diff / 3600)}小时前`
+    return `${Math.ceil(diff / 3600)} hours ago`
   }
   if (diff < 3600 * 24 * 2) {
-    return '1天前'
+    return '1 day ago'
   }
   if (option) {
     return parseTime(time, option)
   }
-  return `${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}时${date.getMinutes()}分`
+  return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
 }
 
 export function useDateTime() {

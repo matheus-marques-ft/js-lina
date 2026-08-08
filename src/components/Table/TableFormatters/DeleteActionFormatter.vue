@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     iDisabled() {
-      // 禁用
+      // disabled
       if (this.formatterArgs.disabled !== undefined) {
         return this.formatterArgs.disabled
       }

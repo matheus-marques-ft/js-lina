@@ -127,10 +127,12 @@ export default {
 }
 
 /*
- * el-drawer 使用 append-to-body（teleport 到 <body>），scoped :deep() 到不了它的内部，
- * 因此滚动/高度链必须写在非 scoped 块里，以 .el-drawer.drawer 为根匹配 teleport 后的节点。
- * 目标：__body 本身不滚；tab 详情页由内部 .tab-page-content 滚动、tabs 头固定；
- * 普通(非 tab)页面仍由 .drawer__content 整体滚动。
+ * el-drawer uses append-to-body (teleported to <body>), so scoped :deep() cannot
+ * reach its internals. Because of that, the scroll/height chain must be written
+ * in a non-scoped block, matching the teleported nodes with .el-drawer.drawer
+ * as the root. Goal: __body itself does not scroll; on tab detail pages, the
+ * internal .tab-page-content scrolls while the tabs header stays fixed; on
+ * normal (non-tab) pages, .drawer__content still scrolls as a whole.
  */
 .el-drawer.drawer {
   .el-drawer__body {
@@ -155,8 +157,10 @@ export default {
     overscroll-behavior: contain;
   }
 
-  // 可调整宽度的抽屉中，表单及自定义字段可能带有固有宽度。逐级允许收缩，
-  // 并限制控件不超过当前内容区，避免收窄时先被裁切、继续收窄后再横向溢出。
+  // In a resizable drawer, the form and custom fields may have an intrinsic width.
+  // Allow shrinking at every level and constrain controls to not exceed the current
+  // content area, avoiding first getting clipped and then overflowing horizontally
+  // as it narrows further.
   .drawer__content > *,
   .drawer__content .el-form,
   .drawer__content .el-form-item,
@@ -169,7 +173,7 @@ export default {
     max-width: 100%;
   }
 
-  // tab 详情页：整条链定高，滚动落在 .tab-page-content 上
+  // Tab detail page: the whole chain has a fixed height, scrolling happens on .tab-page-content
   .page.tab-page {
     height: 100%;
     min-height: 0;
@@ -199,9 +203,10 @@ export default {
 <style lang="scss" scoped>
 .drawer__no-footer {
   :deep(.drawer) {
-    // 仅普通(非 tab)页面沿用固定高 + 由 .drawer__content 整体滚动；
-    // tab 页面改为内部 .tab-page-content 滚动(见下方 .page.tab-page 相关规则),
-    // 不能再被这条固定高撑得比抽屉可视区更高,否则滚动条会贯穿到 tab 区域。
+    // Only normal (non-tab) pages keep the fixed height + full scroll on .drawer__content;
+    // tab pages instead scroll on the internal .tab-page-content (see the .page.tab-page
+    // rules below), and must no longer be stretched taller than the drawer's visible
+    // area by this fixed height, otherwise the scrollbar would leak into the tab area.
     .page:not(.tab-page) {
       height: calc(100vh - 55px);
     }
@@ -386,7 +391,7 @@ export default {
         margin-top: unset;
       }
 
-      // Detail 中
+      // In Detail
       &.content {
         margin-right: 0;
       }
@@ -398,7 +403,7 @@ export default {
         // margin-top: 0;
       }
 
-      // Form 中的子 form
+      // Sub-form inside Form
       .el-form {
         margin-left: 0;
         margin-top: 0;
@@ -458,8 +463,8 @@ export default {
         }
 
         .el-form-item__content:has(.el-checkbox):not(:has(.el-checkbox-group)) {
-          display: inline-block; /* 更改为 inline-block */
-          //width: unset; /* 这个设置上去后，平台详情中， Automations 会有问题 */
+          display: inline-block; /* changed to inline-block */
+          //width: unset; /* setting this caused issues with Automations in the platform detail page */
           vertical-align: bottom;
         }
 
@@ -519,7 +524,8 @@ export default {
     //}
   }
 
-  // DataForm 由自身容器宽度决定标签布局，不继承旧抽屉表单的固定最小宽度。
+  // DataForm's label layout is determined by its own container width; it does not
+  // inherit the fixed minimum width of the legacy drawer form.
   :deep(.form-fields.el-form .el-form-item) {
     min-width: 0;
   }

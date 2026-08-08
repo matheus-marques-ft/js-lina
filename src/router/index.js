@@ -24,7 +24,7 @@ import commonRoutes from './common'
  * user routes
  * the routes that need to be dynamically loaded based on user roles
  */
-// 权限路由
+// Permission-gated routes
 import consoleViewRoutes from './console'
 import auditViewRoutes from './audit'
 import workbenchViewRoutes from './workbench'
@@ -41,7 +41,7 @@ import store from '@/store'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-// 全局路由
+// Global routes
 export const constantRoutes = [
   {
     path: '/',

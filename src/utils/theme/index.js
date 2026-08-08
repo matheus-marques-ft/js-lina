@@ -67,9 +67,10 @@ export function changeElementColor(themeColors) {
 }
 
 export function changeThemeColors(themeColors) {
-  // 主题色现在完全由 CSS 变量驱动（setRootColors / changeMenuColor 同步 --color-* 与
-  // --el-color-*），不再拉取并注入 Element UI 时代的 element-extra.css——那份样式里的
-  // `.el-input__inner { border }` 正是 Element Plus 下输入框「border 套 border」的根源。
+  // Theme colors are now fully driven by CSS variables (setRootColors / changeMenuColor
+  // sync --color-* and --el-color-*), so we no longer fetch and inject the Element UI-era
+  // element-extra.css — the `.el-input__inner { border }` rule in that stylesheet was
+  // exactly the source of the "border inside border" issue on inputs under Element Plus.
   setRootColors()
   changeMenuColor(themeColors)
   changeElementColor(themeColors)

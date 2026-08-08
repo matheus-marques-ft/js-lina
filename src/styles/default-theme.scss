@@ -1,7 +1,7 @@
-// 默认主题 CSS 变量定义
-// 这些变量会被注入到 :root 中
+// Default theme CSS variable definitions
+// These variables are injected into :root
 
-// SCSS 颜色变量定义（可以被其他 SCSS 文件导入使用）
+// SCSS color variable definitions (can be imported and used by other SCSS files)
 $color-primary: #1ab394;
 $color-success: #2793d7;
 $color-info: #1c84c6;
@@ -25,7 +25,7 @@ $menu-text-active: #1ab394;
 $menu-hover: #ffffff;
 
 :root {
-  /* 主题颜色变量 */
+  /* Theme color variables */
   --color-primary: #{$color-primary};
   --color-success: #{$color-success};
   --color-info: #{$color-info};
@@ -33,21 +33,21 @@ $menu-hover: #ffffff;
   --color-danger: #{$color-danger};
   --color-link: #{$color-link};
 
-  /* 文本颜色 */
+  /* Text colors */
   --color-text-primary: #{$color-text-primary};
   --color-text-secondary: #{$color-text-secondary};
   --color-icon-primary: #{$color-icon-primary};
 
-  /* 边框和输入框 */
+  /* Borders and inputs */
   --color-border: #{$color-border};
   --color-input-border: #{$color-input-border};
 
-  /* 禁用状态 */
+  /* Disabled state */
   --color-disabled-background: #{$color-disabled-background};
   --color-disabled: #{$color-disabled};
   --color-help-text: #{$color-help-text};
 
-  /* 菜单相关 */
+  /* Menu related */
   --banner-bg: #{$banner-bg};
   --submenu-bg: #{$submenu-bg};
   --menu-bg: #{$menu-bg};
@@ -55,7 +55,7 @@ $menu-hover: #ffffff;
   --menu-text-active: #{$menu-text-active};
   --menu-hover: #{$menu-hover};
 
-  /* Element Plus CSS 变量覆盖 */
+  /* Element Plus CSS variable overrides */
   --el-color-primary: #{$color-primary};
   --el-color-success: #{$color-success};
   --el-color-info: #{$color-info};

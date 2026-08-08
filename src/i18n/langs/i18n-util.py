@@ -1,16 +1,19 @@
 """
-  描述: Lina i18n 翻译 检测、更新 工具
+  Description: Lina i18n translation detection / update tool
 
-  两个功能:
-    1. 以 zh.json 文件为基础，检测 en.json 和 ja.json 文件是否有缺失的翻译，如果有会将缺少的翻译信息写入到新文件 diff-zh-en.json 和 diff-zh-ja.json 中
-    2. 用户直接修改 diff-zh-en.json 和 diff-zh-ja.json 文件中对应的翻译，然后执行命令，会将修改后的翻译写入到 en.json 和 ja.json 文件中
+  Two features:
+    1. Using the zh.json file as the baseline, check whether en.json and ja.json are missing any
+       translations; if so, write the missing translation entries into new files diff-zh-en.json
+       and diff-zh-ja.json
+    2. Directly modify the corresponding translations in diff-zh-en.json and diff-zh-ja.json, then
+       run the command, and the modified translations will be written into en.json and ja.json
 
-  使用方法:
-    1. 生成差异文件: python i18n-util.py diff en ja
-    2. 修改差异文件: vi diff-zh-en.json 和 vi diff-zh-ja.json
-    3. 更新翻译文件: python i18n-util.py apply en ja
+  Usage:
+    1. Generate diff files: python i18n-util.py diff en ja
+    2. Edit diff files: vi diff-zh-en.json and vi diff-zh-ja.json
+    3. Update translation files: python i18n-util.py apply en ja
 
-  依赖包:
+  Dependencies:
     pip install data-tree
     pip install pathdict
 
@@ -24,13 +27,13 @@ from pathdict import PathDict
 
 
 actions_display_mapper = {
-    'diff': '检测',
-    'apply': '更新'
+    'diff': 'detect',
+    'apply': 'update'
 }
 langs_display_map = {
-    'en': '英文',
-    'ja': '日文',
-    'zh_Hant': '繁体中文',
+    'en': 'English',
+    'ja': 'Japanese',
+    'zh_Hant': 'Traditional Chinese',
 }
 
 
@@ -51,7 +54,7 @@ class I18NFileUtil(object):
         data = {}
 
         diff_filepath = f'{self.dir_path}/.diff-zh-{lang}.json'
-        
+
         with open(diff_filepath, 'w', encoding='utf-8') as f:
             for path in diff_paths:
                 value = zh_tree.get(path)
@@ -62,8 +65,8 @@ class I18NFileUtil(object):
             f.write(json_data)
 
             msg = f'\n' \
-                  f'* 检测到 ./{lang}.json 有 {len(data)} 条翻译未处理, ' \
-                  f'待翻译条目已写入到 {diff_filepath} 文件中. \n'
+                  f'* Found {len(data)} untranslated entries in ./{lang}.json, ' \
+                  f'the pending entries have been written to {diff_filepath}. \n'
             print(msg)
 
     def apply(self, lang):
@@ -79,9 +82,9 @@ class I18NFileUtil(object):
             data = self.pathdict_to_dict(lang_pdict)
             data = json.dumps(data, ensure_ascii=False, indent=2)
             f.write(data)
-            print(f'\n翻译文件 {self.dir_path}/{lang}.json 已更新, 总共写入新的翻译 {len(diff_data)} 条.\n')
-            
-        # 删除 diff 文件
+            print(f'\nTranslation file {self.dir_path}/{lang}.json has been updated, {len(diff_data)} new translations written in total.\n')
+
+        # Remove the diff file
         os.remove(diff_filepath)
 
     def pathdict_to_dict(self, data):
@@ -133,6 +136,6 @@ if __name__ == '__main__':
 
     if action == 'diff':
         _langs = ' '.join(langs)
-        msg = f'\n* Tips: 修改差异文件后, 执行命令 ```npm run apply-i18n ``` 更新翻译文件 *\n'
+        msg = f'\n* Tips: after editing the diff files, run ```npm run apply-i18n ``` to update the translation files *\n'
         print(msg)
 

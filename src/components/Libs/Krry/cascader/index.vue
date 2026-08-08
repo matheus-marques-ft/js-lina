@@ -1,6 +1,6 @@
 <template>
   <div class="krry-main">
-    <!-- 地区 -->
+    <!-- Region -->
     <krry-container
       :box-operation="boxOperation"
       :box-title="boxTitle"
@@ -24,11 +24,11 @@ export default {
   props: {
     boxTitle: {
       type: Array,
-      default: () => ['省份', '城市', '区县', '选中地域']
+      default: () => ['Province', 'City', 'District', 'Selected Region']
     },
     boxOperation: {
       type: Array,
-      default: () => ['添加省份', '添加城市', '添加区县', '删除地域']
+      default: () => ['Add Province', 'Add City', 'Add District', 'Remove Region']
     },
     dataObj: {
       type: Object,
@@ -44,7 +44,7 @@ export default {
     },
     filterPlaceholder: {
       type: String,
-      default: () => '请输入搜索内容'
+      default: () => 'Please enter search content'
     }
   },
   data() {
@@ -55,12 +55,12 @@ export default {
   watch: {},
   created() {},
   methods: {
-    // 获取已选数据的监听事件
+    // Listener event for retrieving the selected data
     emitChangeSelected(val) {
       this.hasSelectData = val
       this.$emit('onChange', val)
     },
-    // 提供获取已选数据的钩子
+    // Hook providing access to the selected data
     getSelectedData() {
       return this.hasSelectData
     }

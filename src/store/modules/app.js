@@ -5,7 +5,7 @@ const state = {
     opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
     withoutAnimation: false
   },
-  // 默认需要展开的菜单
+  // Menus that should be expanded by default
   defaultOpensMenu: [],
   device: 'desktop',
   inited: false,

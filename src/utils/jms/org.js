@@ -17,12 +17,12 @@ function getPropOrg() {
   if (defaultOrg) {
     return defaultOrg
   }
-  // 优先选择非 SYSTEM 和非 ROOT 的组织
+  // Prefer an organization that is neither SYSTEM nor ROOT
   const nonSystemOrg = orgs.find((item) => !item['is_root'] && !item['is_system'])
   if (nonSystemOrg) {
     return nonSystemOrg
   }
-  // 如果用户只有 SYSTEM 组织，则允许使用 SYSTEM 组织，避免登录无限重定向
+  // If the user only has the SYSTEM organization, allow using it to avoid an infinite login redirect
   return orgs[0]
 }
 
@@ -49,14 +49,14 @@ async function changeOrg(org, reload = true, vm = null) {
   } else {
     path = fullPath
   }
-  // 替换 Path 中的 UUID
+  // Replace the UUID in the path
   const idRegex = /\/?([a-fA-F0-9]{8}-(?:[a-fA-F0-9]{4}-){3}[a-fA-F0-9]{12})|(-?\d+(\.\d+)?)\/?/
   const i = path.search(idRegex)
   if (i !== -1) {
     path = path.slice(0, i + 1)
   }
 
-  // 替换 Query 中的 UUID
+  // Replace the UUID in the query
   const newQuery = {}
   const ignoreOrgQueryKey = ['platform']
   for (const [key, value] of Object.entries(query)) {

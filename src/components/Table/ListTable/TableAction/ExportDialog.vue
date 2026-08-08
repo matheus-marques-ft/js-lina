@@ -256,7 +256,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// 导出选项用 flex 排布：同组单选项一行内均匀排列、可换行、垂直居中，不再 block 堆叠/错落
+// Export options use flex layout: radios in the same group are evenly spaced on one line, wrap, and vertically centered, no longer stacked/misaligned as block
 :deep(.el-radio-group) {
   display: flex;
   flex-wrap: wrap;

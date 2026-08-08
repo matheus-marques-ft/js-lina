@@ -187,7 +187,7 @@ service.interceptors.response.use(
 )
 
 axiosRetry(service, {
-  // 默认不开启请求重试
+  // Request retry is disabled by default
   retries: 0
 })
 
@@ -240,7 +240,7 @@ export function createWebSocket(url = globalUrl, callback = globalCallback) {
   ws.onsend = onSend
 }
 
-// 发送消息
+// Send a message
 export function onSend(message) {
   if (typeof message !== 'string') {
     message = JSON.stringify(message)
@@ -248,7 +248,7 @@ export function onSend(message) {
   ws?.send(message)
 }
 
-// 接受服务端消息
+// Receive a message from the server
 export function onMessage(res) {
   const { data: msgData } = res
   if (typeof msgData === 'object') {
@@ -290,7 +290,7 @@ export function reconnect() {
     return
   }
   lockReconnect = true
-  // 设置延迟避免请求过多
+  // Set a delay to avoid too many requests
   timeoutNum && clearTimeout(timeoutNum)
   timeoutNum = setTimeout(function () {
     createWebSocket()

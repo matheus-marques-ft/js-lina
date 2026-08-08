@@ -43,7 +43,7 @@ export default {
       type: Boolean,
       default: false
     },
-    // 预览尺寸（px）。不同字段建议不同大小：方形 logo 82、网站图标 16、登录大图 492×472。
+    // Preview size (px). Different fields are recommended to use different sizes: square logo 82, favicon 16, login banner 492×472.
     width: {
       type: [String, Number],
       default: ''
@@ -158,7 +158,7 @@ export default {
   }
 }
 
-/* 顶部宽 logo 等可能是白底/透明图，给预览盒铺品牌背景色，避免白底图“看不见” */
+/* The top wide logo etc. may be a white/transparent background image; give the preview box a brand background color to avoid a white-background image being "invisible" */
 .upload-field__preview.show-bg {
   background-color: var(--banner-bg);
   border-color: var(--banner-bg);

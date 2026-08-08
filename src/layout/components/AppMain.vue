@@ -39,9 +39,10 @@ export default {
   /*padding: 10px 20px 10px;*/
 }
 
-// 注意：.main-container 已通过 `position: relative; top: $headerHeight` 整体下移避开固定头部
-// （见 styles/sidebar.scss），因此这里 **不能** 再加 padding-top，否则会双重下移 $headerHeight，
-// 在头部下方留出一条空白（点右键只会命中 app-wrapper，因为那是 app-main padding 区）。
+// Note: .main-container is already shifted down as a whole via `position: relative; top: $headerHeight`
+// (see styles/sidebar.scss) to clear the fixed header, so we **must not** add padding-top here again,
+// otherwise it would be shifted down twice by $headerHeight, leaving a blank gap below the header
+// (right-clicking there would only hit app-wrapper, since that's the app-main padding area).
 .fixed-header + .app-main {
   padding-top: 0;
 }
@@ -52,7 +53,7 @@ export default {
     min-height: calc(100vh - #{$headerHeight} - 34px);
   }
 
-  // tags-view 高 34px，main-container 已偏移 $headerHeight，这里只需再补 tags-view 高度
+  // tags-view is 34px tall; main-container is already offset by $headerHeight, so we only need to add the tags-view height here
   .fixed-header + .app-main {
     padding-top: 34px;
   }

@@ -147,7 +147,7 @@ export class TableColumnsGenerator {
     configColumns = primaryColumns.concat(configColumns, columnsAdd)
     configColumns = configColumns.filter((item) => !columnsExclude.includes(item))
 
-    // 解决后端 API 返回字段中包含 actions 的问题;
+    // Work around the backend API response fields including "actions";
     const hasColumnActions = configColumns.findIndex((item) => item?.prop === 'actions') !== -1
     if (!hasColumnActions) {
       configColumns = [...configColumns.filter((i) => i !== 'actions'), 'actions']

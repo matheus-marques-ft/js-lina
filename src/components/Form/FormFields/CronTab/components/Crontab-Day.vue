@@ -141,7 +141,7 @@ export default {
     })
   },
   methods: {
-    // 单选按钮值变化时
+    // when the radio button value changes
     radioChange() {
       ;('day rachange')
       if (this.radioValue === 1) {
@@ -180,33 +180,33 @@ export default {
       }
       ;('day rachange end')
     },
-    // 周期两个值变化时
+    // when the two cycle values change
     cycleChange() {
       if (this.radioValue === 3) {
         this.$emit('update', 'day', this.cycleTotal)
       }
     },
-    // 平均两个值变化时
+    // when the two average values change
     averageChange() {
       if (this.radioValue === 4) {
         this.$emit('update', 'day', this.averageTotal)
       }
     },
-    // 最近工作日值变化时
+    // when the nearest workday value changes
     workdayChange() {
       if (this.radioValue === 5) {
         this.$emit('update', 'day', this.workday + 'W')
       }
     },
-    // checkbox值变化时
+    // when the checkbox value changes
     checkboxChange() {
       if (this.radioValue === 7) {
         this.$emit('update', 'day', this.checkboxString)
       }
     },
-    // 父组件传递的week发生变化触发
+    // triggered when the week value passed from the parent component changes
     weekChange() {
-      // 判断week值与day不能同时为“?”
+      // check that week and day cannot both be "?" at the same time
       if (this.cron.week === '?' && this.radioValue === 2) {
         this.radioValue = '1'
       } else if (this.cron.week !== '?' && this.radioValue !== 2) {

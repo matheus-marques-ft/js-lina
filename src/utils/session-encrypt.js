@@ -12,8 +12,8 @@ export function fillKey(key) {
   if (key.length > KeyLength) {
     key = key.slice(0, KeyLength)
   }
-  // 浏览器环境没有 Node 的 Buffer：用 Uint8Array + TextEncoder 得到同样的
-  // 「UTF-8 字节、右侧补零到 16 字节」结果
+  // The browser environment doesn't have Node's Buffer: use Uint8Array + TextEncoder to get the same
+  // result of "UTF-8 bytes, zero-padded on the right to 16 bytes"
   const filledKey = new Uint8Array(KeyLength)
   const keys = new TextEncoder().encode(key)
   for (let i = 0; i < keys.length && i < KeyLength; i++) {
@@ -23,7 +23,7 @@ export function fillKey(key) {
 }
 
 function aesEncrypt(text, originKey) {
-  // fillKey 返回 16 字节的 Uint8Array，经 hex 转成 CryptoJS WordArray 作为 AES key
+  // fillKey returns a 16-byte Uint8Array; convert it via hex into a CryptoJS WordArray to use as the AES key
   const key = CryptoJS.enc.Hex.parse(bytesToHex(fillKey(originKey)))
   return CryptoJS.AES.encrypt(text, key, {
     mode: CryptoJS.mode.ECB,
@@ -55,7 +55,7 @@ function hexToBytes(hex) {
   if (hex.startsWith('0x')) {
     hex = hex.slice(2)
   }
-  // 确保是偶数长度
+  // Ensure the length is even
   const len = Math.floor(hex.length / 2)
   const bytes = new Uint8Array(len)
   for (let i = 0; i < len; i++) {
@@ -65,7 +65,7 @@ function hexToBytes(hex) {
 }
 
 function bytesToBase64(bytes) {
-  // Uint8Array -> base64（标准 base64）
+  // Uint8Array -> base64 (standard base64)
   let binary = ''
   for (let i = 0; i < bytes.length; i++) {
     binary += String.fromCharCode(bytes[i])
@@ -74,7 +74,7 @@ function bytesToBase64(bytes) {
 }
 
 function bytesToHex(bytes) {
-  // Uint8Array -> hex，等价于 Node 的 Buffer.from(x).toString('hex')
+  // Uint8Array -> hex, equivalent to Node's Buffer.from(x).toString('hex')
   let hex = ''
   for (let i = 0; i < bytes.length; i++) {
     hex += bytes[i].toString(16).padStart(2, '0')
@@ -84,22 +84,23 @@ function bytesToHex(bytes) {
 
 function rsaEncryptPassword(password, rsaPublicKey) {
   const aesKey = (Math.random() + 1).toString(36).substring(2)
-  // public key 是 base64 存储的
+  // The public key is stored as base64
   const keyCipher = rsaEncrypt(aesKey, rsaPublicKey)
   const passwordCipher = aesEncrypt(password, aesKey)
   return `${keyCipher}:${passwordCipher}`
 }
 
 function ensureSm2PublicKey(sm2PublicKey) {
-  // sm2.min.js 的 doEncrypt 需要能被 decodePointHex 解析的公钥：
-  // 通常为非压缩点 hex，格式 `04||x||y`（总长度 130）。
-  // 但后端生成/下发的公钥有时是 `x||y`（长度 128），这里做归一化补齐 `04` 前缀。
+  // sm2.min.js's doEncrypt requires a public key parseable by decodePointHex:
+  // usually an uncompressed point in hex, in the format `04||x||y` (total length 130).
+  // But the public key generated/issued by the backend is sometimes `x||y` (length 128), so we
+  // normalize it here by prepending the `04` prefix.
   if (typeof sm2PublicKey === 'string') {
     sm2PublicKey = sm2PublicKey.replaceAll('"', '').trim()
     if (sm2PublicKey.startsWith('0x')) {
       sm2PublicKey = sm2PublicKey.slice(2)
     }
-    // 后端下发的 SM2 公钥常见是 x||y（128 hex），sm-crypto 需要 04||x||y（130 hex）
+    // The SM2 public key issued by the backend is commonly x||y (128 hex chars); sm-crypto needs 04||x||y (130 hex chars)
     if (sm2PublicKey.length === 128 && !sm2PublicKey.startsWith('04')) {
       sm2PublicKey = '04' + sm2PublicKey
     }
@@ -109,24 +110,25 @@ function ensureSm2PublicKey(sm2PublicKey) {
 
 function gmEncryptPassword(password, sm2PublicKey) {
   sm2PublicKey = ensureSm2PublicKey(sm2PublicKey)
-  // 只适配前端，不改后端：
-  // 直接生成 16 字符 key（后端 padding_key 会保持原样，不再补齐）
+  // Adapting the frontend only, without changing the backend:
+  // generate a 16-character key directly (the backend's padding_key keeps it as-is, no further padding)
   const sm4KeyRaw = randomString(16)
   const sm4KeyHex = bytesToHex(new TextEncoder().encode(sm4KeyRaw))
 
   let keyCipher = ''
   try {
-    // 与后端 gmssl.sm2.CryptSM2 默认 decrypt 的 mode 对齐：
-    // gmssl 解析的格式是 C1C2C3（mode=0），前端这里输出也用 mode=0。
+    // Aligned with the mode used by the backend's gmssl.sm2.CryptSM2 default decrypt:
+    // gmssl parses the format C1C2C3 (mode=0), so the frontend also outputs using mode=0 here.
     keyCipher = sm2.doEncrypt(sm4KeyRaw, sm2PublicKey, 0)
   } catch (e) {
     console.error('gmEncryptPassword sm2.doEncrypt failed:', e)
-    // 避免前端崩溃：失败时返回明文，由后端按原值流程处理（至少可继续登录/看报错）
+    // Avoid crashing the frontend: on failure, return the plaintext, letting the backend handle it
+    // via its original-value flow (at least allowing login to continue / errors to be seen)
     return password
   }
 
   const passwordCipher = sm4.encrypt(password, sm4KeyHex)
-  // sm2/sm4 默认输出是 hex，但后端 gm.py/session.py 需要 base64：
+  // sm2/sm4 output hex by default, but the backend's gm.py/session.py expects base64:
   // - sm2_decrypt: base64.b64decode
   // - sm4 decrypt: base64.urlsafe_b64decode
   const keyCipherB64 = bytesToBase64(hexToBytes(keyCipher))

@@ -1,5 +1,5 @@
-/* 这里只写element-variables里面改不动的、且和主题系列颜色相关的样式！！！ */
-/* 主题相关看该文件夹下的README.md */
+/* Only write styles here that can't be changed in element-variables and are related to theme colors!!! */
+/* For theme-related info, see the README.md in this folder */
 
 /* info type special treatment */
 .el-button--info {

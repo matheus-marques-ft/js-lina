@@ -209,8 +209,9 @@ export default {
   margin: 0;
 }
 
-// 分段式强度条：轨道 + 20/40/60/80% 处的白色间隙分成 5 段（间隙由 :before/:after 提供），
-// 不做整体药丸圆角/overflow:hidden，否则会糊成一整条连续进度条。
+// Segmented strength bar: track + white gaps at 20/40/60/80% split it into 5 segments
+// (gaps provided by :before/:after); no overall pill border-radius/overflow:hidden is
+// applied, otherwise it would blur into one continuous progress bar.
 .password-input__meter-wrap :deep(.Password__strength-meter) {
   width: 100%;
   height: 6px;

@@ -64,7 +64,7 @@ export default {
         },
         callback: {
           onCheck: _.debounce((event, treeId, treeNode) => {
-            // 选择后，更新按钮可用
+            // After selecting, enable the update button
             vm.setUpdateBtn()
             vm.checkActionDeps(treeNode)
             vm.checkSpecDeps()
@@ -293,7 +293,7 @@ export default {
       const viewIgnoreAction = ['match']
       const checked = node.checked
       if (action === 'view') {
-        // 选中 view node 不需要处理, 不选中的话去掉 兄弟节点选中
+        // No action needed when the view node is checked; if unchecked, uncheck sibling nodes
         if (checked) {
           return
         }
@@ -305,7 +305,7 @@ export default {
             continue
           }
           const { action: act, resource: res } = d
-          // 忽略的 action 不用处理, resource 不相同的不用处理
+          // Ignored actions don't need handling; different resources don't need handling
           this.$log.debug('Action: ', act, d)
           if (act === 'view' || viewIgnoreAction.indexOf(act) > -1 || res !== resource) {
             continue

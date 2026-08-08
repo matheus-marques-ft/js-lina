@@ -91,7 +91,7 @@ export default {
       },
       cleanFormValue(value) {
         value.meta.INDEX = value.meta?.INDEX?.toLowerCase()
-        // 解决第一次提交失败后，再次提交时，HOSTS字段为Array的问题
+        // Fixes the issue where, after the first submit fails, the HOSTS field is already an Array on resubmission
         if (typeof value.meta.HOSTS === 'string') {
           value.meta.HOSTS = value.meta.HOSTS.split(',').map((item) => item.trim())
         }

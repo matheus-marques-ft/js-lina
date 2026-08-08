@@ -1,6 +1,6 @@
 <template>
   <span ref="root" class="global-search">
-    <!-- 搜索触发按钮 -->
+    <!-- Search trigger button -->
     <div class="search-trigger" @click="openPanel">
       <el-input
         v-model="search"
@@ -17,7 +17,7 @@
       </el-input>
     </div>
 
-    <!-- 搜索模态框 -->
+    <!-- Search modal -->
     <el-dialog
       v-model="isOpen"
       :close-on-click-modal="true"
@@ -33,7 +33,7 @@
       @close="closePanel"
     >
       <div class="search-modal-content">
-        <!-- 搜索框 -->
+        <!-- Search box -->
         <div class="search-input-wrapper">
           <el-input
             ref="panelSearchInput"
@@ -47,7 +47,7 @@
           />
         </div>
 
-        <!-- 搜索结果内容 -->
+        <!-- Search results content -->
         <div class="search-results">
           <div v-if="loading" class="section loading">{{ $t('Loading') }}...</div>
 
@@ -313,15 +313,15 @@ export default {
       document.removeEventListener('keydown', this.handleKeyboardShortcut)
     },
     handleKeyboardShortcut(event) {
-      // 检查是否按下了正确的快捷键
+      // Check whether the correct shortcut key was pressed
       const isCorrectKey = event.key === 'k' || event.key === 'K'
       const isCorrectModifier = this.isMac ? event.metaKey : event.ctrlKey
 
       if (isCorrectKey && isCorrectModifier) {
-        // 阻止默认行为
+        // Prevent the default behavior
         event.preventDefault()
 
-        // 如果当前有输入框聚焦，不触发搜索
+        // Do not trigger the search if an input field is currently focused
         const activeElement = document.activeElement
         const isInputFocused =
           activeElement &&

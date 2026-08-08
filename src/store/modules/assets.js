@@ -58,13 +58,13 @@ const actions = {
   getPlatforms({ commit, dispatch, state }) {
     return new Promise((resolve, reject) => {
       if (state.platforms.length > 0) {
-        // 如果已有数据，直接返回
+        // If data already exists, return it directly
         resolve(state.platforms)
         return
       }
 
       if (isFetchingPlatforms) {
-        // 如果正在请求中，等待之前的请求完成后再返回
+        // If a request is already in flight, wait for it to finish before returning
         const checkInterval = setInterval(() => {
           if (!isFetchingPlatforms) {
             clearInterval(checkInterval)
@@ -74,18 +74,18 @@ const actions = {
         return
       }
 
-      // 设置标志位，表示正在请求中
+      // Set the flag to indicate a request is in flight
       isFetchingPlatforms = true
 
       request
         .get('/api/v1/assets/platforms/')
         .then((data) => {
           state.platforms = data
-          isFetchingPlatforms = false // 请求完成，重置标志位
+          isFetchingPlatforms = false // Request finished, reset the flag
           resolve(data)
         })
         .catch((error) => {
-          isFetchingPlatforms = false // 请求失败也要重置标志位
+          isFetchingPlatforms = false // Also reset the flag if the request fails
           reject(error)
         })
     })

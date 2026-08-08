@@ -97,9 +97,11 @@ export default {
       type: String,
       default: ''
     },
-    // 兼容调用方用 :help-tip 传入提示。若不在此声明，help-tip 会经 $attrs 透传到内层 Page，
-    // 被渲染成 .page-alert（位于 page-heading 与 page-submenu 之间），导致提示与其它页面不一致。
-    // 这里显式接收，统一渲染到 tab-page-content 内的 tab-page-alert。
+    // For compatibility with callers passing the tip via :help-tip. If not declared here,
+    // help-tip would pass through $attrs to the inner Page and be rendered as .page-alert
+    // (between page-heading and page-submenu), making the tip inconsistent with other pages.
+    // It's received explicitly here and rendered uniformly as tab-page-alert inside
+    // tab-page-content.
     helpTip: {
       type: String,
       default: ''
@@ -439,8 +441,9 @@ export default {
     overflow: auto;
     scrollbar-gutter: stable;
 
-    // Tab 内容保留统一的可用宽度；视口或抽屉继续收窄时由内容区滚动，
-    // 不再让表单、帮助文案和复杂控件无限压缩。
+    // Tab content keeps a consistent usable width; when the viewport or drawer keeps
+    // narrowing, the content area scrolls instead of letting forms, help text, and complex
+    // controls compress indefinitely.
     > :deep(*) {
       flex-shrink: 0;
       min-width: 600px;
@@ -448,8 +451,10 @@ export default {
     }
 
     /*
-     * flex 列 + overflow-y:auto 的容器会裁掉自身 padding-bottom（Chrome 已知行为），
-     * 导致滚到底时最后一块内容贴边。用一个不参与裁剪的 ::after 占位块补回底部间距。
+     * A flex column + overflow-y:auto container clips its own padding-bottom (a known Chrome
+     * behavior), so the last block of content ends up flush against the edge when scrolled to
+     * the bottom. An ::after placeholder that isn't subject to the clipping restores the
+     * bottom spacing.
      */
     &::after {
       content: '';
@@ -460,8 +465,10 @@ export default {
   }
 
   /*
-   * .tab-page-content 是唯一的滚动容器：小屏空间不足时，应由它整体滚动，而不是让内部 card
-   * 自己出现滚动条。故强制卡片相关容器不自带滚动 / 高度上限，把溢出交还给 .tab-page-content。
+   * .tab-page-content is the sole scroll container: when space is short on small screens, it
+   * should scroll as a whole rather than letting inner cards show their own scrollbar. So
+   * card-related containers are forced to not have their own scroll / max-height, handing
+   * overflow back to .tab-page-content.
    */
   .tab-page-content :deep(.el-card__body),
   .tab-page-content :deep(.ibox),
@@ -470,7 +477,8 @@ export default {
     max-height: none !important;
   }
 
-  // 设置页表单标签在固定 label 列内统一左对齐，避免窄宽度下贴到控件右侧。
+  // Settings page form labels are uniformly left-aligned within the fixed label column, to
+  // avoid them sticking to the right side of the control at narrow widths.
   .tab-page-content :deep(.form-fields .el-form-item__label-wrap) {
     display: flex;
     justify-content: flex-start;
@@ -482,14 +490,18 @@ export default {
   }
 
   /*
-   * <transition mode="out-in"> 与 <keep-alive> 要求单一根节点，内容组件因此普遍用一个
-   * <div>（无 class 或 class=""）包裹多个区块（如 el-alert + IBox）。该 wrapper 会成为唯一的
-   * flex 子节点，使外层 gap 对其内部区块失效。这里让纯结构 wrapper 自身成为 flex 列并复用同样的
-   * gap，既恢复区块间距，又保留 wrapper 的盒子以维持 fade-transform 过渡动画。
+   * <transition mode="out-in"> and <keep-alive> require a single root node, so content
+   * components commonly wrap multiple blocks (e.g. el-alert + IBox) in one <div> (no class,
+   * or class=""). This wrapper becomes the only flex child, causing the outer gap to have no
+   * effect on its inner blocks. Here the purely structural wrapper is made a flex column
+   * itself, reusing the same gap — restoring spacing between blocks while keeping the
+   * wrapper's box to preserve the fade-transform transition animation.
    *
-   * 过渡动画期间 Vue 会给 wrapper 加上 fade-transform-* 类，此时 :not([class]) 不再命中，
-   * 故补充 [class^="fade-transform"] 让其在动画期间仍保持 flex，避免间距闪烁。
-   * 带 class 的 wrapper（如 .auth-container）class 以自身类名开头，均不命中，保持不变。
+   * During the transition animation, Vue adds fade-transform-* classes to the wrapper, at
+   * which point :not([class]) no longer matches, so [class^="fade-transform"] is added to
+   * keep it flex during the animation and avoid spacing flicker. Wrappers with a class (e.g.
+   * .auth-container) start with their own class name and never match either selector, so they
+   * remain unaffected.
    */
   .tab-page-content > :deep(div:not([class])),
   .tab-page-content > :deep(div[class='']),

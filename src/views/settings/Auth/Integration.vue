@@ -41,7 +41,7 @@ export default {
     ...mapState({
       authMethodsSetting: (state) => state.settings.authMethods
     }),
-    // 未启用的认证方法（按类型分组）
+    // Disabled auth methods (grouped by type)
     disabledAuthItems() {
       const disabled = {}
       Object.entries(this.authItems).forEach(([type, items]) => {
@@ -52,7 +52,7 @@ export default {
       })
       return disabled
     },
-    // 已开启的认证方法（平铺列表，不分类）
+    // Enabled auth methods (flat list, not grouped)
     enabledAuthMethodsList() {
       const enabled = []
       Object.values(this.authItems).forEach((items) => {
@@ -64,11 +64,11 @@ export default {
       })
       return enabled
     },
-    // 是否有未启用的认证方法
+    // Whether there are any disabled auth methods
     hasDisabledMethods() {
       return Object.values(this.disabledAuthItems).some((items) => items.length > 0)
     },
-    // 是否有已开启的认证方法
+    // Whether there are any enabled auth methods
     hasEnabledMethods() {
       return this.enabledAuthMethodsList.length > 0
     }
@@ -156,7 +156,7 @@ export default {
   overflow-y: auto;
   padding-right: 5px;
 
-  // 自定义滚动条样式
+  // Custom scrollbar style
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -214,7 +214,7 @@ h4.auth-method-type {
   }
 }
 
-// 响应式设计
+// Responsive design
 @media (max-width: 768px) {
   .auth-layout {
     .auth-column {

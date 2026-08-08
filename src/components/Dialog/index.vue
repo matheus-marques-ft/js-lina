@@ -171,7 +171,8 @@ export default {
     color: var(--color-text-primary);
   }
 
-  // 关闭按钮在标题栏内垂直居中(默认 top:0 + --el-dialog-padding-primary:0 会贴到顶部)
+  // Vertically center the close button within the header (by default top:0 +
+  // --el-dialog-padding-primary:0 would stick it to the top)
   .el-dialog__headerbtn {
     top: 50%;
     right: 14px;
@@ -221,7 +222,7 @@ export default {
   transition: opacity 1s ease;
 }
 
-.dialog-fade-enter, .dialog-fade-leave-to /* .dialog-fade-leave-active 在 <2.1.8 中以及被重复声明 */ {
+.dialog-fade-enter, .dialog-fade-leave-to /* .dialog-fade-leave-active is also declared again in <2.1.8 */ {
   opacity: 0;
 }
 </style>

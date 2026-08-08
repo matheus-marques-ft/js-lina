@@ -157,7 +157,7 @@ export default {
     box-shadow: none !important;
     outline: none !important;
 
-    // fa 图标字形在自身 em 盒内偏上(flex 居中的是行盒而非字形),下移 1px 做视觉居中
+    // The fa icon glyph sits high within its own em box (flex centers the line box, not the glyph), shift it down 1px for visual centering
     i {
       display: block;
       line-height: 1;

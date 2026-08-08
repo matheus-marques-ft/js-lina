@@ -1,40 +1,40 @@
 import { IS_DEV } from '@/utils/env'
 
 /**
- * 全局错误处理器
- * 防止 Vue 3 中未捕获的错误导致整个应用崩溃
+ * Global error handler
+ * Prevents uncaught errors in Vue 3 from crashing the entire application
  *
- * @param {Object} app - Vue 应用实例
- * @param {Object} message - 消息提示服务对象
+ * @param {Object} app - Vue application instance
+ * @param {Object} message - Message notification service object
  */
 export function setupErrorHandler(app, message) {
   app.config.errorHandler = (err, instance, info) => {
-    // 在开发环境下打印详细错误信息
+    // Print detailed error info in the development environment
     if (IS_DEV) {
       console.error('Global Error Handler:', err)
       console.error('Component instance:', instance)
       console.error('Error info:', info)
     } else {
-      // 生产环境下只打印错误信息，不打印组件实例
+      // In production, only print the error message, not the component instance
       console.error('Application Error:', err?.message || err)
       console.error('Error info:', info)
     }
 
-    // 尝试显示友好的错误提示
+    // Try to show a friendly error message
     try {
-      // 使用传入的 message 函数
+      // Use the provided message function
       if (message && typeof message.error === 'function') {
         message.error(err?.message || 'An error occurred. Please refresh the page.')
       } else {
-        // 如果 message 不可用，至少输出到控制台
+        // If message is unavailable, at least log to the console
         console.error('Error details:', err)
       }
     } catch (e) {
-      // 如果 message 服务不可用，忽略
+      // Ignore if the message service is unavailable
       console.error('Failed to show error message:', e)
     }
 
-    // 不重新抛出错误，防止应用完全崩溃
-    // 这样即使某个组件出错，其他部分仍可正常显示
+    // Do not rethrow the error, to prevent the app from crashing entirely
+    // This way, even if one component errors out, the rest can still render normally
   }
 }

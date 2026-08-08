@@ -25,7 +25,7 @@
         </div>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">执行</el-button>
+        <el-button type="primary" @click="onSubmit">Execute</el-button>
       </el-form-item>
     </el-form>
   </Dialog>

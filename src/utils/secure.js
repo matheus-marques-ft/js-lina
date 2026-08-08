@@ -34,9 +34,9 @@ const options = {
       return html.replace(/</g, '&lt;').replace(/>/g, '&gt;')
     }
   },
-  // 避免把页面样式过滤掉
+  // Avoid stripping out page styles
   onTagAttr(tag, name, value, isWhiteAttr) {
-    // 过滤掉标签上的事件
+    // Strip out event handlers on tags
     if (/^on/.test(name)) {
       return name + '=' + '.'
     }
@@ -53,7 +53,7 @@ export function fillKey(key) {
   if (key.length > KeyLength) {
     key = key.slice(0, KeyLength)
   }
-  // 浏览器没有 Node 的 Buffer，用 Uint8Array + TextEncoder 生成等价的 16 字节密钥
+  // Browsers don't have Node's Buffer; use Uint8Array + TextEncoder to produce an equivalent 16-byte key
   const filledKey = new Uint8Array(KeyLength)
   const keys = new TextEncoder().encode(key)
   for (let i = 0; i < keys.length && i < KeyLength; i++) {
@@ -71,7 +71,7 @@ function bytesToHex(bytes) {
 }
 
 export function aesEncrypt(text, originKey) {
-  // 与旧实现（Utf8.parse(Buffer)）字节等价：把 16 字节密钥按 Hex 解析成 WordArray
+  // Byte-equivalent to the old implementation (Utf8.parse(Buffer)): parse the 16-byte key as Hex into a WordArray
   const key = CryptoJS.enc.Hex.parse(bytesToHex(fillKey(originKey)))
   return CryptoJS.AES.encrypt(text, key, {
     mode: CryptoJS.mode.ECB,
@@ -98,7 +98,7 @@ export function encryptPassword(password) {
     return password
   }
   const aesKey = (Math.random() + 1).toString(36).substring(2)
-  // public key 是 base64 存储的
+  // The public key is stored as base64
   rsaPublicKeyText = rsaPublicKeyText.replaceAll('"', '')
   const rsaPublicKey = atob(rsaPublicKeyText)
   const keyCipher = rsaEncrypt(aesKey, rsaPublicKey)

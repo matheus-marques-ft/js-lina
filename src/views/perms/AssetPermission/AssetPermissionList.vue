@@ -74,8 +74,9 @@ export default {
         showMenu: false,
         showAssets: true,
         notShowBuiltinTree: true,
-        // 选中节点只过滤表格，不把选择同步到路由。否则路由变化会触发整棵树重新初始化、闪烁。
-        // 与资产列表(AllList)、账号发现、风险列表等页面保持一致。
+        // Selecting a node only filters the table; the selection is not synced to the route. Otherwise a
+        // route change would trigger the whole tree to reinitialize and flicker.
+        // Kept consistent with the asset list (AllList), account discovery, risk list, and similar pages.
         selectSyncToRoute: false,
         url: '/api/v1/perms/asset-permissions/',
         nodeUrl: '/api/v1/perms/asset-permissions/',

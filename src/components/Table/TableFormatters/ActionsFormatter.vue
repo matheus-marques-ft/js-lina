@@ -191,7 +191,7 @@ const defaultDeleteCallback = function ({ row, col, cellValue, reload }) {
       }
     }
   }).catch(() => {
-    /* 取消*/
+    /* cancelled */
   })
 }
 

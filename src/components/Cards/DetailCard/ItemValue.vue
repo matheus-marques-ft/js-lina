@@ -106,7 +106,8 @@ export default {
 </script>
 
 <style scoped>
-/* 详情值里的链接用统一链接色（各主题皆蓝），而非 --color-success（Deep black 下为绿、语义也不对）。 */
+/* Links inside detail values use the unified link color (blue across all themes), not
+   --color-success (which renders green under Deep black and is also semantically wrong). */
 a {
   color: var(--color-link);
 }

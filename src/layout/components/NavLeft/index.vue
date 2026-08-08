@@ -102,8 +102,10 @@ export default {
       if (meta.activeMenu) {
         return meta.activeMenu
       }
-      // hidden 路由且未显式指定 activeMenu:用当前路径剥掉动态 id 段,高亮父级菜单
-      // 注意:vue-router 5 的 router.resolve() 直接返回路由对象,没有 .location(VR3 才有)
+      // Hidden route without an explicit activeMenu: strip the dynamic id segment from the
+      // current path to highlight the parent menu.
+      // Note: vue-router 5's router.resolve() returns the route object directly; it has no
+      // .location (that was only in VR3).
       let locPath = path
       const parmaId = route.params?.id
       if (parmaId) {
@@ -137,7 +139,8 @@ export default {
       this.viewShown = true
     },
     handleViewChange() {
-      // 此处不使用 nextTick 的原因可能是由于子组件中切换 tag 需要触发异步的 dispatch
+      // The reason nextTick isn't used here may be that switching tags in the child component
+      // needs to trigger an asynchronous dispatch
       setTimeout(() => {
         // this.setLeastMenuOpen()
       }, 500)

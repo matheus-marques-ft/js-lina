@@ -104,7 +104,7 @@ export default {
     handlerClickCopy(event) {
       const wrapper = event.target.closest('.code-block-wrapper')
       if (wrapper) {
-        // 查找里面的 code 元素
+        // Find the code element inside
         const codeElement = wrapper.querySelector('code.code-block-body')
         if (codeElement) {
           const codeText = codeElement.textContent
@@ -115,7 +115,7 @@ export default {
     handlerClickInsert(event) {
       const wrapper = event.target.closest('.code-block-wrapper')
       if (wrapper) {
-        // 查找里面的 code 元素
+        // Find the code element inside
         const codeElement = wrapper.querySelector('code.code-block-body')
         if (codeElement) {
           const codeText = codeElement.textContent

@@ -143,9 +143,11 @@ tr.item {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  // 行内用 flex 居中对齐：按钮（small）比文字高，原先 float + inline 单元格无法把按钮
-  // 纳入行高计算，按钮溢出贴到 border-bottom。flex 居中后按钮垂直居中，padding 在上下
-  // 各留出与 border 的间距。
+  // Use flex to center the row: the (small) button is taller than the text, and the
+  // previous float + inline cell couldn't include the button in the line-height
+  // calculation, causing the button to overflow onto the border-bottom. Centering
+  // with flex vertically centers the button, with padding leaving spacing from the
+  // border above and below.
   padding: 6px 8px;
   border-bottom: 1px solid #e7eaec;
 

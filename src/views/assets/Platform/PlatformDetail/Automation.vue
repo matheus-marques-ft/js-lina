@@ -83,9 +83,11 @@ export default {
     width: 100%;
   }
 
-  // 自动化方法行：method 下拉占满（右侧留出齿轮按钮空间）；params 齿轮按钮通过负 margin
-  // 叠加到 method 同一行的最右侧。负 margin = method 行高 30px + FormItem 间距(--form-section-gap)，
-  // 既能精确落在 method 行，又不会挤压后续行；绑定 CSS 变量以适配 flex+gap 布局。
+  // Automation method row: the method dropdown fills the row (leaving space on the right
+  // for the gear button); the params gear button is overlaid onto the far right of the
+  // same method row via a negative margin. negative margin = method row height 30px +
+  // FormItem spacing (--form-section-gap), which lands it precisely on the method row
+  // without squeezing subsequent rows; bound to a CSS variable to fit the flex+gap layout.
   .item-method.el-form-item {
     .el-form-item__content {
       width: calc(100% - 50px) !important;

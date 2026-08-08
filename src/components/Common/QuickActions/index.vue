@@ -12,7 +12,7 @@
 import IBox from '@/components/Common/IBox/index.vue'
 import ActionItem from './action.vue'
 
-// 查看 views/users/users/UserDetail/UserInfo.vue 使用样例
+// See views/users/users/UserDetail/UserInfo.vue for a usage example
 export default {
   name: 'QuickActions',
   components: {
@@ -62,7 +62,7 @@ export default {
 
   span {
     overflow: hidden;
-    white-space: nowrap; /* 控制文本不换行 */
+    white-space: nowrap; /* Prevent text wrapping */
     text-overflow: ellipsis;
     display: block;
   }

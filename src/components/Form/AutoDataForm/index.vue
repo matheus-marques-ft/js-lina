@@ -85,7 +85,7 @@ export default {
     iForm() {
       const iForm = {}
       Object.entries(this.form).forEach(([key, value]) => {
-        // 初始值是 choice 对象
+        // The initial value is a choice object
         if (value && typeof value === 'object' && value.label && value.value !== undefined) {
           iForm[key] = value.value
         } else if (
@@ -124,7 +124,7 @@ export default {
       this.generateColumns()
       this.$emit('afterGenerateColumns', this.totalFields)
       this.cleanFormValue()
-      // 初始化时清空错误
+      // Clear errors on initialization
       this.serverErrors = {}
       this.loading = false
     },
@@ -141,7 +141,7 @@ export default {
         return this.$route?.params?.id || this.form?.id || this.iForm?.id
       }
 
-      // 移除 url 后拼接的参数
+      // Strip the params appended after the url
       const defaultListUrl = (() => {
         try {
           const u = new URL(this.url, location.origin)
@@ -190,10 +190,10 @@ export default {
       for (const [k, v] of Object.entries(remoteMeta)) {
         let valueSet = form[k]
         if (v.type === 'nested object' && v.children) {
-          // 有一些字段属性时 nested object 类型，但是没有 children，没有children的不需要走递归逻辑，
-          // 比如：认证配置中的属性映射字段
+          // Some fields have a nested object type but no children; fields without children don't need the recursive logic,
+          // e.g. the attribute mapping field in authentication config
           if (typeof valueSet !== 'object') {
-            // 处理一些前端没有设置初始值的情况
+            // Handle cases where the frontend hasn't set an initial value
             valueSet = {}
           }
           form[k] = valueSet
@@ -219,7 +219,7 @@ export default {
       }
     },
     /**
-     * @description 仅清理 UI 的错误展示,不触发表单内容重建
+     * @description Only clears the UI error display, without triggering a rebuild of the form content
      */
     clearAllFieldErrors() {
       const elForm = this._getElFormInstance()
@@ -229,7 +229,7 @@ export default {
           item.validateState = ''
         })
       }
-      // 不修改 totalFields/attrs，避免触发 content 重建导致输入丢失
+      // Don't modify totalFields/attrs, to avoid triggering a content rebuild that would lose input
       this.serverErrors = {}
     },
     setFieldError(name, error) {
@@ -242,7 +242,7 @@ export default {
           item.validateState = error ? 'error' : ''
         }
       }
-      // 不写入 totalFields，避免触发 innerContent 变化导致表单值被覆盖
+      // Don't write to totalFields, to avoid triggering an innerContent change that would overwrite the form value
       this.serverErrors = {
         ...this.serverErrors,
         [name]: error
@@ -253,9 +253,9 @@ export default {
       Object.entries(errors || {}).forEach(([k, v]) => {
         let msg = v
         console.log(k, v)
-        // v是数组并且数组都是字符串，则拼接为字符串
+        // If v is an array and all elements are strings, join them into a string
         if (Array.isArray(v) && v.every((item) => typeof item === 'string')) msg = v.join('; ')
-        // 处理 [{"port":["请确保该值小于或者等于 65535。"]},{},{}] 这种情况
+        // Handle cases like [{"port":["Please make sure this value is less than or equal to 65535."]},{},{}]
         else if (Array.isArray(v) && v.every((item) => _.isPlainObject(item))) {
           const subMsg = []
           v.forEach((subItem) => {

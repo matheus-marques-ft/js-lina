@@ -216,7 +216,7 @@ export default {
         actionsObj = { ...actionsObj, ...fold }
       }
 
-      // 将对象转换为数组
+      // Convert the object into an array
       const actions = Object.values(actionsObj)
 
       actions.forEach((action) => {
@@ -318,7 +318,7 @@ export default {
         margin-bottom: 0;
         margin-right: 5px;
 
-        // input 框与 label 相关样式
+        // styles related to the input box and label
         :deep(.el-form-item__label) {
           display: flex;
           justify-items: flex-start;
@@ -330,22 +330,25 @@ export default {
           font-size: 11px;
         }
 
-        // 全局 .el-form .el-form-item__content 设了 line-height:32px,会让 runas 的 autocomplete
-        // (外层是 inline 的 <span>)按 32px 行高基线排布,与右侧块级 el-select 竖直错位("歪")。
-        // 这里重置行高,让各控件按 flex-end 正常对齐。
+        // The global .el-form .el-form-item__content sets line-height:32px, which makes
+        // runas's autocomplete (an inline <span> wrapper) lay out on a 32px line-height
+        // baseline, misaligning it vertically ("skewed") against the block-level el-select
+        // to its right. Reset the line-height here so each control aligns properly via flex-end.
         :deep(.el-form-item__content) {
           line-height: normal;
         }
 
-        // 全局表单样式会让错误提示参与横向 flex 布局，导致文案显示在输入框右侧。
-        // 恢复 Element Plus 的定位方式，使提示固定显示在控件下方且不挤动工具栏。
+        // The global form style makes the error message participate in the horizontal
+        // flex layout, causing the text to display to the right of the input box.
+        // Restore Element Plus's positioning so the message is fixed below the control
+        // and doesn't push the toolbar.
         :deep(.el-form-item__error) {
           position: absolute;
           top: 100%;
           left: 0;
         }
 
-        // 输入框统一 30px 标准控件高度,与 select / 按钮底部对齐
+        // Input boxes uniformly use the standard 30px control height, aligned with the bottom of select / buttons
         :deep(.el-form-item__content .inline-input),
         :deep(.el-form-item__content .inline-input .el-input__wrapper) {
           height: 30px;
@@ -358,7 +361,7 @@ export default {
           line-height: 28px;
         }
 
-        // 执行、停止按钮:图标 + 文字,30px,与输入框/下拉等高
+        // Run/stop buttons: icon + text, 30px, same height as the input box/dropdown
         :deep(.el-form-item__content .start-stop-btn) {
           display: inline-flex;
           align-items: center;
@@ -366,7 +369,7 @@ export default {
           height: 30px;
         }
 
-        // 账号策略 / 模块 / 超时:标准 el-select(30px、原生下拉),替换旧的灰色假按钮
+        // Account policy / module / timeout: standard el-select (30px, native dropdown), replacing the old fake gray button
         :deep(.el-form-item__content .toolbar-select) {
           width: 130px;
 
@@ -376,8 +379,9 @@ export default {
           }
         }
 
-        // 必填项(运行用户)此前用 -1px 负 margin 微调,导致与其它字段错位(看起来"歪");
-        // 统一为 0,与相邻 select/输入框底部对齐。
+        // The required field (run-as user) previously used a -1px negative margin tweak,
+        // causing misalignment with other fields (looked "skewed");
+        // unified to 0, aligned with the bottom of the adjacent select/input box.
         &.is-required {
           margin-bottom: 0;
         }
@@ -387,7 +391,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-        // 撑到与控件等高(30px),底部对齐后图标即与右侧 select/输入框竖直居中对齐
+        // Stretched to match the control height (30px); once bottom-aligned, the icon is vertically centered with the select/input box to its right
         height: 30px;
         margin-left: 15px;
 
@@ -435,7 +439,7 @@ export default {
       background: #fff;
     }
 
-    // 去掉 CodeMirror 聚焦时的默认虚线 outline(CM6 默认 outline:1px dotted)
+    // Remove CodeMirror's default dotted outline on focus (CM6 defaults to outline:1px dotted)
     :deep(.cm-editor.cm-focused) {
       outline: none;
     }

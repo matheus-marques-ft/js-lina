@@ -96,7 +96,7 @@ export default {
     },
     async: {
       type: Boolean,
-      default: () => false // 已选区不做异步
+      default: () => false // The selected region does not do async
     },
     isLastPage: {
       type: Boolean
@@ -109,7 +109,7 @@ export default {
       default: () => 'var(--color-primary)'
     },
     asyncSearchFlag: {
-      // 是否设置了异步搜索方法
+      // Whether an async search method has been configured
       type: Boolean
     },
     showClearBtn: {
@@ -118,8 +118,8 @@ export default {
   },
   data() {
     return {
-      districtListMock: [], // 展示的数据 （搜索和分页会自动修改这个数组）
-      checkedData: [], // 已选择，数据格式：[id,id,id...]
+      districtListMock: [], // Displayed data (search and pagination automatically update this array)
+      checkedData: [], // Already selected, data format: [id, id, id...]
       isIndeterminate: false,
       checkAll: false,
       searchWord: '',
@@ -128,21 +128,21 @@ export default {
       pageIndex: 0,
       disabledPre: true,
       disabledNex: false,
-      asyncSearch: false, // 要执行异步搜索的标记
-      asyncPageIndex: 1, // 异步分页的 pageIndex
-      asyncSearchPageIndex: 1, // 异步搜索的 pageIndex,
+      asyncSearch: false, // Flag indicating an async search should be run
+      asyncPageIndex: 1, // pageIndex for async pagination
+      asyncSearchPageIndex: 1, // pageIndex for async search,
       defaultPrev: '< ' + (i18n?.global?.tc?.('PagePrev') || 'Prev'),
       defaultNext: (i18n?.global?.tc?.('PageNext') || 'Next') + ' >'
     }
   },
   watch: {
-    // 搜索框的监听器
+    // Watcher on the search box
     searchWord(newWord) {
       this.$emit('search-word', newWord, this.operateId)
     },
-    // districtListMock 和 checkAll 的监听器
+    // Watcher on districtListMock and checkAll
     districtListMock() {
-      // 当方框中无已选择的数据时，不能勾选checkBox
+      // The checkbox cannot be checked when there is no selected data in the box
       if (this.checkedData.length === 0) {
         this.checkAll = false
         this.isIndeterminate = false
@@ -151,7 +151,7 @@ export default {
     checkedData(newWord) {
       this.$emit('check-disable', newWord, this.operateId)
     },
-    // 当列表中无数据时，不能勾选checkBox
+    // The checkbox cannot be checked when the list has no data
     checkAll() {
       this.checkAll = this.districtListMock.length === 0 ? false : this.checkAll
     },
@@ -171,7 +171,7 @@ export default {
       this.asyncSearchFlag &&
         this.$emit('get-data-by-keyword', this.searchWord, this.asyncSearchPageIndex)
     },
-    // 分页数据
+    // Paginated data
     initData() {
       this.len = this.dataShowList.length
       this.total = Math.ceil(this.len / this.pageSize)
@@ -193,23 +193,23 @@ export default {
         this.districtListMock = this.dataShowList.slice(this.pageIndex * this.pageSize, this.len)
       }
     },
-    // 异步获取的数据，检查分页按钮可用性
+    // Data fetched asynchronously; check pagination button availability
     asyncInitData() {
-      // 取消勾选
+      // Uncheck
       this.checkedData = []
-      // 分页按钮可用性
+      // Pagination button availability
       this.disabledNex = this.isLastPage
       this.disabledPre =
         this.asyncSearchFlag && this.asyncSearch
           ? this.asyncSearchPageIndex <= 1
           : this.asyncPageIndex <= 1
-      // 赋值
+      // Assign
       this.districtListMock = this.dataShowList
     },
-    // 上一页
+    // Previous page
     prev() {
       if (this.async) {
-        // 异步获取数据
+        // Fetch data asynchronously
         this.disabledPre = true
         this.asyncSearchFlag && this.asyncSearch
           ? this.$emit(
@@ -223,10 +223,10 @@ export default {
         this.pageData()
       }
     },
-    // 下一页
+    // Next page
     next() {
       if (this.async) {
-        // 异步获取数据
+        // Fetch data asynchronously
         this.disabledNex = true
         this.asyncSearchFlag && this.asyncSearch
           ? this.$emit('get-data-by-keyword', this.searchWord, ++this.asyncSearchPageIndex)
@@ -236,21 +236,21 @@ export default {
         this.pageData()
       }
     },
-    // 单选
+    // Single check
     handleCheckedChange(value) {
       const checkedCount = value.length
       this.checkAll = checkedCount === this.districtListMock.length
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.districtListMock.length
-      // 子传父
+      // Pass from child to parent
       this.$emit('check-district', value)
     },
-    // 全选
+    // Select all
     handleCheckAllChange(val) {
       this.checkedData = val
         ? this.districtListMock.filter((val) => !val.disabled).map((val) => val)
         : []
       this.isIndeterminate = false
-      // 子传父
+      // Pass from child to parent
       this.$emit('check-district', this.checkedData)
     },
     clearInp() {
@@ -312,13 +312,16 @@ export default {
     height: 335px;
 
     .el-transfer-panel__filter {
-      // 该 div 同时带了 EP 的 .el-input 类(inline-flex + width:100%),会把 input 与图标当作
-      // flex 项并排错位,且 width:100% 叠加左右 margin 会溢出面板。强制 block + width:auto:
-      // 块级自动填满(减去 margin),input 独占整行,图标绝对定位覆盖在左侧。
+      // This div also carries Element Plus's .el-input class (inline-flex + width:100%),
+      // which would treat the input and icon as flex items sitting side by side out of
+      // place, and width:100% combined with left/right margin would overflow the panel.
+      // Force block + width:auto: block-level fills the available width (minus margin),
+      // the input takes the full row, and the icon is absolutely positioned over the left.
       display: block;
       width: auto;
-      // 该 div 还带 EP 的 .el-input 类,会被赋予固定 height:var(--el-input-height,32px);
-      // 这里改回 auto,让容器高度由内部 30px 的 input 决定,避免 32/30 错位
+      // This div also carries Element Plus's .el-input class, which gives it a fixed
+      // height:var(--el-input-height,32px); reset it back to auto here so the container's
+      // height is driven by the inner 30px input, avoiding a 32/30 mismatch
       height: auto;
       box-sizing: border-box;
       position: relative;

@@ -22,28 +22,28 @@ export default {
   inheritAttrs: false,
   props: {
     /**
-     * 是否是文字按钮。
+     * Whether this is a text button.
      */
     isText: {
       type: Boolean,
       default: false
     },
     /**
-     * 如果没有这个props，则通过attrs传`type`时，会导致el-button的`native-type`也被改变
+     * Without this prop, passing `type` via attrs would also change el-button's `native-type`
      */
     type: String,
     /**
-     * 点击按钮绑定的函数
+     * The function bound to the button click
      */
     click: {
       type: Function
     },
     /**
-     * click函数的参数
+     * Arguments for the click function
      */
     params: {},
     /**
-     * 点击事件的回调函数
+     * Callback function for the click event
      */
     callback: {
       type: Function,
@@ -56,7 +56,7 @@ export default {
     }
   },
   methods: {
-    // 监控按钮的Promise进程
+    // Track the button's Promise progress
     handleClick() {
       if (!this.click) return
 
@@ -64,7 +64,7 @@ export default {
       Promise.resolve(this.click(this.params))
         .then((flag) => {
           if (flag === false) return
-          // 调用父组件中的数据刷新方法
+          // Call the data refresh method in the parent component
           this.callback()
         })
         .catch((e) => {})

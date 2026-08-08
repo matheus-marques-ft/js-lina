@@ -203,7 +203,7 @@ export default {
           top: 0,
           left: 0,
           icon: 'rect',
-          // 图例标记的图形宽度
+          // Width of the legend marker graphic
           itemWidth: 10,
           itemHeight: 10,
           itemGap: 12
@@ -227,7 +227,7 @@ export default {
             },
             axisLabel: {
               textStyle: {
-                // 坐标轴颜色
+                // Axis color
                 color: '#8F959E'
               }
             },

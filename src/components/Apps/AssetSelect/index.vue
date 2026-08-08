@@ -147,7 +147,7 @@ export default {
     }
   },
   methods: {
-    // 暴露给模板使用(formatAssetLabel 是模块级函数,模板无法直接访问)
+    // Exposed for use in the template (formatAssetLabel is a module-level function, not directly accessible from the template)
     formatAssetLabel(item) {
       return formatAssetLabel(item)
     },

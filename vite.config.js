@@ -10,8 +10,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const assetsDir = 'assets'
 const outputDir = 'lina'
 
-// 配置加载即求值：生产环境下等于 Docker 构建时刻，开发环境下等于 dev server 启动时刻。
-// 容器默认 UTC，这里统一格式化为北京时间避免时区困惑。
+// The config is evaluated as soon as it's loaded: in production that's the Docker build
+// time, in development it's when the dev server starts. Containers default to UTC, so we
+// consistently format this as Beijing time to avoid timezone confusion.
 const BUILD_TIME = new Date().toLocaleString('zh-CN', {
   timeZone: 'Asia/Shanghai',
   hour12: false

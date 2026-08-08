@@ -166,7 +166,7 @@ export default {
           actions: {
             prop: 'actions',
             label: this.$t('Actions'),
-            // data 初始化早于 computed，不能在这里读取 dynamicActionWidth。
+            // data is initialized before computed, so dynamicActionWidth cannot be read here.
             width: this.$i18n.locale === 'pt-br' ? '160px' : '130px',
             formatter: ActionsFormatter,
             formatterArgs: {

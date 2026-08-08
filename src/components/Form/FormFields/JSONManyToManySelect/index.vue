@@ -124,12 +124,15 @@ export default {
     DataTable,
     ResourceSelect
   },
-  // 根节点是 <div>。父级(DataForm)通过 v-on 绑定了 input/change/update:modelValue 等
-  // 监听器，Vue3 默认会把这些透传成根 <div> 的原生 DOM 监听器；内部 el-radio-group 的
-  // 原生 radio input/change 事件冒泡上来会带上 target.value(如 "all"/"attrs")，污染表单
-  // 值，导致 value prop 收到 String 而非 Object 报错。
-  // inheritAttrs:false 让这些监听器只留在 $attrs、不绑到根节点，组件只通过显式
-  // $emit('input', object) 更新表单值，彻底杜绝原生事件冒泡污染。
+  // The root node is a <div>. The parent (DataForm) binds listeners like
+  // input/change/update:modelValue via v-on; by default Vue3 passes these through as
+  // native DOM listeners on the root <div>. The internal el-radio-group's native radio
+  // input/change events bubble up carrying target.value (e.g. "all"/"attrs"),
+  // polluting the form value and causing the value prop to receive a String instead of
+  // an Object, which throws an error.
+  // inheritAttrs:false keeps these listeners only in $attrs and not bound to the root
+  // node; the component updates the form value only via an explicit
+  // $emit('input', object), completely preventing native event bubbling pollution.
   inheritAttrs: false,
   emits: ['input'],
   props: {
@@ -331,7 +334,7 @@ export default {
         this.tableConfig.totalData.splice(this.editIndex, 1)
       }
       const allAttrs = this.tableConfig.totalData
-      // 因为可能 attr 的 name 会重复，所以需要先删除再添加
+      // since an attr's name may be duplicated, it needs to be removed before being added
       const setIndex = allAttrs.findIndex((attr) => attr.name === form.name)
       if (setIndex === -1) {
         allAttrs.push(Object.assign({}, form))
@@ -346,8 +349,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// 根节点必须撑满：外层 .el-form-item__content 是 flex column + align-items:flex-start，
-// 不会自动拉伸块级子元素，否则本组件(radio + 属性表格)会按内容宽度收缩、不占满表单项宽度。
+// The root node must fill the width: the outer .el-form-item__content is a flex
+// column with align-items:flex-start and won't auto-stretch block-level children;
+// otherwise this component (radio + attribute table) would shrink to its content
+// width instead of filling the form item's width.
 .json-m2m-select {
   width: 100%;
 }

@@ -154,7 +154,7 @@ export default {
           this.selectAssetRows.push(item)
         }
       })
-      // 移除已经取消选择的资产
+      // Remove assets that have been deselected
       this.selectAssetRows = this.selectAssetRows.filter((r) => valueSelected.includes(r.id))
       this.selectAssets = valueSelected
       this.dialogVisible = false
@@ -208,7 +208,7 @@ export default {
     display: flex;
     flex-direction: column;
 
-    // 卡片体撑满剩余高度并内部滚动，替代固定的 calc(100vh - 200px)
+    // Card body fills the remaining height and scrolls internally, replacing the fixed calc(100vh - 200px)
     :deep(.el-card__body) {
       flex: 1;
       min-height: 0;

@@ -65,7 +65,7 @@ export default {
                 .delete(url)
                 .then((res) => {
                   this.$message.success(this.$tc('DeleteSuccessMsg'))
-                  // 局部刷新当前表格，替代 common/reload 的整页重建
+                  // Partially refresh the current table instead of a full-page rebuild via common/reload
                   this.$refs.ListTable.reloadTable()
                 })
                 .catch((error) => {
@@ -109,7 +109,7 @@ export default {
         onAddSuccess: (items, that) => {
           this.$log.debug('AssetSelect value', that.assets)
           this.$message.success(this.$tc('UpdateSuccessMsg'))
-          // 局部刷新当前表格，替代 common/reload 的整页重建
+          // Partially refresh the current table instead of a full-page rebuild via common/reload
           this.$refs.ListTable.reloadTable()
         }
       },

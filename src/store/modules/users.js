@@ -74,7 +74,7 @@ const mutations = {
     state.consoleOrgs = state.consoleOrgs.filter((i) => i.id !== org.id)
   },
   SET_CURRENT_ORG(state, org) {
-    // 系统组织不设置成 Pre org
+    // Do not set the system organization as the Pre org
     const currentOrg = state.currentOrg
     if (currentOrg && !currentOrg.autoEnter && !currentOrg.is_system) {
       state.preOrg = currentOrg
@@ -108,7 +108,7 @@ const actions = {
             reject('Verification failed, please Login again.')
           }
           if (typeof response !== 'object') {
-            // 后端 middleware 对 API 做了校验，这里返回可能是 302 重定向, response 为 string 类型
+            // The backend middleware validates the API; the response here may be a 302 redirect, in which case response is a string
             resolve(response)
             return
           }

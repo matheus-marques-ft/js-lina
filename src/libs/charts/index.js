@@ -20,12 +20,13 @@ import {
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import VueECharts from 'vue-echarts'
-// vue-echarts 7+ 把根元素 x-vue-echarts{width:100%;height:100%} 的样式拆到了单独的 css,
-// 必须显式导入,否则图表容器尺寸为 0,报 "[ECharts] Can't get DOM width or height"
+// vue-echarts 7+ moved the root element's x-vue-echarts{width:100%;height:100%} styles into a
+// separate css file, which must be imported explicitly, otherwise the chart container size is 0
+// and it errors with "[ECharts] Can't get DOM width or height"
 import 'vue-echarts/style.css'
 
 /**
- * 初始化并注册 ECharts 扩展
+ * Initialize and register ECharts extensions
  */
 function initECharts() {
   use([
@@ -49,22 +50,22 @@ function initECharts() {
 }
 
 /**
- * Charts 插件
- * 统一封装 ECharts 相关的所有设置
+ * Charts plugin
+ * Unified wrapper for all ECharts-related setup
  */
 const ChartsPlugin = {
   install(app) {
-    // 初始化并注册 ECharts 扩展
+    // Initialize and register ECharts extensions
     initECharts()
 
-    // 注册 ECharts 组件到 Vue 应用
+    // Register ECharts components on the Vue app
     app.component('Echarts', VueECharts)
     app.component('Echart', VueECharts)
   }
 }
 
-// 导出插件，供 app.use() 使用
+// Export the plugin for use with app.use()
 export default ChartsPlugin
 
-// 导出 VueECharts 组件，供其他地方使用
+// Export the VueECharts component for use elsewhere
 export { default as VueECharts } from 'vue-echarts'

@@ -150,10 +150,10 @@ export default {
         showMenu: false,
         showRefresh: true,
         showAssets: false,
-        // ?assets=0不显示资产. =1显示资产
+        // ?assets=0 hides assets, =1 shows assets
         treeUrl: `/api/v1/terminal/command-storages/tree/?real=1&date_from=${dateFrom}&date_to=${dateTo}&asset_id=${this.assetId}`,
         view: {
-          // 添加禁用颜色区分
+          // Add disabled color differentiation
           fontCss: (treeId, treeNode) => {
             if (treeNode.chkDisabled) {
               return {
@@ -165,7 +165,7 @@ export default {
         },
         callback: {
           onSelected: (event, treeNode) => {
-            // 禁止点击根节点
+            // Disallow clicking the root node
             if (treeNode.id === 'root') {
               return
             }

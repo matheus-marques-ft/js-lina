@@ -171,13 +171,13 @@ export default {
               vm.$emit('submitError', error)
               const response = error.response
               const data = response.data
-              // 不要逐个设置字段的 attrs.error 或改动 fields 引用。
-              // 这样会触发表单 content 重建，导致用户已输入的内容被覆盖/清空，
-              // 且可能出现只能显示一个字段错误的现象。
-              // 这里改为使用 AutoDataForm 暴露的 setErrors(errors) 覆盖式设置：
-              // - 直接同步到 UI 的 el-form-item.validateMessage
-              // - 支持同时显示多个字段错误
-              // - 不修改 fields/attrs 引用，避免输入丢失
+              // Do not set attrs.error on fields one by one, or change the fields reference.
+              // Doing so would trigger a form content rebuild, overwriting/clearing what the user
+              // already typed, and could result in only a single field error being shown.
+              // Instead, use the setErrors(errors) exposed by AutoDataForm to set errors by overwriting:
+              // - syncs directly to el-form-item.validateMessage in the UI
+              // - supports showing multiple field errors at once
+              // - does not modify the fields/attrs reference, avoiding input loss
               if (response.status === 400 && data && typeof data === 'object') {
                 this.$refs.form.setErrors(data)
               }

@@ -84,7 +84,7 @@ function cleanRoute(tmp, parent) {
     tmp.meta = {}
   }
 
-  // 根据层级来标识 类型是 view, app, resource 还是crud
+  // Determine whether the type is view, app, resource, or crud based on the level
   if (!tmp.meta.level) {
     tmp.meta.level = parent.meta.level + 1
   }
@@ -97,31 +97,32 @@ function cleanRoute(tmp, parent) {
   const pathSlice = path.split('/')
   const pathValue = pathSlice[pathSlice.length - 1]
 
-  // 不再自动生成 name (vue-router 5 对父子同名严格报错,
-  // 且容器路由不需要 name——没人通过 name 导航到它们)
+  // No longer auto-generating name (vue-router 5 strictly errors on
+  // parent/child sharing the same name, and container routes don't need a name —
+  // nothing navigates to them by name)
 
-  // 标识路由是哪个 view
+  // Identify which view the route belongs to
   if (!tmp.meta.view) {
     tmp.meta.view = tmp.meta.level === 1 ? pathValue : parent.meta?.view
   }
-  // 标识路由是哪个 Django app
+  // Identify which Django app the route belongs to
   if (!tmp.meta.app && tmp.meta.level >= 2) {
     tmp.meta.app = tmp.meta.level === 2 ? pathValue : parent.meta?.app
   }
-  // 标识路由是哪个 resource(Model)
+  // Identify which resource (Model) the route belongs to
   if (!tmp.meta.resource && tmp.meta.level >= 3) {
     const resource = getResourceNameByPath(pathValue)
     tmp.meta.resource = tmp.meta.level === 3 ? resource : parent.meta?.resource
   }
-  // 标识路由的动作是哪个
+  // Identify the route's action
   if (!tmp.meta.action) {
     tmp.meta.action = cleanRouteAction(tmp)
   }
-  // 设置默认的权限
+  // Set the default permissions
   if (!tmp.meta.permissions) {
     tmp.meta.permissions = getRouteDefaultPerms(tmp)
   }
-  // 设置是否显示 Organization, 该参数是继承的
+  // Set whether to show Organization; this parameter is inherited
   if (!tmp.meta.showOrganization && parent.meta.showOrganization !== undefined) {
     tmp.meta.showOrganization = parent.meta.showOrganization
   }
@@ -130,14 +131,14 @@ function cleanRoute(tmp, parent) {
     tmp.meta.disableOrgsChange = parent.meta.disableOrgsChange
   }
 
-  // 翻译一下 title 吧
+  // Translate the title
   if (tmp.meta.title) {
     tmp.meta.title = i18n.global.t(tmp.meta.title)
   }
   if (tmp.meta.menuTitle) {
     tmp.meta.menuTitle = i18n.global.t(tmp.meta.menuTitle)
   }
-  // 设置 fullPath
+  // Set fullPath
   const parentFullPath = _.trimEnd(parent.meta.fullPath, '/')
   if (!tmp.meta.fullPath) {
     if (tmp.path && tmp.path[0] === '/') {
@@ -147,7 +148,7 @@ function cleanRoute(tmp, parent) {
     }
     // debug('Full path: ', tmp.meta.fullPath)
   }
-  // 设置默认active menu
+  // Set the default active menu
   if (tmp.meta.type === 'crud' && !tmp.meta.activeMenu) {
     tmp.meta.activeMenu = parentFullPath
     // Todo

@@ -391,7 +391,7 @@ export default {
             axisTick: {
               show: false
             },
-            // 坐标轴线样式
+            // Axis line style
             splitLine: {
               show: true,
               lineStyle: {

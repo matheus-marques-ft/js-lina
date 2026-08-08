@@ -71,7 +71,7 @@ const actions = {
             if (faviconURL) {
               link.href = faviconURL
             }
-            // 动态修改Title
+            // Dynamically update the title
             document.title = data?.INTERFACE?.login_title || ''
           }
           const themeColors = data?.INTERFACE?.theme_info?.colors || {}
@@ -84,7 +84,7 @@ const actions = {
         .catch((error) => {
           if (error.response && error.response.status === 400) {
             alert(
-              '自 v3.6 版本开始，要求配置可信任域名或主机，否则无法正常使用, 查看: https://github.com/jumpserver/jumpserver/releases/tag/v3.6.0'
+              'Starting from v3.6, a trusted domain or host must be configured, otherwise the application will not work correctly. See: https://github.com/jumpserver/jumpserver/releases/tag/v3.6.0'
             )
           }
           reject(error)

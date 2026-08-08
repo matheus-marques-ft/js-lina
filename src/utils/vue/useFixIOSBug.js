@@ -2,10 +2,10 @@ import { onMounted } from 'vue'
 import { useStore } from 'vuex'
 
 /**
- * useFixIOSBug - 修复 iOS 设备菜单点击 bug 的 composable
- * 替代 FixiOSBug mixin
+ * useFixIOSBug - a composable that fixes the menu-click bug on iOS devices
+ * Replaces the FixiOSBug mixin
  *
- * @param {import('vue').Ref} subMenuRef - el-sub-menu 组件的 ref
+ * @param {import('vue').Ref} subMenuRef - ref of the el-sub-menu component
  */
 export function useFixIOSBug(subMenuRef) {
   const store = useStore()

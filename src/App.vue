@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- 使用 key 而不是 v-if 来强制重新渲染 router-view，避免根节点被完全卸载导致的 DOM insertBefore 错误 -->
+    <!-- Use key instead of v-if to force router-view to re-render, avoiding a DOM insertBefore error caused by fully unmounting the root node -->
     <router-view :key="isRouterAlive" />
   </div>
 </template>
@@ -45,9 +45,9 @@ export default {
       }
     }
   },
-  // Vue 3 错误捕获钩子 - 捕获子组件错误，防止整个应用崩溃
+  // Vue 3 error capture hook - catches child component errors, preventing the whole app from crashing
   errorCaptured(err, instance, info) {
-    // 在开发环境下打印详细错误信息
+    // Print detailed error info in dev environment
     if (IS_DEV) {
       console.error('Error Captured in App:', err)
       console.error('Component instance:', instance)
@@ -56,17 +56,17 @@ export default {
       console.error('Component Error:', err?.message || err)
     }
 
-    // 尝试显示友好的错误提示
+    // Try to show a friendly error message
     try {
       if (this.$message && typeof this.$message.error === 'function') {
-        this.$message.error(err?.message || '组件加载出错，请刷新页面重试')
+        this.$message.error(err?.message || 'Component failed to load, please refresh the page and try again')
       }
     } catch (e) {
-      // 如果 message 服务不可用，忽略
+      // Ignore if the message service is unavailable
     }
 
-    // 返回 false 可以阻止错误继续向上传播
-    // 但这里返回 true，让全局错误处理器也能处理
+    // Returning false would stop the error from propagating further
+    // but we return true here so the global error handler can also process it
     return true
   },
   methods: {

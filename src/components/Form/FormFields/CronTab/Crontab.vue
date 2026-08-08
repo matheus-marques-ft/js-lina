@@ -172,7 +172,7 @@ export default {
   watch: {
     expression: 'resolveExp',
     hideComponent(value) {
-      // 隐藏部分组件
+      // hide some components
     }
   },
   mounted: function () {
@@ -184,11 +184,11 @@ export default {
       return true
     },
     resolveExp() {
-      // 反解析 表达式
+      // parse the expression back out
       if (this.expression) {
         const arr = this.expression.split(' ')
         if (arr.length >= 5) {
-          // 5 位以上是合法表达式
+          // 5 or more fields is a valid expression
           const obj = {
             min: arr[0],
             hour: arr[1],
@@ -205,23 +205,23 @@ export default {
           }
         }
       } else {
-        // 没有传入的表达式 则还原
+        // no expression was passed in, so reset
         this.clearCron()
       }
     },
-    // tab切换值
+    // tab switch value
     tabCheck(index) {
       this.tabActive = index
     },
-    // 由子组件触发，更改表达式组成的字段值
+    // triggered by a child component, changes the field value that makes up the expression
     updateContabValue(name, value, from) {
       this.contabValueObj[name] = value
       if (from && from !== name) {
-        // debug(`来自组件 ${from} 改变了 ${name} ${value}`)
+        // debug(`component ${from} changed ${name} ${value}`)
         this.changeRadio(name, value)
       }
     },
-    // 赋值到组件
+    // assign to the component
     changeRadio(name, value) {
       const arr = ['second', 'min', 'hour', 'month']
       const refName = 'cron' + name
@@ -326,9 +326,9 @@ export default {
       }
       this.$refs[refName].radioValue = insVlaue
     },
-    // 表单选项的子组件校验数字格式（通过-props传递）
+    // the form option's child component validates number format (passed via props)
     checkNumber(value, minLimit, maxLimit) {
-      // 检查必须为整数
+      // check that it must be an integer
       value = Math.floor(value)
       if (value < minLimit) {
         value = minLimit
@@ -337,11 +337,11 @@ export default {
       }
       return value
     },
-    // 隐藏弹窗
+    // hide the popup
     hidePopup() {
       this.$emit('hide')
     },
-    // 填充表达式
+    // fill in the expression
     submitFill() {
       const minMinutes = 60
       const crontabDiffMin = this.crontabDiff / 1000 / 60
@@ -354,7 +354,7 @@ export default {
       this.hidePopup()
     },
     clearCron() {
-      // 还原选择项
+      // restore the selection
       this.contabValueObj = {
         second: '0',
         min: '0',

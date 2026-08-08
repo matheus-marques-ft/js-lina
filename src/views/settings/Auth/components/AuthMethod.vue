@@ -114,7 +114,7 @@ export default {
           text-overflow: ellipsis;
           white-space: nowrap;
           font-weight: 500;
-          min-height: 17px; /* 确保标题区域有固定高度 */
+          min-height: 17px; /* Ensure the title area has a fixed height */
           line-height: 32px;
         }
 
@@ -132,7 +132,7 @@ export default {
           word-break: keep-all;
           white-space: normal;
           line-height: 1.4;
-          height: 20px; /* 最大高度：2行 * 1.4行高 * 12px字体 ≈ 34px */
+          height: 20px; /* Max height: 2 lines * 1.4 line-height * 12px font ≈ 34px */
         }
       }
 

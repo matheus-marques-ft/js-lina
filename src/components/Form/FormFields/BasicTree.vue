@@ -74,9 +74,10 @@ export default {
         return this.setTreeReadonly(this.tree)
       }
     },
-    // 默认展开一层:根节点 value 与外部传入的 defaultExpanded 合并。
-    // el-tree 只在初始化时读取 default-expanded-keys,必须在首次渲染前就备好
-    // (原先在 mounted 里 push 太晚,且改动了 prop,故从不生效)
+    // Expand one level by default: merge the root node's value with the externally
+    // passed defaultExpanded. el-tree only reads default-expanded-keys at init time,
+    // so it must be ready before the first render
+    // (previously pushing in mounted was too late, and it mutated a prop, so it never took effect)
     iDefaultExpanded() {
       const keys = [...this.defaultExpanded]
       const rootValue = this.iTree?.[0]?.value

@@ -18,11 +18,15 @@ jobs:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
 
+      - name: Extract repository owner
+        id: owner
+        run: echo "OWNER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Image
@@ -31,7 +35,7 @@ jobs:
           context: .
           push: true
           file: Dockerfile
-          tags: ghcr.io/jumpserver/${{ matrix.component }}:${{ matrix.version }}
+          tags: ghcr.io/${{ env.OWNER }}/${{ matrix.component }}:${{ matrix.version }}
           platforms: linux/amd64
           build-args: |
             VERSION=${{ matrix.version }}

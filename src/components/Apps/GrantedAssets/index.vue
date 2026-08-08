@@ -70,7 +70,7 @@ export default {
         showAssets: false,
         showSearch: false,
         url: this.tableUrl,
-        // ?assets=0不显示资产. =1显示资产
+        // ?assets=0 hides assets. =1 shows assets
         treeUrl: this.treeUrl,
         notShowBuiltinTree: true,
         callback: {

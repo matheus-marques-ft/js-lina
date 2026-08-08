@@ -1,3 +1,3 @@
 <template>
-  <div>Todo: 抽象 Secret</div>
+  <div>Todo: abstract Secret</div>
 </template>

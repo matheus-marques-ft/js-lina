@@ -592,7 +592,7 @@ export default {
           type: 'jdmc',
           nextPath: '/jdmc/'
         },
-        // 在开启 JDMC 且有 rbac.view_jdmc 权限时，才显示
+        // Only shown when JDMC is enabled and the rbac.view_jdmc permission is granted
         hidden: ({ settings }) => !settings['JDMC_ENABLED']
       },
       beforeEnter: (_to, from, next) => {
@@ -622,7 +622,7 @@ export default {
           nextPath: '/jdmc/sys-management/sys-auth',
           enabled: ({ settings }) => useJDMCLicense(settings)
         },
-        // 旧 JDMC 许可证模式需要 rbac.view_jdmc 权限，KOTL 和普通模式均由 Core 管理
+        // The legacy JDMC license mode requires the rbac.view_jdmc permission; both KOTL and normal mode are managed by Core
         hidden: ({ settings }) => useJDMCLicense(settings) && !hasPermission('rbac.view_jdmc')
       }
     }

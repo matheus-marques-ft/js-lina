@@ -45,7 +45,7 @@ export default {
     const endValue = this.dateEnd || this.$route.query['date_end']
     const dateStart = new Date(startValue)
     const dateTo = new Date(endValue)
-    // 无有效初始值时置空，避免把 Invalid Date 绑进 v-model 导致面板异常、无法点选
+    // Set to null when there's no valid initial value, to avoid binding an Invalid Date into v-model, which would break the panel and make it unclickable
     const hasValidRange = !isNaN(dateStart.getTime()) && !isNaN(dateTo.getTime())
     if (hasValidRange && this.toMinMax) {
       dateStart.setHours(0, 0, 0, 0)
@@ -53,7 +53,7 @@ export default {
     }
     return {
       value: hasValidRange ? [dateStart, dateTo] : null,
-      // Element Plus 的 default-time 需要 Date 数组（起止各一个），不能用字符串
+      // Element Plus's default-time requires a Date array (one for start and one for end); a string cannot be used
       defaultTime: [new Date(2000, 0, 1, 0, 0, 1), new Date(2000, 0, 1, 23, 59, 59)],
       popperOptions: {
         modifiers: [
@@ -147,7 +147,7 @@ html:lang(pt-br) {
 </style>
 
 <style lang="scss">
-// 日期面板 teleport 到 body，窄窗口下限制在视口内；双日历宽度超出时由浮层横向滚动。
+// The date panel is teleported to body; on narrow windows it is constrained within the viewport, and when the dual-calendar width overflows, the popup scrolls horizontally.
 .datetime-range-picker-popper.el-picker__popper {
   box-sizing: border-box;
   max-width: calc(100vw - 24px);

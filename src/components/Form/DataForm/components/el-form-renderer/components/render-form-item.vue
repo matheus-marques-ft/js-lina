@@ -69,8 +69,8 @@
           </el-tooltip>
           <span v-if="data.helpText">{{ data.helpText }}</span>
         </el-checkbox>
-        <!-- radio 使用 value 属性来表示选中值 -->
-        <!-- FYI: radio 的 value 属性可以在没有 radio-group 时用来关联到同一个 v-model -->
+        <!-- radio uses the value attribute to represent the selected value -->
+        <!-- FYI: radio's value attribute can be used to bind to the same v-model even without a radio-group -->
         <el-radio
           v-bind="opt"
           v-else-if="data.type === 'radio-group'"
@@ -191,12 +191,12 @@ export default {
       }
       return this.itemValue
     },
-    // 解构运算符会处理 undefined 的情况
+    // The spread operator handles the undefined case
     componentProps: ({ data: { el }, propsInner }) => ({ ...el, ...propsInner }),
     hasReadonlyContent: ({ data: { type } }) => _includes(['input', 'select'], type),
     hiddenStatus: ({ data: { hidden = () => false }, data, value }) => hidden(value, data),
     enableWhenStatus: ({ data: { enableWhen }, value }) => getEnableWhenStatus(enableWhen, value),
-    // 是否显示
+    // Whether to show
     _show() {
       return !this.hiddenStatus && this.enableWhenStatus
     },
@@ -218,10 +218,11 @@ export default {
           trim = true
         }
       } = this
-      // updateForm 由父组件 el-form-renderer 在 mounted 阶段才注入到共享 context 中，
-      // 而子组件的 mounted 先于父组件执行，若在此处解构 updateForm 会捕获到初始的 null，
-      // 且 context 为普通对象（非响应式），后续赋值不会让本 computed 重新求值。
-      // 因此必须在事件触发时（调用时）再从 context 读取，保证拿到已注入的函数。
+      // updateForm is only injected into the shared context by the parent el-form-renderer during its
+      // mounted phase, and a child's mounted runs before its parent's. If updateForm were destructured
+      // here it would capture the initial null, and since context is a plain (non-reactive) object,
+      // a later assignment wouldn't cause this computed to re-evaluate. So it must be read from the
+      // context at event-trigger time (call time) to guarantee getting the already-injected function.
       const getUpdateForm = () => this.formRendererContext.updateForm
       return {
         ..._frompairs(
@@ -230,7 +231,7 @@ export default {
             (...args) => handler(args, getUpdateForm())
           ])
         ),
-        // 手动更新表单数据
+        // Manually update the form data
         input: (value, ...rest) => {
           this.handleValueUpdate({
             id,
@@ -267,7 +268,7 @@ export default {
           this.$emit('updateValue', { id, value })
           originOnChange([value, ...rest], getUpdateForm())
 
-          // FIXME: rules 的 trigger 只写了 blur，依然会在 change 的时候触发校验！
+          // FIXME: even though rules' trigger is set to blur only, validation still fires on change!
           this.triggerValidate(id)
         }
       }
@@ -284,9 +285,9 @@ export default {
   watch: {
     data: validator,
     /**
-     * 这里其实用 remote 处理了两件事。有机会是可以拆分的
-     * 1. 基本用法，配置 url 后即可从远程获取某个 prop 注入到组件
-     * 2. 针对 select、checkbox-group & radio-group 组件，会直接将 resp 作为 options 处理；label & value 也是直接为这个场景而生的
+     * remote actually handles two things here. It could be split apart if there's an opportunity to.
+     * 1. Basic usage: configure a url and a prop is fetched remotely and injected into the component
+     * 2. For select, checkbox-group & radio-group components, the resp is treated directly as options; label & value exist specifically for this case
      */
     'data.remote': {
       handler(v, oldV) {
@@ -299,7 +300,7 @@ export default {
         const {
           url,
           request = () => this.$axios.get(url).then((resp) => resp.data),
-          prop = 'options', // 默认处理 el-cascader 的情况
+          prop = 'options', // Handles the el-cascader case by default
           dataPath = '',
           onResponse = (resp) => {
             if (dataPath) resp = _get(resp, dataPath)
@@ -344,11 +345,11 @@ export default {
     handleValueUpdate({ id, value, rest = [], atChange = noop, originInput = noop, updateForm }) {
       value = this.normalizeEmittedValue(value)
       this.$emit('updateValue', { id, value })
-      // 更新表单时调用
+      // Called when updating the form
       atChange(id, value)
       originInput([value, ...rest], updateForm)
 
-      // FIXME: rules 的 trigger 只写了 blur，依然会在 input 的时候触发校验！
+      // FIXME: even though rules' trigger is set to blur only, validation still fires on input!
       this.triggerValidate(id)
     },
     triggerValidate(id) {
@@ -356,8 +357,8 @@ export default {
       if (this.isBlurTrigger) return
 
       /**
-       * 使用注入的 formRendererContext 获取 ElForm 实例
-       * 替代原来的 $parent 链式访问
+       * Use the injected formRendererContext to get the ElForm instance
+       * instead of the previous $parent chain access
        */
       const elForm = this.formRendererContext?.getElForm?.()
       if (!elForm) return
@@ -387,8 +388,8 @@ export default {
 }
 
 /*
- * 表单内提示用的 el-alert（.help-warning）字号/图标/内间距与页面级 alert 统一：
- * 文字 12px、图标 16px，避免表单内提示比页面 alert 偏大或间距不一致。
+ * The el-alert (.help-warning) used for in-form tips has its font size/icon/padding aligned with
+ * the page-level alert: 12px text, 16px icon, to avoid the in-form tip looking larger or inconsistently spaced.
  */
 .help-block :deep(.help-warning) {
   padding: 8px 12px;

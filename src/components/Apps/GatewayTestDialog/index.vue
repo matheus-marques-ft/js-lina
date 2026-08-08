@@ -66,8 +66,8 @@ export default {
   emits: ['update:visible', 'update:port'],
   data() {
     return {
-      // 用本地 state 承接端口:父组件仅单向传入 :port(无 v-model:port),
-      // 若沿用受控 computed 会因父组件不回传 update:port 而导致无法输入。
+      // Use local state to hold the port: the parent only passes :port one-way (no v-model:port),
+      // so relying on a controlled computed would make the input unusable since the parent never emits update:port back.
       iPort: this.port
     }
   },
@@ -110,11 +110,11 @@ export default {
     flex: 0 0 auto;
     white-space: nowrap;
     font-size: 13px;
-    line-height: 30px; // 与首行 30px 输入框垂直对齐
+    line-height: 30px; // Vertically aligned with the 30px input on the first row
     color: var(--color-text-primary);
   }
 
-  // 标签右侧的纵向列:输入行 + 提示,使提示左侧与输入框左侧对齐
+  // Vertical column to the right of the label: input row + hint, aligning the hint's left edge with the input's left edge
   &__field {
     flex: 1 1 auto;
     min-width: 0;

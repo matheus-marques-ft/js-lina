@@ -114,8 +114,9 @@ export default {
     }
   },
   watch: {
-    // Vue 3 的 data 初始化早于 computed。通过 immediate watcher 在 computed
-    // 可用后统一初始化，首次打开和后续外部更新都会同步服务器值。
+    // In Vue 3, data initializes before computed. Use an immediate watcher to
+    // initialize uniformly once computed is available; both the first open and
+    // subsequent external updates will sync the server value.
     currentValue: {
       handler(val) {
         this.filterTags = this.normalizeTags(val)
@@ -130,9 +131,9 @@ export default {
     },
     emitTags(tags = this.filterTags) {
       const payload = this.normalizeTags(tags)
-      // 先同步双向绑定，再通知 change 监听器。父组件常见的
-      // `v-model + @change` 用法会在 change 回调中读取绑定值，若 change
-      // 先触发，读取到的仍是上一次输入。
+      // Sync the two-way binding first, then notify the change listener. The common
+      // parent component pattern of `v-model + @change` reads the bound value inside
+      // the change callback; if change fired first, it would still read the previous input.
       this.$emit('update:modelValue', payload)
       this.$emit('update:model-value', payload)
       this.$emit('input', payload)
@@ -149,9 +150,10 @@ export default {
       this.filterValue = item.value
       this.handleConfirm()
     },
-    // 失焦时把未提交的输入收成一个 tag；不再用 @change 防抖自动提交，
-    // 否则 el-input 的 change 在每次输入后触发会把 "123" 拆成 1/2/3 三个 tag。
-    // blur 路径不回焦，避免点击别处仍把焦点抢回输入框。
+    // On blur, collect the uncommitted input into a tag; no longer auto-submit via a
+    // debounced @change, otherwise el-input's change firing after every input would
+    // split "123" into three tags 1/2/3.
+    // The blur path does not refocus, avoiding the input stealing focus back when clicking elsewhere.
     handleBlur() {
       this.focus = false
       this.handleConfirm(false)
@@ -168,7 +170,7 @@ export default {
       }
       this.filterValue = ''
       this.emitTags()
-      // 回车/选中后保持焦点便于连续录入；失焦提交时不抢回焦点
+      // keep focus after enter/select to allow continuous entry; don't steal focus back when submitting on blur
       if (refocus) {
         this.$refs.SearchInput?.focus()
       }
@@ -249,7 +251,7 @@ export default {
   width: 100%;
   min-height: 30px;
   height: auto;
-  // 边框由当前容器承担，输入文字的水平留白统一交由内部 wrapper（11px）处理。
+  // The border is handled by this container; horizontal padding of the input text is uniformly handled by the inner wrapper (11px).
   padding: 0;
   box-sizing: border-box;
   border: 1px solid #dcdee2;

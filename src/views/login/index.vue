@@ -140,7 +140,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* 修复input 背景不协调 和光标变色 */
+/* Fix input background inconsistency and caret color */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $input-bg: #283443;

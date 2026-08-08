@@ -64,7 +64,7 @@ export default {
         submitMethod() {
           return 'put'
         },
-        // 不清理的话，编辑secret，在删除提交会报错
+        // Without this cleanup, editing the secret would error on submit after deletion
         cleanFormValue(data) {
           if (!data['DINGTALK_APPSECRET']) {
             delete data['DINGTALK_APPSECRET']

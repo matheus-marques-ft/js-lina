@@ -64,7 +64,7 @@ export default {
                     }
                   },
                   callback: function ({ row }) {
-                    // 跳转下载页面
+                    // Navigate to the download page
                     download(`/api/v1/audits/ftp-logs/${row.id}/file/download/`)
                   }
                 }

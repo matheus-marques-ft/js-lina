@@ -147,7 +147,7 @@ export default {
                   this.$message.warning(`${this.$t('RequiredAssetOrNode')}`)
                   return cb([])
                 }
-                cb([]) // 先返回空，避免输入时出现下拉闪烁
+                cb([]) // Return empty first to avoid dropdown flicker while typing
                 this.$axios
                   .post('/api/v1/ops/username-hints/', {
                     nodes: nodes,
@@ -568,7 +568,7 @@ export default {
     min-width: 0;
     gap: 20px;
 
-    // 编辑器区套一层白色面板，避免直接露出内容区灰底（AppMain #f3f3f4）
+    // Wrap the editor area in a white panel to avoid exposing the content area's gray background (AppMain #f3f3f4)
     :deep(.code-editor) {
       padding: 14px 16px;
       background: #fff;

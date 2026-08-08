@@ -1,4 +1,4 @@
-FROM jumpserver/lina-base:20260727_073206 AS stage-build
+FROM ghcr.io/matheus-marques-ft/lina-base:20260727_073206 AS stage-build
 
 ARG VERSION
 ENV VERSION=$VERSION

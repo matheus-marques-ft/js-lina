@@ -23,18 +23,18 @@ export default {
     return {
       formatterArgs: Object.assign(this.formatterArgsDefault, this.col.formatterArgs),
       riskLabel: {
-        zombie: '长时间未使用',
-        ghost: '未托管',
-        long_time_password: '长时间未修改密码',
-        weak_password: '弱密码',
-        password_error: '密码错误',
-        password_expired: '密码过期',
-        group_changed: '组变更',
-        sudo_changed: 'sudo提权',
-        account_deleted: '账号删除',
-        no_admin_account: '无管理账号',
-        no_user_account: '无用户账号',
-        other: '其它'
+        zombie: 'Not used for a long time',
+        ghost: 'Unmanaged',
+        long_time_password: 'Password not changed for a long time',
+        weak_password: 'Weak password',
+        password_error: 'Password error',
+        password_expired: 'Password expired',
+        group_changed: 'Group changed',
+        sudo_changed: 'Sudo privilege escalation',
+        account_deleted: 'Account deleted',
+        no_admin_account: 'No admin account',
+        no_user_account: 'No user account',
+        other: 'Other'
       },
       riskType: {
         zombie: 'warning',

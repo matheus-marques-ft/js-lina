@@ -25,7 +25,7 @@ export default {
   name: 'Language',
   data() {
     return {
-      langCookeName: 'django_language', // 后端Django需要的COOKIE KEY
+      langCookeName: 'django_language', // The COOKIE KEY required by the backend Django
       supportLanguages: [],
       defaultLang: {
         title: 'English',
@@ -75,7 +75,8 @@ export default {
 .header-lang {
   color: white;
   cursor: pointer;
-  /* el-dropdown 触发器聚焦(点击)时浏览器/EP 会描一圈 outline，顶栏深色背景上很突兀，去掉。 */
+  /* When the el-dropdown trigger is focused (clicked), the browser/EP draws an outline ring, which
+  looks out of place on the dark top bar background, so remove it. */
   outline: none;
 }
 

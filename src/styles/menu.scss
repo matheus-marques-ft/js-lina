@@ -50,8 +50,9 @@ $single-menu-height: 38px;
     .item-title {
       font-size: 12px;
       width: 150px;
-      // 用主题感知的 --menu-text（Deep black 等深色主题会覆盖为浅色），而非固定的
-      // --color-text-primary，否则深色菜单底 + 深色文字会导致文字不可见。
+      // Use the theme-aware --menu-text (dark themes like Deep black override it to a light color)
+      // instead of the fixed --color-text-primary, otherwise a dark menu background + dark text
+      // would make the text invisible.
       color: var(--menu-text);
       //overflow: hidden;
       //white-space: nowrap;
@@ -61,11 +62,11 @@ $single-menu-height: 38px;
       word-break: break-word;
       white-space: normal;
       line-height: 1.2;
-      display: -webkit-box; /* 创建弹性盒子模型 */
-      -webkit-box-orient: vertical; /* 垂直排列子元素 */
-      overflow: hidden; /* 隐藏超出内容 */
-      text-overflow: ellipsis; /* 超出部分显示省略号 */
-      -webkit-line-clamp: 2; /* 限制显示两行 */
+      display: -webkit-box; /* Create a flexible box model */
+      -webkit-box-orient: vertical; /* Arrange child elements vertically */
+      overflow: hidden; /* Hide overflowing content */
+      text-overflow: ellipsis; /* Show an ellipsis for overflowing text */
+      -webkit-line-clamp: 2; /* Limit display to two lines */
     }
   }
 
@@ -96,7 +97,7 @@ $single-menu-height: 38px;
     }
   }
 
-  // 通用 item 样式
+  // Common item styling
   .el-menu-item {
     display: flex;
     align-items: center;
@@ -131,7 +132,7 @@ $single-menu-height: 38px;
 
   .group-title {
     color: var(--menu-text);
-    // 分组的 title 样式
+    // Group title styling
     & > span {
       display: block;
       padding: 10px 0 2px 20px;
@@ -146,7 +147,7 @@ $single-menu-height: 38px;
       //display: flex;
       cursor: pointer;
 
-      // 存在三级子菜单
+      // There is a third-level submenu
       .level1-menu {
         &.el-sub-menu.is-opened {
           border-top: solid 1px var(--menu-border, var(--color-border));
@@ -162,10 +163,10 @@ $single-menu-height: 38px;
         .el-menu--inline .nest-menu .el-menu-item {
           span {
             &::before {
-              content: '•'; /* 使用圆点符号 */
+              content: '•'; /* Use a bullet dot symbol */
               font-size: 15px;
-              position: absolute; /* 绝对定位伪元素 */
-              left: 25px; /* 调整伪元素位置 */
+              position: absolute; /* Absolutely position the pseudo-element */
+              left: 25px; /* Adjust the pseudo-element's position */
             }
           }
         }
@@ -173,9 +174,9 @@ $single-menu-height: 38px;
     }
   }
 
-  // 折叠起来的样式
+  // Collapsed styling
   &.el-menu--collapse {
-    // 覆盖默认 64px 宽度
+    // Override the default 64px width
     width: 55px;
 
     .el-menu-item,

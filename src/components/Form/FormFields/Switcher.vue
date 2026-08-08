@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'Switcher', // 不能叫 Switch，否则会和 js 关键字冲突
+  name: 'Switcher', // cannot be named Switch, or it would conflict with the js keyword
   props: {
     type: {
       type: String,

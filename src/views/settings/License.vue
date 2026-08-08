@@ -104,7 +104,7 @@ export default {
             key: 'Github',
             formatter: () => {
               return (
-                <a href="https://github.com/jumpserver/jumpserver" target="_blank">
+                <a href="https://github.com/matheus-marques-ft/js-jumpserver" target="_blank">
                   {' JumpServer '}
                 </a>
               )

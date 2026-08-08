@@ -1,5 +1,5 @@
 /**
- * 多选策略接口
+ * Multi-select strategy interface
  */
 class StrategyAbstract {
   constructor(elDataTable) {
@@ -22,7 +22,7 @@ class StrategyAbstract {
 }
 
 /**
- * 普通策略。由 el-table 自己维护 selection
+ * Normal strategy. el-table maintains the selection itself
  */
 class StrategyNormal extends StrategyAbstract {
   onSelectionChange(val) {
@@ -39,14 +39,15 @@ class StrategyNormal extends StrategyAbstract {
 }
 
 /**
- * 跨页保存多选策略
+ * Cross-page persistent multi-select strategy
  */
 class StrategyPersistSelection extends StrategyAbstract {
   onSelect(selection, row) {
     const isChosen = selection.indexOf(row) > -1
     this.toggleRowSelection(row, isChosen)
-    // el-table 原生 selection-change 仅包含当前页。为保证跨页勾选有效，
-    // 在内部策略维护完 selected 后，向外部同步“全量已选”。
+    // el-table's native selection-change only contains the current page. To keep
+    // cross-page selection working, sync the "full selected set" to the outside
+    // after the internal strategy has finished updating selected.
     this.elDataTable.$emit('selection-change', this.elDataTable.selected)
   }
 
@@ -100,14 +101,14 @@ class StrategyPersistSelection extends StrategyAbstract {
 
     this.elDataTable.$emit('toggle-row-selection', isSelected, row)
     this.updateElTableSelection()
-    // 切换后同步全量 selection（跨页）
+    // Sync the full selection (across pages) after toggling
     this.elDataTable.$emit('selection-change', this.elDataTable.selected)
   }
 
   clearSelection() {
     this.elDataTable.selected = []
     this.updateElTableSelection()
-    // 清空后也同步给外部，保持外层状态一致
+    // Also sync to the outside after clearing, to keep the outer state consistent
     this.elDataTable.$emit('selection-change', this.elDataTable.selected)
   }
 

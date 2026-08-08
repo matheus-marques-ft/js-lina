@@ -115,7 +115,7 @@ export default {
         const diffY = rect.top - parentRect.top
         const maxY = window.innerHeight - parentRect.height
         let parentY = event.clientY - diffY
-        // 这个是拖动的 header, 不是 bar
+        // This is the dragged header, not the bar
         if (isHeader) {
           parentY = event.clientY - rect.height / 2
         }

@@ -57,7 +57,7 @@ export default {
         finished: new Set()
       }
     }
-    // 唯一 id，避免重复计数
+    // Unique id, to avoid double counting
     this._chartId = `chart_${Date.now()}_${Math.random().toString(36).slice(2)}`
     window._echarts.total.add(this._chartId)
   },
@@ -87,7 +87,7 @@ export default {
     if (window._echarts) {
       window._echarts.total.delete(this._chartId)
       window._echarts.finished.delete(this._chartId)
-      // 可选：当没有图表时清理全局对象
+      // Optional: clean up the global object when there are no charts left
       if (window._echarts.total.size === 0) {
         delete window._echarts
         delete window.echartsFinished

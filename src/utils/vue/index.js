@@ -19,8 +19,8 @@ export function resolveRoute(route, router) {
     if (!routes) {
       return
     }
-    // Vue Router 4: router.resolve() 直接返回路由对象，没有 .resolved 属性
-    // Vue Router 3: router.resolve() 返回 { resolved: {...}, ... }
+    // Vue Router 4: router.resolve() returns the route object directly, no .resolved property
+    // Vue Router 3: router.resolve() returns { resolved: {...}, ... }
     const resolved = routes.resolved || routes
     if (!resolved || !resolved.matched) {
       return

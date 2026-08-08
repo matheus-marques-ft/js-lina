@@ -179,8 +179,9 @@ export default {
     width: 100%;
   }
 
-  // 自动化方法行:method 下拉与参数设置按钮已由 AutomationMethodField 组件拼成一体的
-  // input-group(下拉在左、齿轮按钮 append 在右),整个控件占满整行即可。
+  // Automation method row: the method dropdown and params-setting button are already
+  // joined into a single input-group by the AutomationMethodField component (dropdown
+  // on the left, gear button appended on the right); the whole control just fills the row.
   .item-method.el-form-item {
     .el-form-item__content {
       width: 100%;

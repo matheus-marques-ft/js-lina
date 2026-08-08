@@ -142,14 +142,14 @@ export default {
   },
   data() {
     return {
-      notSelectDataList: [], // 未选中（已过滤出已选)的数据
-      checkedData: [], // 已选中的数据
+      notSelectDataList: [], // Unselected data (already filtered out of the selection)
+      checkedData: [], // Selected data
 
-      dataListNoCheck: [], // 未搜索的数据
-      selectListCheck: [], // 未搜索的数据
+      dataListNoCheck: [], // Data before search filtering
+      selectListCheck: [], // Data before search filtering
 
-      noCheckData: [], // 未选中区域的已勾选的数据（待添加到已选区域)
-      hasCheckData: [], // 已选中区域的已勾选的数据（从未选区域中待删除)
+      noCheckData: [], // Checked data from the unselected region (pending addition to the selection)
+      hasCheckData: [], // Checked data from the selected region (pending removal from the unselected region)
 
       noSelectKeyword: '',
       haSelectKeyword: '',
@@ -157,14 +157,14 @@ export default {
       disablePre: true,
       disableNex: true,
 
-      manualEmpty: false, // 是否手动将已选区数据置为空
+      manualEmpty: false, // Whether the selected region's data was manually cleared
 
-      asyncDataList: [], // 异步请求的数据源
-      isLastPage: false // 异步请求是否是最后一页
+      asyncDataList: [], // Data source from the async request
+      isLastPage: false // Whether the async request reached the last page
     }
   },
   computed: {
-    // 传递到后台保存的数据（已选中的数据的 id 数组）
+    // Data passed to the backend for saving (array of ids of the selected data)
     selectIdList() {
       return this.selectListCheck.map((item) => item.id)
     },
@@ -172,13 +172,13 @@ export default {
       return this.async ? this.asyncDataList : this.dataList
     },
     asyncSearchFlag() {
-      // 是否设置了异步搜索方法
+      // Whether an async search method has been configured
       return this.async && this.getSearchData !== undefined
     }
   },
   watch: {
     selectIdList(newVal) {
-      // 获取已选数据的监听事件
+      // Listener event for retrieving the selected data
       const moveKeys = [
         ...this.noCheckData.map((item) => item.id),
         ...this.hasCheckData.map((item) => item.id)
@@ -204,9 +204,9 @@ export default {
     this.async ? this.getData(1, true) : this.initData(true)
   },
   methods: {
-    // 分页数据，初始化数据，过滤已选数据
+    // Paginated data, initialize the data, filter the selected data
     initData(selectedChange) {
-      // this.checkedData 为空 且 从来没有将已选区置为空，则从 selectedData 获取
+      // If this.checkedData is empty and the selected region was never manually cleared, get it from selectedData
       if ((!this.checkedData.length && !this.manualEmpty) || selectedChange) {
         this.checkedData = JSON.parse(JSON.stringify(this.selectedData))
         const keywords = this.$refs.hasSelect ? this.$refs.hasSelect.searchWord : ''
@@ -231,8 +231,8 @@ export default {
       }
     },
     searchWord(keyword, titleId) {
-      // 过滤掉数据，保留搜索的数据
-      // 如果设置了异步搜索，就不用过滤关键词 this.asyncSearchFlag 为 true
+      // Filter out the data, keeping only what matches the search
+      // If async search is configured, no need to filter by keyword (this.asyncSearchFlag is true)
       if (titleId === 0) {
         this.noSelectKeyword = keyword
         if (!this.asyncSearchFlag) {
@@ -243,12 +243,12 @@ export default {
         this.checkedData = this.selectListCheck.filter((val) => val.label.includes(keyword))
       }
       const refsName = titleId === 0 ? 'noSelect' : 'hasSelect'
-      // 延迟执行
+      // Execute with a delay
       setTimeout(() => {
         !this.async && this.$refs[refsName].initData()
       }, 0)
     },
-    // 检查左右按钮可用性
+    // Check the availability of the left/right buttons
     checkDisable(data, operateId) {
       if (operateId === 0) {
         this.disableNex = !(data.length > 0)
@@ -256,41 +256,44 @@ export default {
         this.disablePre = !(data.length > 0)
       }
     },
-    // 未选中区域的选泽
+    // Selection in the unselected region
     noCheckSelect(val) {
       this.noCheckData = val
       if (this.transferOnCheck) {
         setTimeout(() => this.addData(), 300)
       }
     },
-    // 已选中区域的选泽
+    // Selection in the selected region
     hasCheckSelect(val) {
       this.hasCheckData = val
       setTimeout(() => this.deleteData(), 300)
     },
-    // 关键：把未选择的数据当做已选择的过滤数组，把已选择的数据当做未选择的过滤数组，在全局data进行过滤，最后进行一次搜索
-    // 添加至已选
+    // Key point: treat the unselected data as the filter array for the selected side, and the
+    // selected data as the filter array for the unselected side, filter across the global data,
+    // then run a search once at the end
+    // Add to the selection
     addData() {
       const noCheckDataId = this.noCheckData.map((ele) => ele.id)
-      // 待选区数据过滤
-      // 如果设置了异步搜索，就不用过滤关键词 this.asyncSearchFlag 为 true
+      // Filter the pending-selection region's data
+      // If async search is configured, no need to filter by keyword (this.asyncSearchFlag is true)
       this.notSelectDataList = this.notSelectDataList.filter(
         (ele) =>
           !noCheckDataId.includes(ele.id) &&
           (ele.label.includes(this.noSelectKeyword) || this.asyncSearchFlag)
       )
       this.dataListNoCheck = this.dataListNoCheck.filter((ele) => !noCheckDataId.includes(ele.id))
-      // 已选区数据增加
+      // Add to the selected region's data
       if (!this.async && this.sort) {
-        // 排序，从固定不变的所有数据中过滤，顺序就不会乱。但若数据量大就会比较卡
-        // 异步分页不支持排序
+        // Sort by filtering from the fixed, unchanging full dataset so the order stays
+        // consistent, but this can be sluggish with large amounts of data
+        // Async pagination does not support sorting
         const dataListNoCheckId = this.dataListNoCheck.map((ele) => ele.id)
         this.checkedData = this.originList.filter(
           (ele) => !dataListNoCheckId.includes(ele.id) && ele.label.includes(this.haSelectKeyword)
         )
         this.selectListCheck = this.originList.filter((ele) => !dataListNoCheckId.includes(ele.id))
       } else {
-        // 这种效率更高的方法，但不能排序
+        // This approach is more efficient, but cannot be sorted
         this.checkedData.push(...this.noCheckData)
         this.selectListCheck.push(...this.noCheckData)
         this.checkedData = this.checkedData.filter((ele) =>
@@ -298,9 +301,9 @@ export default {
         )
       }
     },
-    // 从已选中删除
+    // Remove from the selection
     deleteData() {
-      // 已选区数据过滤
+      // Filter the selected region's data
       const hasCheckDataId = this.hasCheckData.map((ele) => ele.id)
       this.checkedData = this.checkedData.filter(
         (ele) => !hasCheckDataId.includes(ele.id) && ele.label.includes(this.haSelectKeyword)
@@ -309,10 +312,10 @@ export default {
 
       this.manualEmpty = !this.checkedData.length
 
-      // 待选区数据增加
+      // Add back to the pending-selection region's data
       const selectListCheckId = this.selectListCheck.map((ele) => ele.id)
       // const checkedDataId = this.checkedData.map(ele => ele.id)
-      // 如果设置了异步搜索，就不用过滤关键词 this.asyncSearchFlag 为 true
+      // If async search is configured, no need to filter by keyword (this.asyncSearchFlag is true)
       this.notSelectDataList = this.originList.filter(
         (ele) =>
           !selectListCheckId.includes(ele.id) &&
@@ -320,7 +323,7 @@ export default {
       )
       this.dataListNoCheck = this.originList.filter((ele) => !selectListCheckId.includes(ele.id))
     },
-    // 提供获取已选数据的钩子
+    // Hook providing access to the selected data
     getSelectedData() {
       return this.selectIdList
     },
@@ -360,18 +363,19 @@ export default {
     },
     async getData(pageIndex, changed = false) {
       this.$nextTick(() => {
-        // 设置异步分页的 pageIndex
+        // Set the async pagination's pageIndex
         this.$refs.noSelect.asyncPageIndex = pageIndex
-        // 清空左侧输入框
+        // Clear the left-hand input box
         this.$refs.noSelect.searchWord = ''
-        // asyncSearch 设置为 true
+        // Set asyncSearch to true
         this.$refs.noSelect.asyncSearch = false
       })
       const resData = await this.getPageData(pageIndex, this.pageSize)
       if (Array.isArray(resData) && resData.length) {
         this.asyncDataList = resData
         this.notSelectDataList = resData
-        // 这里必须是 true，否则右侧不能搜索, 一搜索确认就不行了
+        // This must be true here, otherwise the right side can't be searched -
+        // once you search and confirm, it breaks
         this.initData(changed)
         this.isLastPage = resData.length < this.pageSize
       } else {

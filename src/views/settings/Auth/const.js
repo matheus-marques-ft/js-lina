@@ -146,7 +146,7 @@ export function getAuthItems() {
   ]
 
   if (store.getters.hasValidLicense) {
-    // 把 AUTH_LDAP_HA 加到 authItems 中的 AUTH_LDAP 后面
+    // Add AUTH_LDAP_HA to authItems after AUTH_LDAP
     authItems.push(...xpackBackends)
   }
   return authItems

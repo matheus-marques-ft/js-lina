@@ -275,11 +275,12 @@ export default {
       const specAccountsInput = this.getSpecValues(value)
       const excludeAccountsInput = this.getExcludeChoices(value)
 
-      // 每次都完整同步外部值，避免同一组件切换记录时保留上一条记录的账号。
+      // Always fully sync with the external value to avoid carrying over the previous record's
+      // accounts when this component switches to a different record.
       this.specAccountsInput = specAccountsInput
       this.excludeAccountsInput = excludeAccountsInput
 
-      // 先清理 radio
+      // Reset the radio first
       const isAll = value.includes(this.ALL)
 
       if (isAll) {
@@ -292,7 +293,7 @@ export default {
         this.realRadioSelected = NoneAccount
       }
 
-      // 清理虚拟账号
+      // Reset virtual accounts
       const virtualChoices = this.getVirtualChoices(value)
       this.virtualChecked = virtualChoices.length > 0
       this.virtualSelected = virtualChoices
@@ -331,7 +332,7 @@ export default {
       this.outputValue()
     },
     outputValue() {
-      // 这是真是的
+      // This is the real value
       let choicesSelected = []
 
       if (this.realRadioSelected === this.ALL) {
@@ -351,8 +352,9 @@ export default {
 
       this.$log.debug('choicesSelected', choicesSelected)
 
-      // 空的“排除账号”与“无”都会输出 []。记录本次内部输出，避免父表单将
-      // 同一个值同步回来时把当前 radio 误判成“无”；外部真正变更时仍会完整重置。
+      // Both an empty "exclude accounts" and "none" output []. Record this internal output so that
+      // when the parent form syncs the same value back, the current radio isn't mistakenly read as
+      // "none"; a genuine external change will still fully reset it.
       const pendingValueSync = choicesSelected.slice()
       this.pendingValueSync = pendingValueSync
       this.$emit('update:modelValue', choicesSelected)

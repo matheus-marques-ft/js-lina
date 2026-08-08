@@ -95,7 +95,7 @@ export default {
     value: {
       handler(val) {
         const valJson = JSON.stringify(val)
-        // 外部值同步时直接更新内部值，避免通过 loading 重挂整个子表单造成闪烁
+        // Update the internal value directly when the external value syncs, avoiding flicker from remounting the whole sub-form via loading
         if (valJson !== this.formJson) {
           this.iValue = val
           this.formJson = valJson
@@ -146,9 +146,9 @@ export default {
 }
 
 /*
- * 子表单复用与外层一致的 label 宽度（attrs meta 传入的 labelWidth），
- * label-wrap 为 flex: 0 0 var(--label-width)，输入框自然从 label-width + gap 处开始，
- * 因此无需任何负 margin 偏移即可与上下 group 的输入框左侧对齐。
+ * The sub-form reuses the same label width as the outer form (labelWidth passed via attrs meta).
+ * label-wrap is flex: 0 0 var(--label-width), so the input naturally starts at label-width + gap,
+ * meaning no negative margin offset is needed to align its input with the groups above/below.
  */
 .sub-form :deep(.el-form-item__content) {
   margin-left: 0 !important;

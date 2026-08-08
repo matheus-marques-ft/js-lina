@@ -31,12 +31,12 @@ export default {
           title: this.$t('Replay'),
           icon: 'fa-play',
           type: 'warning',
-          // TODO 当前版本 magnus 代理的 mongodb 协议的 session 不支持 replay
+          // TODO The current version of the magnus proxy does not support replay for mongodb protocol sessions
           can: ({ row }) =>
             vm.hasPerms(row, 'view') &&
             !(row.protocol === 'mongodb' && row.terminal.type === 'magnus'),
           callback: function ({ row, tableData }) {
-            // 跳转到luna页面
+            // Navigate to the luna page
             const replayUrl = '/luna/replay/' + row.id
             window.open(addBasePath(replayUrl))
           }
@@ -49,7 +49,7 @@ export default {
             vm.hasPerms(row, 'download') &&
             !(row.protocol === 'mongodb' && row.terminal.type === 'magnus'),
           callback: function ({ row, tableData }) {
-            // 跳转下载页面
+            // Navigate to the download page
             download(`/api/v1/terminal/sessions/${row.id}/replay/download/`)
           }
         }

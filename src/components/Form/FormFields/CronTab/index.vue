@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     crontabFill(value) {
-      // 确定后回传的值
+      // the value passed back after confirming
       this.input = value
       this.$emit('change', value)
     },

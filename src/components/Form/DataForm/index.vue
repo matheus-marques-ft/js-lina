@@ -19,7 +19,7 @@
       @input="handleFormUpdate"
       @update:form="handleFormUpdate"
     >
-      <!-- named slot 透传给 ElFormRender，保持与字段渲染顺序一致 -->
+      <!-- named slots are passed through to ElFormRender, preserving the field render order -->
       <template v-for="item in processedFields" :key="`id:${item.id}`" #[`id:${item.id}`]>
         <slot :name="`id:${item.id}`" />
       </template>
@@ -85,7 +85,7 @@ const scrollToError = (
   }
 ) => {
   setTimeout(() => {
-    // formInstance 是 ElFormRender 组件实例，需要访问内部的 el-form 元素
+    // formInstance is the ElFormRender component instance; we need to access the internal el-form element
     const elForm = formInstance.$refs?.elForm
     if (!elForm || !elForm.$el) {
       return
@@ -142,7 +142,7 @@ export default {
       type: Array,
       default: () => []
     },
-    // 初始值
+    // initial value
     form: {
       type: Object,
       default: () => ({})
@@ -254,9 +254,9 @@ export default {
       this.iSubmitBtnText = this.$t('Submit')
     },
     /**
-     * 提交表单数据
-     * @param {string} formName - 表单的引用名称
-     * @param {boolean} [addContinue] - 是否继续添加
+     * Submit form data
+     * @param {string} formName - the ref name of the form
+     * @param {boolean} [addContinue] - whether to keep adding after submit
      */
     async submitForm(formName, addContinue) {
       const form = this.$refs[formName]
@@ -270,7 +270,7 @@ export default {
         return false
       }
     },
-    // 重置表单
+    // reset the form
     resetForm() {
       this.$refs['form'].resetFields()
     },
@@ -469,8 +469,10 @@ export default {
 }
 
 /*
- * 设置页即使运行在 desktop 设备上，也可能因抽屉或分栏被压缩。此处按表单自身宽度
- * 切换布局，避免百分比 label 被挤成逐字换行，并让帮助文案跟随控件完整展示。
+ * Even when the settings page runs on a desktop device, it can still be squeezed by a
+ * drawer or split panel. Switch layout based on the form's own width here to avoid the
+ * percentage label being crammed into a character-by-character wrap, and let the help
+ * text display fully alongside the control.
  */
 @container data-form (max-width: 640px) {
   .form-fields.el-form {

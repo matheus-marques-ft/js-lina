@@ -17,7 +17,7 @@ export default {
     }
   },
   mounted() {
-    // 将初始color写到style里，覆盖element的hover效果
+    // Write the initial color into style to override element's hover effect
     this.style = Object.assign({}, this.style, {
       color: getComputedStyle(this.$el).color
     })

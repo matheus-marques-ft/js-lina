@@ -124,7 +124,7 @@ export default {
   methods: {
     updateWidth() {
       this.$nextTick(() => {
-        // 创建临时元素来测量文本宽度
+        // Create a temporary element to measure the text width
         const tempSpan = document.createElement('span')
         tempSpan.style.visibility = 'hidden'
         tempSpan.style.position = 'absolute'
@@ -135,29 +135,29 @@ export default {
         tempSpan.style.fontWeight = 'normal'
         tempSpan.style.letterSpacing = 'normal'
 
-        // 获取当前组织显示名称
+        // Get the current organization's display name
         const orgName = this.currentOrgDisplayName
 
         tempSpan.textContent = orgName
         document.body.appendChild(tempSpan)
 
-        // 测量文本宽度
+        // Measure the text width
         const textWidth = tempSpan.offsetWidth
 
-        // 固定空间：左侧图标 + padding + 右侧箭头
+        // Fixed space: left icon + padding + right arrow
         const iconWidth = 18
         const paddingWidth = 48
         const arrowWidth = 24
         const totalWidth = textWidth + iconWidth + paddingWidth + arrowWidth
 
-        // 设置合理的边界
+        // Set reasonable bounds
         const minWidth = 120
         const maxWidth = 360
         const finalWidth = Math.max(minWidth, Math.min(maxWidth, totalWidth))
 
         this.selectWidth = finalWidth + 'px'
 
-        // 清理临时元素
+        // Clean up the temporary element
         document.body.removeChild(tempSpan)
       })
     },

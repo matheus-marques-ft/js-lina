@@ -1,6 +1,6 @@
 <template>
   <ZTree v-bind="$attrs" ref="ztree" :setting="treeSetting">
-    <!--Slot透传-->
+    <!--Slot passthrough-->
     <template #rMenu>
       <slot name="rMenu" />
     </template>
@@ -59,7 +59,8 @@ export default {
   },
   computed: {
     treeSetting() {
-      // merge 到新对象,避免就地修改响应式 this.defaultSetting 造成计算属性自触发循环
+      // Merge into a new object to avoid mutating the reactive this.defaultSetting in
+      // place, which would cause the computed property to trigger itself in a loop
       return _.merge({}, this.defaultSetting, this.setting)
     },
     zTree() {

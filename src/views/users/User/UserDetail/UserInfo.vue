@@ -306,7 +306,7 @@ export default {
   }
 
   & > div:last-child {
-    margin-right: 0; /* 清除最后一个元素的多余间距 */
+    margin-right: 0; /* clear the extra spacing on the last element */
   }
 }
 </style>

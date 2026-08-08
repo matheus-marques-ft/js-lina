@@ -114,7 +114,7 @@ export default {
     })
   },
   methods: {
-    // 单选按钮值变化时
+    // when the radio button value changes
     radioChange() {
       if (this.radioValue !== 1 && this.cron.second === '*') {
         this.$emit('update', 'second', '0', 'min')
@@ -135,19 +135,19 @@ export default {
           break
       }
     },
-    // 周期两个值变化时
+    // when the two cycle values change
     cycleChange() {
       if (this.radioValue === 2) {
         this.$emit('update', 'min', this.cycleTotal, 'min')
       }
     },
-    // 平均两个值变化时
+    // when the two average values change
     averageChange() {
       if (this.radioValue === 3) {
         this.$emit('update', 'min', this.averageTotal, 'min')
       }
     },
-    // checkbox值变化时
+    // when the checkbox value changes
     checkboxChange() {
       if (this.radioValue === 4) {
         this.$emit('update', 'min', this.checkboxString, 'min')

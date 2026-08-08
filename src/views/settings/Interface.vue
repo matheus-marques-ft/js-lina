@@ -183,8 +183,9 @@ export default {
     }
   },
   async mounted() {
-    // 主题下拉选项在表单渲染前就绪：后端 OPTIONS 下发的 theme choices 未按当前语言本地化，
-    // 这里用 previewThemes 返回的 display 映射构建本地化选项，覆盖后端 choices。
+    // The theme dropdown options are ready before the form renders: the theme choices sent by the
+    // backend OPTIONS are not localized for the current language, so we build localized options
+    // here from the display map returned by previewThemes, overriding the backend choices.
     const [data] = await Promise.all([getInterfaceInfo(), this.getPreviewThemes()])
     this.interfaceInfo = data
     this.loading = false
@@ -255,9 +256,9 @@ export default {
 
 <style scoped>
 /*
- * 预览区与表单都置于 IBox 卡片内，页面整体保持一致的卡片化布局
- * （卡片间距由 PageContent 的 gap 统一提供）。
- * 预览的按钮/链接/单选/步骤条统一为应用标准字号 13px，并修正内边距。
+ * Both the preview area and the form sit inside IBox cards, keeping a consistent
+ * card-based layout across the page (card spacing is provided uniformly by PageContent's gap).
+ * The preview's buttons/links/steps are unified to the app's standard 13px font size, with padding fixed up.
  */
 .preview-box :deep(.el-card__body) {
   gap: 4px;

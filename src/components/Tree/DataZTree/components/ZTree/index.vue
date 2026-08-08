@@ -39,7 +39,7 @@
 </template>
 
 <script>
-// 导入JQuery
+// Import jQuery
 // eslint-disable-next-line no-unused-vars
 import $ from '@/utils/jquery-vendor.js'
 import '@ztree/ztree_v3/js/jquery.ztree.all.min.js'
@@ -107,18 +107,18 @@ export default {
       if (!tree) {
         return
       }
-      // 使用 dialog 的高度
+      // Use the dialog's height
       const dialogs = [...document.getElementsByClassName('el-dialog__body')]
       if (dialogs.length > 0) {
         const dialog = dialogs.find((d) => d.innerHTML.indexOf(this.iZTreeID) !== -1)
         if (dialog) {
-          // 对话框内的 zTree 才需要重新计算高度
+          // Only a zTree inside a dialog needs its height recalculated
           const dialogRect = dialog.getBoundingClientRect()
           tree.style.height = `${dialogRect.height - 60}px`
           return
         }
       }
-      // 使用 table 的高度
+      // Use the table's height
       const zTreeRect = tree.getBoundingClientRect()
       tree.style.height = `calc(100vh - ${zTreeRect.top}px - 30px - 25px)`
     }, 100),
@@ -166,7 +166,7 @@ export default {
       vm.zTree = $.fn.zTree.init($(`#${this.iZTreeID}`), this.treeSetting, res)
       const rootNode = this.zTree.getNodes()[0]
       this.rootNodeAddDom(rootNode)
-      // 手动上报事件, Tree加载完成
+      // Manually emit the event once the tree has finished loading
       this.$emit('tree-init-finish', this.zTree)
 
       if (this.treeSetting.showMenu) {

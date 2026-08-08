@@ -33,7 +33,7 @@ export default {
   },
   inheritAttrs: false,
   props: {
-    // DataForm 通过 :model-value 与 :value 两种方式传入当前值，取其一即可
+    // DataForm passes the current value via either :model-value or :value; either works
     modelValue: {
       type: [String, Number],
       default: ''
@@ -58,7 +58,8 @@ export default {
       type: String,
       default: '/api/v1/assets/platform-automation-methods/'
     },
-    // 同级 _params 字段的 key，用于从表单上下文读回已保存的参数（编辑时弹窗回填）
+    // The key of the sibling _params field, used to read back the saved params
+    // from the form context (to prefill the dialog when editing)
     paramsKey: {
       type: String,
       default: ''
@@ -70,7 +71,8 @@ export default {
   },
   emits: ['change', 'paramsChange'],
   setup() {
-    // 注入(automation 子表单的) form-renderer 上下文，用于读回同级 _params 的当前值
+    // Inject the (automation sub-form's) form-renderer context, used to read back
+    // the current value of the sibling _params field
     const formCtx = inject(FORM_RENDERER_KEY, { getElForm: null, updateForm: null })
     return { formCtx }
   },
@@ -79,8 +81,9 @@ export default {
       return this.modelValue !== '' && this.modelValue != null ? this.modelValue : this.value
     },
     currentParams() {
-      // 参数字段已隐藏、值不再经 model-value 传入，这里从当前层表单值实时读回，
-      // 保证编辑已有平台时弹窗能回填已保存的参数。
+      // The params field is now hidden and its value no longer comes through model-value,
+      // so it's read back live from the current form value here, to ensure the dialog
+      // can prefill the saved params when editing an existing platform.
       try {
         const model = this.formCtx?.getElForm?.()?.model
         if (model && this.paramsKey && model[this.paramsKey] != null) {
@@ -94,13 +97,15 @@ export default {
   },
   methods: {
     onMethodChange(val) {
-      // 只抛 change：DataForm 的 render-form-item 会据此更新本字段(_method)的值，
-      // 并触发字段配置里的 on.change（如 change_secret 的联动）。
+      // Only emit change: DataForm's render-form-item will use it to update this
+      // field's (_method) value, and trigger the field config's on.change
+      // (e.g. the change_secret cascading effect).
       this.$emit('change', val)
     },
     onParamsInput(params) {
-      // 参数属于同级的 _params 字段，通过自定义事件让字段配置里的 on.paramsChange
-      // 借助 updateForm 写回，避免直接操作只读的表单值。
+      // The params belong to the sibling _params field; a custom event lets the
+      // field config's on.paramsChange write it back via updateForm, avoiding
+      // direct mutation of the read-only form value.
       this.$emit('paramsChange', params)
     }
   }
@@ -108,8 +113,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// method 下拉 + 参数设置按钮拼接成 Element Plus 的 input-group 形态:下拉在左、齿轮按钮在右,
-// 等高、共用边框、仅两端保留圆角(接缝处平角)。
+// The method dropdown + params-setting button are joined into an Element Plus
+// input-group shape: dropdown on the left, gear button on the right, equal height,
+// shared border, rounded corners only at the two ends (flat at the seam).
 .automation-method {
   display: flex;
   align-items: stretch;

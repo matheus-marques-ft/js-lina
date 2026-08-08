@@ -122,8 +122,10 @@ export default {
   }
 
   &:deep(.el-upload-list) {
-    // 占满「选择文件」按钮右侧的剩余宽度。flex-basis 归零(1 1 0)+ min-width:0,
-    // 使列表宽度只由剩余空间决定、不被超长文件名撑破;否则一串无换行点的长名会溢出容器。
+    // Fill the remaining width to the right of the "Choose File" button. flex-basis
+    // zeroed out (1 1 0) + min-width:0, so the list width is determined only by the
+    // remaining space and isn't blown out by an overly long filename; otherwise a long
+    // name with no wrap points would overflow the container.
     flex: 1 1 0;
     min-width: 0;
     max-width: 100%;
@@ -136,7 +138,7 @@ export default {
     margin-top: 0;
   }
 
-  // 文件名用满可用宽度,超长时以省略号截断(需逐级 min-width:0 + 自身裁剪才生效)
+  // The filename fills the available width; when overly long, it is truncated with an ellipsis (requires min-width:0 at each level plus its own clipping to take effect)
   &:deep(.el-upload-list__item-name) {
     min-width: 0;
     overflow: hidden;

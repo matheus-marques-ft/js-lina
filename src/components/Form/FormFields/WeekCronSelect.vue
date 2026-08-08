@@ -105,7 +105,7 @@ export default {
         this.$t('Sunday')
       ],
       weekTimeData: [],
-      timeRange: [] // 格式化之后数据
+      timeRange: [] // data after formatting
     }
   },
   computed: {
@@ -135,7 +135,7 @@ export default {
     if (this.value.length > 0) this.nextValue()
   },
   methods: {
-    // 初始化数据结构
+    // initialize the data structure
     init() {
       this.theadArr = createArr(24)
       const isData = this.weekArr.map((ret, index) => {
@@ -160,7 +160,7 @@ export default {
       })
       this.weekTimeData = isData
     },
-    // 反解析传递过来的默认值
+    // parse the passed-in default value back out
     nextValue() {
       const deepValue = _.cloneDeep(this.value)
       for (let i = 0, len = deepValue.length; i < len; i++) {
@@ -175,7 +175,7 @@ export default {
         }
       }
     },
-    // 渲染时间区间
+    // render the time range
     renderWeekRange(val, id) {
       const idNum = id === 0 ? 6 : id - 1
       const [start, end] = val.split('~')
@@ -189,7 +189,7 @@ export default {
         }
       }
     },
-    // 计算索引
+    // compute the index
     countIndex(val) {
       const one = val.substr(0, 2)
       const index = one.startsWith('0') ? one.substr(1, 2) : one
@@ -221,13 +221,13 @@ export default {
     formatWeektime(col) {
       const timeStamp = 1542384000000 // '2018-11-17 00:00:00'
       const timezone = 8
-      const offsetGMT = new Date().getTimezoneOffset() // 本地时间和格林威治的时间差，单位为分钟
+      const offsetGMT = new Date().getTimezoneOffset() // the difference between local time and GMT, in minutes
       const nowDate = new Date(timeStamp).getTime()
       const targetStamp = new Date(
         nowDate + offsetGMT * 60 * 1000 + timezone * 60 * 60 * 1000
       ).getTime()
 
-      // (2 / this.colspan) 原来是一个单元格 30分钟，现在是一个单元格 30 * 2 / this.colspan 分钟
+      // (2 / this.colspan): originally each cell was 30 minutes, now each cell is 30 * 2 / this.colspan minutes
       const beginStamp = targetStamp + col * 1800000 * (2 / this.colspan) // col * 30 * 60 * 1000
       const endStamp = beginStamp + 1800000 * (2 / this.colspan)
 
@@ -235,7 +235,7 @@ export default {
       const end = this.formatDate(new Date(endStamp), 'hh:mm')
       return `${begin}~${end}`
     },
-    // 清空时间段
+    // clear the time range
     clearWeektime() {
       this.weekTimeData.forEach((item) => {
         item.child.forEach((t) => {
@@ -245,7 +245,7 @@ export default {
       this.timeRange = []
       this.$emit('change', this.timeRange)
     },
-    // 全选
+    // select all
     selectAll() {
       this.weekTimeData.forEach((item) => {
         item.child.forEach((t) => {

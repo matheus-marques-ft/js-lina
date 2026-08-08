@@ -101,9 +101,11 @@ export default {
         },
         need_update_password: {
           label: this.$t('ResetPasswordNextLogin'),
-          // 单个布尔开关，直接用内置 type: 'checkbox'（与上方 update_password 一致）。
-          // render-form-item 对 checkbox 会：valueProp 返回 undefined 不透传 :value（避免
-          // el-checkbox 把表单值当作分组 label 而卡住），并按 target.checked 归一成布尔。
+          // A single boolean toggle, using the built-in type: 'checkbox' directly (same as
+          // update_password above). For checkboxes, render-form-item's valueProp returns
+          // undefined so :value isn't passed through (avoiding el-checkbox mistaking the
+          // form value for a group label and getting stuck), and normalizes the value to a
+          // boolean based on target.checked.
           type: 'checkbox',
           hidden: (formValue) => {
             if (formValue.source !== 'local') {
@@ -272,7 +274,7 @@ export default {
     disableMFAFieldIfNeed(user) {
       let options = null
       let mfa_level = null
-      // SECURITY_MFA_AUTH 0 不开启 1 全局开启 2 管理员开启
+      // SECURITY_MFA_AUTH: 0 disabled, 1 enabled for all, 2 enabled for admins only
       const securityMFAAuth = store.getters.publicSettings['SECURITY_MFA_AUTH']
       const adminUserIsNeed =
         (user?.is_superuser || user?.is_org_admin) &&

@@ -38,9 +38,10 @@ const messages = Object.keys(elementLocaleByAppLocale).reduce((acc, appLocale) =
   return acc
 }, {})
 
-// 后端下发的 cookie(django_language)语言码 → Element Plus 内置 locale 对象。
-// 供 main.js 在安装 ElementPlus 插件时按当前语言设置内置组件(messagebox/分页/
-// 空状态/日期选择器等)的文案;语言切换会整页 reload,故静态取当前语言即可。
+// Maps the language code from the backend-issued cookie (django_language) to the built-in Element Plus locale object.
+// Used by main.js to set the text of built-in components (messagebox/pagination/empty state/date picker, etc.)
+// according to the current language when installing the ElementPlus plugin; switching languages reloads the whole
+// page, so it's fine to just read the current language statically.
 const elementLocaleByCookieLang = {
   'zh-hans': elementZhCn,
   'zh-cn': elementZhCn,

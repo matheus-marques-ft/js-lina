@@ -1,14 +1,14 @@
 <template>
   <div v-if="hasError" class="error-boundary">
     <div class="error-boundary-content">
-      <h2 class="error-title">{{ $t('ComponentError') || '组件加载出错' }}</h2>
+      <h2 class="error-title">{{ $t('ComponentError') || 'Component failed to load' }}</h2>
       <p class="error-message">{{ errorMessage }}</p>
       <div class="error-actions">
-        <el-button type="primary" @click="handleRetry">{{ $t('Retry') || '重试' }}</el-button>
-        <el-button @click="handleGoHome">{{ $t('GoHomePage') || '返回首页' }}</el-button>
+        <el-button type="primary" @click="handleRetry">{{ $t('Retry') || 'Retry' }}</el-button>
+        <el-button @click="handleGoHome">{{ $t('GoHomePage') || 'Go to homepage' }}</el-button>
       </div>
       <details v-if="showDetails" class="error-details">
-        <summary>错误详情 (开发环境)</summary>
+        <summary>Error details (development environment)</summary>
         <pre>{{ errorDetails }}</pre>
       </details>
     </div>
@@ -33,7 +33,7 @@ export default {
       if (this.error) {
         return this.error.message || String(this.error)
       }
-      return '未知错误'
+      return 'Unknown error'
     },
     errorDetails() {
       if (!this.error) return ''
@@ -52,24 +52,24 @@ export default {
     }
   },
   errorCaptured(err, instance, info) {
-    // 捕获子组件错误
+    // Capture the child component's error
     this.hasError = true
     this.error = err
     this.errorInfo = info
 
-    // 在开发环境下打印错误
+    // Print the error in the development environment
     if (IS_DEV) {
       console.error('ErrorBoundary caught error:', err)
       console.error('Component instance:', instance)
       console.error('Error info:', info)
     }
 
-    // 返回 false 阻止错误继续向上传播
+    // Return false to stop the error from propagating further up
     return false
   },
   methods: {
     handleRetry() {
-      // 重置错误状态，重新渲染子组件
+      // Reset the error state and re-render the child component
       this.hasError = false
       this.error = null
       this.errorInfo = null

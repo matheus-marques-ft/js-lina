@@ -4,13 +4,13 @@ export const queryFlag = 'q='
 export const queryPattern = new RegExp(queryFlag + '.*' + paramSeparator)
 
 /**
- * 转换query对象成可附在url上的字符串
- * qs.stringify只能自定义delimiter，不能自定义equal
+ * Convert a query object into a string that can be appended to a url
+ * qs.stringify can only customize the delimiter, not the equal sign
  * {a: 'a&b', b: true} => 'a~a%26b,b~true'
  *
  * @param {object} query
- * @param {string} equal - 键和值的分隔符
- * @param {string} delimiter - 键值对之间的分隔符
+ * @param {string} equal - separator between key and value
+ * @param {string} delimiter - separator between key-value pairs
  * @return {string}
  */
 export function stringify(query, equal = valueSeparator, delimiter = paramSeparator) {
@@ -31,13 +31,13 @@ export function stringify(query, equal = valueSeparator, delimiter = paramSepara
 }
 
 /**
- * 转换附在url上的字符串成query对象
- * qs.parse只能自定义delimiter，不能自定义equal
+ * Convert a string appended to a url back into a query object
+ * qs.parse can only customize the delimiter, not the equal sign
  * 'a~a%26b,b~true' => {a: 'a&b', b: true}
  *
  * @param {string} query
- * @param {string} equal - 键和值的分隔符
- * @param {string} delimiter - 键值对之间的分隔符
+ * @param {string} equal - separator between key and value
+ * @param {string} delimiter - separator between key-value pairs
  * @return {object}
  */
 export function parse(query, equal = valueSeparator, delimiter = paramSeparator) {
@@ -51,12 +51,12 @@ export function parse(query, equal = valueSeparator, delimiter = paramSeparator)
 }
 
 /**
- * 将query对象转换成str插入到url上
+ * Convert a query object into a string and insert it into the url
  *
  * @param {string} url
  * @param {object} query
  * @param {'history'|'hash'} routerMode
- * @returns {string} 插入了query的url
+ * @returns {string} the url with the query inserted
  */
 export function set(url, query, routerMode) {
   const queryStr = queryFlag + stringify(query) + paramSeparator
@@ -77,20 +77,20 @@ export function set(url, query, routerMode) {
 }
 
 /**
- * 从url中取出query对象，如果没有，返回null
+ * Extract the query object from the url; return null if there is none
  *
  * @param {string} url
- * @return {object|null} 对象类型的query参数
+ * @return {object|null} the query parameters as an object
  */
 export function get(url) {
   const found = url.match(queryPattern)
   if (!found) return null
-  const queryStr = found[0].replace(queryFlag, '').slice(0, -1) // 移除末尾的paramSeparator
+  const queryStr = found[0].replace(queryFlag, '').slice(0, -1) // remove the trailing paramSeparator
   return parse(queryStr)
 }
 
 /**
- * 从url中移除(?||&)queryPattern
+ * Remove the (?||&)queryPattern from the url
  * @param {string} url
  */
 export function clear(url) {

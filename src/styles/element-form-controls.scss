@@ -1,12 +1,12 @@
-// JumpServer 表单控件统一样式（Element Plus 单层边框方案）
+// JumpServer unified form control styling (Element Plus single-layer border approach)
 //
-// Element UI 时代由 element-extra.css 全局处理 .el-input__inner；
-// Element Plus 改用 .el-input__wrapper + inset box-shadow，旧 CSS 会导致 border 套 border。
-// 控件外观集中在此；DataForm 等组件只保留布局（label 宽度、flex、mobile 等）。
+// In the Element UI era, element-extra.css globally handled .el-input__inner;
+// Element Plus switched to .el-input__wrapper + inset box-shadow, so the old CSS caused nested borders.
+// Control appearance is centralized here; components like DataForm keep only layout concerns (label width, flex, mobile, etc.).
 //
-// 作用域：
-//   .el-form .el-form-item__content  — 标准 el-form
-//   .jms-form-controls               — 非 el-form 场景（Crontab、UserConfirmDialog 等）
+// Scope:
+//   .el-form .el-form-item__content  — standard el-form
+//   .jms-form-controls               — non-el-form scenarios (Crontab, UserConfirmDialog, etc.)
 
 @mixin jms-input-wrapper-spacing {
   padding-block: var(--jms-input-padding-block, 1px);
@@ -18,17 +18,18 @@
   padding-inline-end: var(--jms-input-padding-inline-end, var(--jms-input-padding-inline, 11px));
 }
 
-// 输入文字与 placeholder 的间距只属于 wrapper。普通表单输入由下方直接子节点规则
-// 自动应用默认值；TagInput、Autocomplete、InputNumber 等复合控件显式挂载此契约，
-// 并通过变量声明视觉特例，不再修改 Element Plus 内部节点的 text padding。
+// The spacing between input text and the placeholder belongs only to the wrapper. Plain form inputs
+// get the default automatically applied via the direct-child-node rule below; compound controls like
+// TagInput, Autocomplete, InputNumber explicitly opt into this contract and declare visual exceptions
+// via variables, instead of modifying the text padding on Element Plus's internal nodes.
 .jms-input-spacing.el-input > .el-input__wrapper,
 .jms-input-spacing.el-autocomplete > .el-input > .el-input__wrapper,
 .jms-input-spacing .el-input > .el-input__wrapper {
   @include jms-input-wrapper-spacing;
 }
 
-// 所有 Element Plus 多选框使用同一套标签尺寸与间距。契约锚定 selection，
-// 以同时覆盖主控件和 collapse-tags-tooltip teleport 出去的标签列表。
+// All Element Plus multi-select controls use the same tag size and spacing. The contract anchors on
+// selection so it covers both the main control and the tag list teleported out by collapse-tags-tooltip.
 .el-select__selection:has(.el-tag) {
   gap: 0;
 
@@ -48,7 +49,7 @@
     }
   }
 
-  // Tag 的起始 margin 负责 tag-to-tag 间距；输入容器单独补齐末尾 Tag 到光标的间距。
+  // The Tag's leading margin handles tag-to-tag spacing; the input container separately fills in the gap from the last Tag to the cursor.
   > .el-select__input-wrapper:not(.is-hidden) {
     margin-inline-start: 6px;
   }
@@ -76,8 +77,9 @@
     font-size: 13px;
   }
 
-  // Element Plus 默认将 radio 文案限制为单行且固定高度。多语言长文案需要
-  // 在内容区内换行并撑高选项，同时让选中圆点与首行文字对齐。
+  // By default Element Plus restricts radio label text to a single line with a fixed height. Long
+  // multilingual labels need to wrap within the content area and expand the option's height, while
+  // keeping the selected dot aligned with the first line of text.
   .el-radio-group .el-radio {
     align-items: flex-start;
     max-width: 100%;
@@ -197,8 +199,9 @@
     cursor: text;
   }
 
-  // 普通表单项的直接输入框使用默认契约。仅匹配直接子节点，避免替复合控件
-  // 决定特例值；变量继承允许调用方通过 .jms-input-spacing 覆盖默认间距。
+  // The direct input of a plain form item uses the default contract. Matching only direct child nodes
+  // avoids deciding exception values on behalf of compound controls; variable inheritance lets callers
+  // override the default spacing via .jms-input-spacing.
   > .el-input > .el-input__wrapper {
     @include jms-input-wrapper-spacing;
   }
@@ -345,7 +348,7 @@
   @include jms-form-control-items;
 }
 
-// 普通 el-form（非 DataForm）的间距与标签对齐
+// Spacing and label alignment for plain el-form (non-DataForm)
 .el-form:not(.form-fields) {
   .el-form-item {
     margin-bottom: 20px;
@@ -396,7 +399,7 @@
 }
 
 // ---------------------------------------------------------------------------
-// Form 结构与标签
+// Form structure and labels
 // ---------------------------------------------------------------------------
 
 .el-form {
@@ -448,7 +451,7 @@
 }
 
 .el-card__body {
-  // DataForm（.form-fields）自己维护 padding/gap；卡片体已有 20px 内边距，不再额外 margin。
+  // DataForm (.form-fields) maintains its own padding/gap; the card body already has 20px padding, so no extra margin.
   .el-form:not(.form-fields) {
     form {
       margin-top: 0;
@@ -457,7 +460,7 @@
 }
 
 // ---------------------------------------------------------------------------
-// 帮助文案、placeholder
+// Help text, placeholder
 // ---------------------------------------------------------------------------
 
 .help-block {
@@ -481,7 +484,7 @@
 
 .el-input input::placeholder {
   font-weight: 400 !important;
-  // 不强制 'Open Sans'：中日文 placeholder 继承输入框字体，保持一致。
+  // Don't force 'Open Sans': Chinese/Japanese placeholders inherit the input's font for consistency.
   font-size: 13px;
 }
 
@@ -490,7 +493,7 @@
 }
 
 // ---------------------------------------------------------------------------
-// Cascader / Select 微调
+// Cascader / Select fine-tuning
 // ---------------------------------------------------------------------------
 
 .el-cascader--small {
@@ -508,7 +511,7 @@
 }
 
 // ---------------------------------------------------------------------------
-// 日期范围选择器（表单字段 DatetimeRangePicker + 表格筛选 .datepicker）
+// Date range picker (form field DatetimeRangePicker + table filter .datepicker)
 // ---------------------------------------------------------------------------
 
 .datepicker.el-date-editor,
@@ -545,7 +548,7 @@
   line-height: 30px;
 }
 
-// Picker panels teleport 到 body；表单 wrapper 边框 override 可能泄漏进面板，此处恢复 EP inset 边框。
+// Picker panels teleport to body; the form wrapper's border override can leak into the panel, so restore EP's inset border here.
 .el-picker-panel {
   .el-date-picker__time-header,
   .el-date-range-picker__time-header,

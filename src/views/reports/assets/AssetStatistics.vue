@@ -287,7 +287,7 @@ export default {
             },
             axisLabel: {
               textStyle: {
-                // 坐标轴颜色
+                // Axis color
                 color: '#8F959E'
               }
             },
@@ -331,7 +331,7 @@ export default {
             type: 'line',
             smooth: true,
             areaStyle: {
-              // 区域填充样式
+              // Area fill style
               normal: {
                 color: new echarts.graphic.LinearGradient(
                   0,

@@ -19,10 +19,10 @@ export function collect(content, key) {
 }
 
 /**
- * 递归合并 oldV & newV，策略如下：
- * 1. 过滤掉 newV 中不存在于 content 中的项
- * 2. 如果该项的 type 不是 GROUP，直接覆盖合并到 oldV
- * 3. 如果是，则递归执行步骤 1 到 3
+ * Recursively merge oldV & newV, with the following strategy:
+ * 1. Filter out items in newV that don't exist in content
+ * 2. If the item's type is not GROUP, merge it directly by overwriting oldV
+ * 3. If it is, recursively perform steps 1 to 3
  */
 export function mergeValue(oldV, newV, content) {
   Object.keys(newV).forEach((k) => {
@@ -34,8 +34,8 @@ export function mergeValue(oldV, newV, content) {
 }
 
 /**
- * 根据 content 中的 outputFormat 来处理 value；
- * 如果 outputFormat 处理后的值是对象类型，会覆盖（Object.assign）到 value 上
+ * Process value according to the outputFormat in content;
+ * if the value processed by outputFormat is an object type, it will be merged (Object.assign) into value
  */
 export function transformOutputValue(value, content) {
   const newVal = {}
@@ -44,7 +44,7 @@ export function transformOutputValue(value, content) {
     if (item.type !== 'group') {
       if (item.outputFormat) {
         const v = item.outputFormat(value[id])
-        // REVIEW: 仅根据 format 后的类型来判断赋值形式，有些隐晦
+        // REVIEW: deciding the assignment form based solely on the post-format type is a bit obscure
         if (_isplainobject(v)) Object.assign(newVal, v)
         else newVal[id] = v
       } else {
@@ -58,9 +58,10 @@ export function transformOutputValue(value, content) {
 }
 
 /**
- * 根据 content 中的 inputFormat 来处理 value
- * inputFormat 接受的是当前层级的 value
- * 复杂点在于，不管传入的 value 是否包含某表单项的 key，所有使用了 inputFormat 的项都有可能在这次 update 中被更新
+ * Process value according to the inputFormat in content
+ * inputFormat receives the value at the current level
+ * The tricky part is that, regardless of whether the passed-in value contains a given form-item's key,
+ * every item that uses inputFormat may be updated during this update
  */
 export function transformInputValue(value, content) {
   const newVal = {}

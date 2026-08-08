@@ -109,7 +109,7 @@ export default {
       type: Boolean,
       default: true
     },
-    // 默认引用的Tree组件
+    // The Tree component referenced by default
     component: {
       type: String,
       default: () => 'AutoDataZTree'
@@ -222,7 +222,7 @@ $origin-color: #ffffff;
     background: $origin-color;
     color: var(--color-border);
 
-    // title 部分
+    // title section
     .title {
       display: flex;
       align-items: center;
@@ -249,7 +249,7 @@ $origin-color: #ffffff;
       }
     }
 
-    // tree 部分
+    // tree section
     .data-z-tree {
       //margin-left: -20px;
       //width: calc(100% + 20px);

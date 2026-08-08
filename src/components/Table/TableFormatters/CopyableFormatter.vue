@@ -56,7 +56,7 @@ export default {
 .copyable {
   display: flex;
   align-items: center;
-  gap: 4px; /* 元素间距 */
+  gap: 4px; /* element spacing */
 }
 
 .copy {

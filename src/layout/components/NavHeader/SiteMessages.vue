@@ -133,21 +133,22 @@ export default {
       this.currentMsg = msg
       this.msgDetailVisible = true
     },
-    // 列表预览：正文是 Markdown（工单类还含 HTML 片段），这里剥离标记语法/标签，
-    // 得到干净的纯文本用于 1~2 行预览，避免像详情那样把 # / ** 直接暴露出来。
+    // List preview: the body is Markdown (ticket-type messages may also contain HTML fragments);
+    // strip markup/tags here to get clean plain text for a 1-2 line preview, avoiding exposing
+    // raw # / ** like the detail view does.
     stripMarkdown(text) {
       if (!text) return ''
       return String(text)
-        .replace(/<[^>]+>/g, ' ') // HTML 标签
-        .replace(/!\[[^\]]*\]\([^)]*\)/g, '') // 图片
-        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // 链接 → 文本
-        .replace(/^\s{0,3}#{1,6}\s*/gm, '') // 标题
-        .replace(/\*\*([^*]+)\*\*/g, '$1') // 粗体
-        .replace(/\*([^*]+)\*/g, '$1') // 斜体
-        .replace(/`([^`]+)`/g, '$1') // 行内代码
-        .replace(/^\s{0,3}>\s?/gm, '') // 引用
-        .replace(/^\s{0,3}[-*+]\s+/gm, '') // 列表符号
-        .replace(/\s+/g, ' ') // 折叠空白
+        .replace(/<[^>]+>/g, ' ') // HTML tags
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, '') // Images
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // Links -> text
+        .replace(/^\s{0,3}#{1,6}\s*/gm, '') // Headings
+        .replace(/\*\*([^*]+)\*\*/g, '$1') // Bold
+        .replace(/\*([^*]+)\*/g, '$1') // Italic
+        .replace(/`([^`]+)`/g, '$1') // Inline code
+        .replace(/^\s{0,3}>\s?/gm, '') // Blockquote
+        .replace(/^\s{0,3}[-*+]\s+/gm, '') // List markers
+        .replace(/\s+/g, ' ') // Collapse whitespace
         .trim()
     },
     getMessages() {
@@ -179,7 +180,7 @@ export default {
           done()
         }
       }).catch(() => {
-        /* 取消*/
+        /* Cancelled */
       })
     },
     markAsReadAll(msgs) {
@@ -253,7 +254,7 @@ export default {
   padding: 4px 0 12px;
 }
 
-// 通知列表项：未读圆点 + 标题 + 时间/悬停操作 + 纯文本预览
+// Notification list item: unread dot + title + time/hover action + plain-text preview
 .msg-item {
   padding: 12px 24px;
   cursor: pointer;
@@ -312,7 +313,7 @@ export default {
 }
 
 .msg-item__preview {
-  // 预览与标题左对齐（让开圆点占位），限制两行
+  // Align preview with title (leave room for the dot), clamp to two lines
   margin-top: 4px;
   padding-left: 14px;
   font-size: 12px;
@@ -325,7 +326,7 @@ export default {
   word-break: break-word;
 }
 
-// 已读项（一般刷新后即从未读列表移除，此处兜底弱化展示）
+// Read item (usually removed from the unread list on refresh; this is a fallback muted style)
 .msg-item.is-read {
   .msg-item__subject {
     font-weight: 400;
@@ -341,7 +342,7 @@ export default {
     line-height: 22px;
     color: var(--N900, #1f2329);
 
-    // 时间浮到正文右上角，与首行标题同行，不再单独占一行
+    // Float the time to the top-right of the body, sharing the line with the first title row
     .msg-detail-time {
       float: right;
       margin: 0 0 4px 12px;
@@ -350,12 +351,13 @@ export default {
       line-height: 24px;
     }
 
-    // 正文为 Markdown 渲染结果（标题 / 字段列表 / 链接），下面按渲染出的标签排版。
+    // The body is rendered Markdown output (headings / field lists / links); style it below
+    // by the resulting tags.
     :deep(.markdown-body) {
       padding: 0;
     }
 
-    // 段落分节标题（# / ##）
+    // Section headings (# / ##)
     :deep(h1),
     :deep(h2),
     :deep(h3) {
@@ -384,7 +386,8 @@ export default {
       margin: 6px 0;
     }
 
-    // 只把“粗体字段名开头”的列表排成信息表，普通 Markdown 列表仍保留项目符号。
+    // Only lists that “start with a bold field name” are laid out as an info table;
+    // regular Markdown lists keep their bullet markers.
     :deep(ul:has(> li > strong:first-child)) {
       margin: 6px 0 0;
       padding: 0;
@@ -410,8 +413,9 @@ export default {
       }
     }
 
-    // 消息内容里的链接（资产地址、查看详情等）用统一的链接色，而非 --color-success
-    // （在 Deep black 等主题下是绿色，语义也不对）。--color-link 各主题都是蓝色，稳定一致。
+    // Links in message content (asset address, view details, etc.) use the unified link color,
+    // not --color-success (it renders green under themes like Deep black, which is also
+    // semantically wrong). --color-link is blue across all themes, so it stays consistent.
     :deep(a) {
       color: var(--color-link) !important;
       word-break: break-all;
@@ -444,17 +448,20 @@ export default {
 
 <style lang="scss">
 /*
- * el-drawer 默认 teleport 到 body，且 EP 2.14 无 customClass 且 inheritAttrs:false，
- * 故用 header-class/body-class/modal-class 注入真实类名，并用非 scoped 全局样式命中。
- * modal-class 设为透明遮罩：保留遮罩以支持点击外部关闭，但视觉上不变暗。
+ * el-drawer teleports to body by default, and EP 2.14 has no customClass and
+ * inheritAttrs:false, so header-class/body-class/modal-class are used to inject real class
+ * names, matched via a non-scoped global style.
+ * modal-class is set to a transparent mask: the mask is kept to support click-outside-to-close,
+ * but it doesn't visually dim the page.
  */
 .site-msg-modal {
   background-color: transparent !important;
 }
 
 /*
- * 站内信不是通用 Drawer 组件，避免复用 `.drawer` 后误命中全局抽屉的
- * `overflow: hidden` 规则。抽屉根节点锁定视口高度，body 作为唯一滚动容器。
+ * Site messages are not the generic Drawer component; reusing `.drawer` is avoided to
+ * prevent accidentally matching the global drawer's `overflow: hidden` rule. The drawer
+ * root locks the viewport height, with body as the sole scroll container.
  */
 .site-msg-drawer {
   height: 100%;

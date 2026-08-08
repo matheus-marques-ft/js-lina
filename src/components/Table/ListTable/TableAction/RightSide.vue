@@ -144,9 +144,9 @@ export default {
     },
     iExportOptions() {
       /**
-       *  原本是使用 assignIfNot 此函数内部使用 partialRight, 该函数
-       *  只在目标对象的属性未定义时才从源对象复制属性，如果目标对象已经有值，则保留原值
-       *  那如果首次点击的树节点，那么此时 url 就会被确定，后续点击的树节点，那么 url 就将不会携带节点信息
+       *  This originally used assignIfNot, which internally uses partialRight; that function
+       *  only copies a property from the source object when the target object's property is undefined — if the target already has a value, the original value is kept.
+       *  So if a tree node is clicked for the first time, the url would then be fixed, and subsequent tree node clicks would no longer carry node info
        *
        */
       // return assignIfNot(this.exportOptions, { url: this.tableUrl })
@@ -263,8 +263,8 @@ export default {
     color: var(--color-text-primary) !important;
   }
 
-  // 纯图标按钮：el-button 内部还隔着 el-tooltip__trigger 和一层 div，
-  // 外层 button 的 flex 居中不会自动传导到图标；这里把中间链路都撑满并居中。
+  // Icon-only button: inside el-button there's still an el-tooltip__trigger and another div in between,
+  // so the outer button's flex centering doesn't automatically propagate to the icon; fill and center the whole chain in between here.
   :deep(.action-item .el-tooltip__trigger),
   :deep(.action-item .el-tooltip__trigger > div) {
     display: inline-flex;
@@ -275,8 +275,8 @@ export default {
     line-height: 1;
   }
 
-  // 无标题时那个空 <span> 仍带 DataActions 的 margin-left:3px，会把图标挤离中心。
-  // 图标工具栏里标题恒为空，直接去掉该 span 及其 margin，图标即可真正居中。
+  // When there's no title, that empty <span> still carries DataActions' margin-left:3px, which pushes the icon off-center.
+  // In an icon toolbar the title is always empty, so just remove that span and its margin to truly center the icon.
   :deep(.action-item .pre-icon + span) {
     margin-left: 0;
   }

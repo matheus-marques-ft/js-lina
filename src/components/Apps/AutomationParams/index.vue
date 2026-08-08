@@ -145,7 +145,7 @@ export default {
       const platforms = await this.getFilterPlatforms()
       let pushAccountMethods = platforms.map((i) => i.automation[this.method])
       pushAccountMethods = _.uniq(pushAccountMethods)
-      // 检测是否有可设置的推送方式
+      // Check whether there are any push methods that can be configured
       const hasCanSettingPushMethods = _.intersection(
         pushAccountMethods,
         Object.keys(this.remoteMeta)
@@ -158,7 +158,7 @@ export default {
       const fields = []
       const fieldsMeta = {}
       this.config.fields = []
-      // Todo: 未来改成后端处理，生成 serializer, 这里就不用判断类型了
+      // Todo: move this to backend processing in the future to generate a serializer, so type checking here won't be needed
       const typeMapper = {
         string: 'input',
         boolean: 'switch'
@@ -166,7 +166,7 @@ export default {
 
       for (const method of methods) {
         const filterField = this.remoteMeta[method] || {}
-        // 修改资产、节点时不点击设置按钮也需要获取form表单值暴露出去
+        // When modifying assets or nodes, the form value needs to be exposed even without clicking the settings button
         if (Object.prototype.hasOwnProperty.call(this.form, method)) {
           newForm[method] = this.form[method]
         }

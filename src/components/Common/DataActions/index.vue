@@ -178,7 +178,7 @@ export default {
       return ok
     },
     cleanButtonAction(action) {
-      // 只保留 el-button 接受的属性,避免非法 prop 传入导致 validator 报错
+      // Keep only the properties accepted by el-button, to avoid invalid props triggering validator errors
       const { type, size, disabled, plain, round, circle, link, loading } = action
       return { type, size, disabled, plain, round, circle, link, loading }
     },
@@ -190,16 +190,16 @@ export default {
           continue
         }
         const action = { ...v }
-        // 是否拥有这个action
+        // Whether this action is present
         const has = this.checkItem(action, 'has')
         delete action['has']
         if (!has) {
           continue
         }
-        // 是否有分割线
+        // Whether there is a divider
         action.divided = this.checkItem(action, 'divided', false)
 
-        // 是否是disabled
+        // Whether it is disabled
         const can = this.checkItem(action, 'can')
         if (typeof can === 'string') {
           action.disabled = true
@@ -233,16 +233,16 @@ $color-divided: #e4e7ed;
 $color-drop-menu-title: #909399;
 $color-drop-menu-border: #e4e7ed;
 
-// 通用
+// Generic
 .layout {
-  // 确保所有按钮都使用 flex 布局，内容垂直居中
+  // Ensure all buttons use flex layout with vertically centered content
   :deep(.el-button) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     line-height: 1;
 
-    // 确保按钮内部内容垂直居中
+    // Ensure the button's inner content is vertically centered
     > span {
       display: inline-flex;
       align-items: center;
@@ -275,7 +275,7 @@ $color-drop-menu-border: #e4e7ed;
   }
 }
 
-// 主要是左侧 LeftSide
+// Primarily the left side, LeftSide
 .layout.header-action {
   :deep(.action-item.el-button),
   :deep(.action-item.el-dropdown > .el-button),
@@ -409,7 +409,7 @@ $color-drop-menu-border: #e4e7ed;
   .action-item.el-dropdown {
     font-size: 12px;
 
-    // 确保下拉按钮也垂直居中
+    // Ensure the dropdown button is also vertically centered
     :deep(.el-button) {
       display: inline-flex;
       align-items: center;
@@ -443,8 +443,9 @@ $color-drop-menu-border: #e4e7ed;
   padding: 6px 0;
 }
 
-// 下拉分组标题（如「数据库类型」）：与下拉项同样 0 20px 的左右内边距，分组上方加分隔线，
-// 文字垂直居中、次要色，区别于可点击项。
+// Dropdown group title (e.g. "Database Type"): same 0 20px left/right padding as dropdown
+// items, with a divider above the group; text is vertically centered and in the secondary
+// color to distinguish it from clickable items.
 :global(.action-dropdown.el-dropdown__popper .dropdown-menu-title) {
   display: flex;
   align-items: center;
@@ -482,7 +483,7 @@ $color-drop-menu-border: #e4e7ed;
   align-items: center;
   justify-content: flex-start;
   flex: 0 0 auto;
-  // 固定图标列宽，保证使用图标占位的下拉项文字左边缘对齐。
+  // Fix the icon column width to keep the left text edge aligned across dropdown items that use an icon placeholder.
   width: 18px;
   height: 16px;
   margin-right: 6px;
@@ -525,7 +526,7 @@ $color-drop-menu-border: #e4e7ed;
   line-height: 1.4;
 }
 
-// 「批量处理(选中 N 项)」是分组标题:文字在上、分割线在其下方,与下方操作项分隔。
+// "Batch actions (N selected)" is a group title: text on top, divider below it, separating it from the operation items beneath.
 :global(.action-dropdown.el-dropdown__popper .more-batch-processing) {
   margin-bottom: 4px;
   padding-bottom: 4px;

@@ -29,7 +29,7 @@ export default {
     const date_expired = getDaysFuture(time / dividend, new Date()).toISOString()
     const date_start = now.toISOString()
     return {
-      // 工单创建 隐藏提示信息中的跳转连接
+      // Ticket creation: hide the jump link in the hint message
       hasDetailInMsg: false,
       loading: true,
       flowOptions: [],

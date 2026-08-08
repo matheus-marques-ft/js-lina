@@ -388,7 +388,7 @@ export default {
       return this.$nextTick()
     },
     forceHidePopover() {
-      // 外部点击可能已经先更新 visible，仍需在外层 Tab 隐藏触发器前强制隐藏浮层。
+      // An outside click may have already updated visible first; the popover still needs to be forcibly hidden before the outer Tab hides its trigger.
       this.popoverForceHidden = true
       this.popoverVisible = false
       return this.$nextTick()

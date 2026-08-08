@@ -42,14 +42,14 @@ export default {
       this.toggleSiblingVisibility()
     },
     toggleSiblingVisibility() {
-      // 当前 form-group-header 的 DOM 元素
+      // the current form-group-header's DOM element
       const formGroupHeader = this.$refs.formGroup
       if (!formGroupHeader) return
 
-      // 找到当前 form-group-header 的下一个兄弟节点
+      // find the current form-group-header's next sibling node
       let sibling = formGroupHeader.nextElementSibling
 
-      // 循环隐藏或显示直到找到下一个 form-group-header
+      // loop hiding or showing until the next form-group-header is found
       while (sibling && sibling.classList.contains('el-form-item')) {
         sibling.style.display = this.isVisible ? '' : 'none'
         sibling = sibling.nextElementSibling

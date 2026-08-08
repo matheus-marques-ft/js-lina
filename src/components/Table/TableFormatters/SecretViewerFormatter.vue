@@ -175,9 +175,9 @@ export default {
       downloadText(this.realValue, this.name + '.txt')
     },
     async onEdit() {
-      // 编辑态下点击(对号)即确认退出；非编辑态点击(铅笔)进入编辑。
-      // 不再用 this.isEdit = !this.isEdit,避免 action 图标的 click 与 input blur
-      // 竞态导致的重复取反(点对号又被翻回编辑态)。
+      // In edit mode, clicking (checkmark) confirms and exits; in non-edit mode, clicking (pencil) enters edit mode.
+      // No longer using this.isEdit = !this.isEdit, to avoid the race between the action icon's click and the input's blur
+      // causing a double toggle (clicking the checkmark flips it back to edit mode).
       if (this.isEdit) {
         this.confirmEdit()
         return
@@ -193,8 +193,8 @@ export default {
       this.$emit('input', this.realValue)
     },
     onEditBlur() {
-      // action 图标已 @mousedown.prevent,点它们不会触发 blur;
-      // 这里只处理点击输入框外部的失焦(同样视为确认)。
+      // Action icons already have @mousedown.prevent, so clicking them won't trigger blur;
+      // this only handles blur from clicking outside the input (also treated as confirm).
       if (this.isEdit) {
         this.confirmEdit()
       }

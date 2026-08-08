@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 该build基于 Node 24 + yarn
+# This build is based on Node 24 + yarn
 utils_dir=$(pwd)
 project_dir=$(dirname "$utils_dir")
 release_dir=${project_dir}/release
@@ -16,19 +16,19 @@ function change_version() {
 }
 
 function install_deps() {
-  # 下载依赖模块并构建
+  # Download dependency modules and build
   cd "${project_dir}" || exit 3
   yarn install --immutable || exit 4
 }
 
 function build() {
   cd "${project_dir}" || exit 1
-  # 修改版本号文件
+  # Update the version number file
   if [[ -n ${VERSION-''} ]]; then
     change_version || exit 2
   fi
   yarn build:prod || exit 5
-  # 打包
+  # Package
   rm -rf "${release_dir:?}"/*
   mkdir -p "${release_dir}"
   to_dir="${release_dir}/lina"

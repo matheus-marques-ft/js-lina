@@ -104,9 +104,10 @@ export default {
         skipped: this.$tc('Skipped'),
         error: this.$tc('Error')
       }
-      // 与 StateFormatter 一致:优先按 error 归类,其次按 state。
-      // 旧实现用 _.groupBy(result, 'state'),错误行没有 state 会被归到
-      // 'undefined' 组,既生成无标签的汇总项、又永远统计不到 error,导致条数不对。
+      // Consistent with StateFormatter: classify by error first, then by state.
+      // The old implementation used _.groupBy(result, 'state'); error rows without
+      // a state would be grouped into an 'undefined' group, producing an unlabeled
+      // summary item while never counting errors, resulting in incorrect counts.
       const counts = { total: this.result.length, created: 0, updated: 0, skipped: 0, error: 0 }
       for (const row of this.result) {
         if (row.error) {
@@ -147,8 +148,9 @@ export default {
 }
 </style>
 
-<!-- el-dialog teleport 到 body,内部样式须用非 scoped 块;selector 特异度 (0,4,0)
-     高于 el-data-table 的 .el-data-table[data-v] .el-pagination (0,3,0),故无需 !important -->
+<!-- el-dialog teleports to body, so internal styles must use a non-scoped block; selector
+     specificity (0,4,0) is higher than el-data-table's .el-data-table[data-v] .el-pagination
+     (0,3,0), so !important is not needed -->
 <style lang="scss">
 .el-dialog.dialog.bulk-create-result-dialog .el-pagination {
   padding: 1px 0;

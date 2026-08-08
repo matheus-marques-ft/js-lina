@@ -66,7 +66,7 @@ export default {
       default: true
     },
     actions: {
-      type: Object, // 查看defaultActions设置
+      type: Object, // See the defaultActions setting
       default: () => ({})
     },
     getObjectName: {
@@ -202,7 +202,7 @@ export default {
     getDetailUrl() {
       const vm = this
       const objectId = this.actionId || this.$context.get('id')
-      // 兼容之前的 detailApiUrl
+      // For backward compatibility with the previous detailApiUrl
       if (vm.validActions.detailApiUrl || vm.detailApiUrl) {
         return vm.validActions.detailApiUrl || vm.detailApiUrl
       }
@@ -252,7 +252,7 @@ export default {
           }
         }
       }).catch(() => {
-        /* 取消*/
+        /* Cancelled */
       })
     },
     defaultUpdate() {
@@ -290,7 +290,7 @@ export default {
       this.$router.push(route)
     },
     getObject() {
-      // 兼容之前的 detailApiUrl
+      // For backward compatibility with the previous detailApiUrl
       const url = this.getDetailUrl()
       return this.$axios
         .get(url, { disableFlashErrorMsg: true })

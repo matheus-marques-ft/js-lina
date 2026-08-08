@@ -1,15 +1,14 @@
 export function randomColorBySeed(s) {
-  // 将标签名称转换为哈希值，用作随机种子
+  // Convert the label name into a hash value, used as the random seed
   const hash = hashCode(s)
 
-  // 生成随机颜色
+  // Generate a random color
   const color = '#' + ('000000' + (hash & 0xffffff).toString(16)).slice(-6)
-  // 转换为十六进制颜色
+  // Convert to a hex color
   return color
 }
 
-// 辅助函数：将字符串转换为哈希值
-// 辅助函数：将字符串转换为哈希值
+// Helper function: convert a string into a hash value
 function hashCode(str) {
   let hash = 0
   for (let i = 0; i < str.length; i++) {
@@ -20,17 +19,17 @@ function hashCode(str) {
 }
 
 export function getRandomColor() {
-  // 生成随机的红、绿、蓝颜色值
+  // Generate random red, green, and blue color values
   const r = Math.floor(Math.random() * 256)
   const g = Math.floor(Math.random() * 256)
   const b = Math.floor(Math.random() * 256)
 
-  // 将颜色值转换为十六进制字符串
+  // Convert the color values to hex strings
   const hexR = r.toString(16).padStart(2, '0')
   const hexG = g.toString(16).padStart(2, '0')
   const hexB = b.toString(16).padStart(2, '0')
 
-  // 返回组合后的十六进制颜色代码
+  // Return the combined hex color code
   return `#${hexR}${hexG}${hexB}`
 }
 
@@ -41,13 +40,13 @@ export function hexToRgb(hex) {
   return { r, g, b }
 }
 
-// 判断颜色是否为深色的函数
+// Function to determine whether a color is dark
 export function isDarkness(color) {
   if (!color) {
     return false
   }
   const { r, g, b } = hexToRgb(color)
-  // 计算亮度
+  // Calculate brightness
   const brightness = 0.299 * r + 0.587 * g + 0.114 * b
-  return brightness < 128 // 128 是一个经验阈值，可以调整
+  return brightness < 128 // 128 is an empirical threshold, can be adjusted
 }

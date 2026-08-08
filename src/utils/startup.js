@@ -52,7 +52,7 @@ async function checkLogin({ to, from }) {
 }
 
 async function getPublicSetting({ to, from }, isOpen) {
-  // 获取Public settings
+  // Fetch the public settings
   const publicSettings = store.getters.publicSettings
   if (!publicSettings || Object.keys(publicSettings).length === 0 || !isOpen) {
     await store.dispatch('settings/getPublicSettings', isOpen)
@@ -61,7 +61,7 @@ async function getPublicSetting({ to, from }, isOpen) {
 
 async function refreshCurrentOrg() {
   return orgs.getCurrentOrg().then((org) => {
-    // Root 就不刷新本地的了, 会影响 autoEnter
+    // Don't refresh the local one for Root, it would affect autoEnter
     if (autoEnterOrgs.indexOf(org.id) !== -1) {
       return
     }
@@ -119,11 +119,12 @@ export async function generatePageRoutes({ to, from }) {
         return acc
       }, {})
     )
-    // vue-router 5 不允许父子路由同名,递归去重:如果父 name 和某个后代重名,去掉父的 name
+    // vue-router 5 doesn't allow a parent and child route to share a name; deduplicate recursively:
+    // if the parent's name collides with a descendant's, drop the parent's name
     function deduplicateRouteNames(routes, ancestorNames = new Set()) {
       for (const route of routes) {
         if (route.name && ancestorNames.has(route.name)) {
-          // 子路由 name 与祖先重名,去掉子的(保留祖先的,子用 path 匹配)
+          // The child route's name collides with an ancestor's; drop the child's (keep the ancestor's, the child matches by path)
           delete route.name
         }
         if (route.children && route.children.length > 0) {
@@ -131,7 +132,7 @@ export async function generatePageRoutes({ to, from }) {
           for (const child of route.children) {
             if (child.name) childNames.add(child.name)
           }
-          // 如果父 name 和某个 child name 相同,去掉父的 name(父只是容器)
+          // If the parent's name matches a child's name, drop the parent's name (the parent is just a container)
           if (route.name && childNames.has(route.name)) {
             delete route.name
           }
@@ -176,13 +177,13 @@ async function regenerateMissingRoute({ to, from }) {
 }
 
 export async function checkUserFirstLogin({ to, from, next }) {
-  // 防止递归调用
+  // Prevent recursive calls
   if (to.path === '/profile/improvement') return true
   if (store.state.users.profile.is_first_login) {
     return {
       name: 'Improvement',
       replace: true,
-      query: { _t: Date.now() } // 添加时间戳，防止 from 一样 next 不触发 guard.js router.beforeEach逻辑
+      query: { _t: Date.now() } // Add a timestamp to prevent an identical `from` from skipping the router.beforeEach logic in guard.js
     }
   } else {
     const nextRoute = localStorage.getItem('next')
@@ -196,7 +197,8 @@ export async function checkUserFirstLogin({ to, from, next }) {
 
 export async function changeCurrentViewIfNeed({ to, from }) {
   let viewName = to.path.split('/')[1]
-  // 这几个是需要检测的, 切换视图组织时，避免 404, 这里不能加 settings, 因为 默认没有返回 setting 组织(System) 的管理权限
+  // These are the ones that need checking, to avoid 404s when switching view organizations. Don't add
+  // settings here, because by default the management permission for the setting (System) organization isn't returned
   if (['console', 'audit', 'pam', 'workbench', 'tickets', ''].indexOf(viewName) === -1) {
     console.debug('Current view no need check', viewName)
     return
@@ -209,12 +211,12 @@ export async function changeCurrentViewIfNeed({ to, from }) {
     return true
   }
   const preferView = getPropView()
-  // 如果没有可用视图，直接放行，避免无限重定向
+  // If there's no available view, allow the navigation directly to avoid an infinite redirect
   if (!preferView || preferView === viewName) {
     return true
   }
   viewName = preferView
-  // Next 之前要重置 init 状态，否则这些路由守卫就不走了
+  // The init state must be reset before Next, otherwise these route guards won't run
   await store.dispatch('app/reset')
   return `/${viewName}`
 }
@@ -241,7 +243,7 @@ export async function startup({ to, from, next }) {
     if (['404', 'NotFound'].includes(to?.name)) {
       return regenerateMissingRoute({ to, from })
     }
-    // 页面初始化后也需要检测
+    // Also needs checking after the page has been initialized
     const firstLoginResult = await checkUserFirstLogin({ to, from })
     if (firstLoginResult && firstLoginResult !== true) {
       return firstLoginResult

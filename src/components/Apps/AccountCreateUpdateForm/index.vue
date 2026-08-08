@@ -32,7 +32,7 @@ export default {
       type: Object,
       default: () => ({})
     },
-    // 默认组件密码加密
+    // Encrypt password by default
     encryptPassword: {
       type: Boolean,
       default: true
@@ -161,7 +161,7 @@ export default {
       form.secret = form[secretType]
       form.secret = this.encryptPassword ? encryptPassword(form.secret) : form.secret
 
-      // 如果不删除会明文显示
+      // Delete it, otherwise it will be shown in plain text
       delete form[secretType]
 
       if (!form.secret) {

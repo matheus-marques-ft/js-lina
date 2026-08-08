@@ -100,7 +100,7 @@ export default {
   watch: {
     cellValue: {
       handler(newValue) {
-        // listData 需要重新赋值一遍 items 重新计算
+        // listData needs to be reassigned so items gets recomputed
         this.listData = newValue
         this.computeAmount()
       }

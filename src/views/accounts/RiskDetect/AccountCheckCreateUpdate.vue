@@ -54,7 +54,7 @@ export default {
                 let name = item.name
                 let disabled = false
                 if (item.slug === 'check_gathered_account') {
-                  name = `${name} (使用创建账号发现任务替代)`
+                  name = `${name} (use the account discovery task instead)`
                   disabled = true
                 }
                 return { label: name, value: item.slug, disabled: disabled }

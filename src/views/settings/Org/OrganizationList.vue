@@ -107,7 +107,7 @@ export default {
                     }
                   }
                 }).catch(() => {
-                  /* 取消*/
+                  /* Cancelled */
                 })
               }
             }

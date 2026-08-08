@@ -69,7 +69,7 @@ export default {
       default: true
     },
     rows: {
-      type: Array, // 可能会批量 review 所以有了它
+      type: Array, // May be reviewed in batch, hence this field
       default: () => []
     },
     selectedRows: {
@@ -98,7 +98,8 @@ export default {
       }
     },
     isBatch() {
-      // 如果是批量，则判断批量中所选的第一个的 Status，如果是在表格中，那么会存在 row.id 那么也应该出现 button
+      // If batch, check the Status of the first selected row in the batch; if in the table, row.id
+      // exists so the button should also appear
       if (this.selectedRows.length > 0 && this.selectedRows[0] && this.selectedRows[0].status) {
         return this.selectedRows[0].status.value === '0'
       }

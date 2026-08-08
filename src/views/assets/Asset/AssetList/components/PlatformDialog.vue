@@ -96,7 +96,7 @@ export default {
         recentPlatforms[this.recentUsedLabel] = this.typeRecentPlatforms
         platforms = this.typeSortedPlatforms
       }
-      // 最近使用为空就不用了
+      // No need for it if recently used is empty
       if (recentPlatforms[this.recentUsedLabel].length === 0) {
         recentPlatforms = {}
       }
@@ -159,8 +159,9 @@ export default {
 .platform-item {
   width: 100%;
   margin: 5px 0;
-  // 每个平台卡片显式描一圈边框（左侧 4px 为随机强调色）。el-card 默认边框在部分主题/
-  // 场景下不可见，这里固定给一圈浅色边框，保证卡片轮廓始终存在。
+  // Explicitly draw a border around each platform card (the left 4px is the random
+  // accent color). el-card's default border is invisible in some themes/scenarios,
+  // so a fixed light border is drawn here to keep the card outline always visible.
   border: 1px solid var(--color-border);
 
   & :deep(.el-card__body) {

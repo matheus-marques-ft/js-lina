@@ -30,7 +30,7 @@ export default {
         {
           name: 'name',
           label: this.$t('name'),
-          default: '张三'
+          default: 'John Doe'
         },
         {
           name: 'userName',
@@ -50,7 +50,7 @@ export default {
         {
           name: 'assetName',
           label: this.$t('assetName'),
-          default: '服务器01'
+          default: 'Server01'
         },
         {
           name: 'assetAddress',
@@ -67,7 +67,7 @@ export default {
         {
           name: 'name',
           label: this.$t('name'),
-          default: '张三'
+          default: 'John Doe'
         },
         {
           name: 'userName',

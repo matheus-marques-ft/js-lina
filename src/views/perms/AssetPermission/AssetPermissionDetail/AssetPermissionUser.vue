@@ -57,7 +57,7 @@ export default {
                 .delete(url)
                 .then((res) => {
                   this.$message.success(this.$tc('DeleteSuccessMsg'))
-                  // 局部刷新当前表格，替代 common/reload 的整页重建
+                  // Partially refresh the current table instead of a full-page rebuild via common/reload
                   this.$refs.ListTable.reloadTable()
                 })
                 .catch((error) => {
@@ -167,7 +167,7 @@ export default {
     this.updateTableConfigUrl(this.$route.params.id)
   },
   methods: {
-    // 对于 url 中的 id 值有可能会捕获到上一个页面路由对象中的 id 值，因此会导致权限报错
+    // The id value in the url may pick up the id from the previous page's route object, which causes a permission error
     updateTableConfigUrl(id) {
       if (id) {
         this.tableConfig.url = `/api/v1/perms/asset-permissions/${id}/users/all/`

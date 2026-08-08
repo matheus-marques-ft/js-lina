@@ -47,27 +47,27 @@ export default {
     }
   },
   computed: {
-    // icon 是图片资源（后端路径或 base64）
+    // icon is an image resource (backend path or base64)
     isImageIcon() {
       const icon = this.d.icon
       return !!icon && (icon.startsWith('/') || icon.startsWith('data:'))
     },
-    // 图片可用（未加载失败）
+    // Image is usable (has not failed to load)
     showImage() {
       return this.isImageIcon && !this.imgError
     },
-    // icon 是图标名（svg / fa / el-icon）
+    // icon is an icon name (svg / fa / el-icon)
     isNamedIcon() {
       return !!this.d.icon && !this.isImageIcon
     },
-    // 无图/图裂时的文字占位:取名称前两个字符
+    // Text placeholder for when there is no image or it fails to load: takes the first two characters of the name
     placeholderText() {
       const name = (this.d.display_name || '').trim()
       return name.slice(0, 2) || '--'
     }
   },
   watch: {
-    // 卡片实例会被复用（v-for + keep-alive），换数据时重置图片错误态
+    // Card instances are reused (v-for + keep-alive); reset the image error state when the data changes
     'd.icon'() {
       this.imgError = false
     }
@@ -116,13 +116,13 @@ export default {
       object-fit: contain;
     }
 
-    // 命名图标统一尺寸
+    // Uniform size for named icons
     :deep(svg) {
       width: 40px;
       height: 40px;
     }
 
-    // 无图/图裂时的文字占位块:方形 6px 圆角,取名称前两字
+    // Text placeholder block for when there is no image or it fails to load: square with 6px rounded corners, first two characters of the name
     .text-icon {
       width: 60px;
       height: 60px;
@@ -142,7 +142,7 @@ export default {
 
   .text-zone {
     flex: 1 1 auto;
-    // 关键:允许子元素在 flex 布局内正常 ellipsis
+    // Key: allows child elements to ellipsis correctly within the flex layout
     min-width: 0;
     display: flex;
     flex-direction: column;

@@ -89,7 +89,7 @@ export default {
           top: 0,
           left: 0,
           icon: 'rect',
-          // 图例标记的图形宽度
+          // Width of the legend marker shape
           itemWidth: 10,
           itemHeight: 10,
           itemGap: 12
@@ -136,7 +136,7 @@ export default {
             axisTick: {
               show: false
             },
-            // 坐标轴线样式
+            // Axis line style
             splitLine: {
               show: true,
               lineStyle: {
@@ -153,7 +153,7 @@ export default {
             type: 'line',
             smooth: true,
             areaStyle: {
-              // 区域填充样式
+              // Area fill style
               color: new echarts.graphic.LinearGradient(
                 0,
                 0,
@@ -185,7 +185,7 @@ export default {
             type: 'line',
             smooth: true,
             areaStyle: {
-              // 区域填充样式
+              // Area fill style
               color: new echarts.graphic.LinearGradient(
                 0,
                 0,
@@ -236,7 +236,7 @@ export default {
     this._after = () => this.forceResize()
     window.addEventListener('beforeprint', this._before)
     window.addEventListener('afterprint', this._after)
-    // 兼容某些浏览器（Safari）触发 print 媒体切换
+    // Support some browsers (Safari) triggering the print media switch
     this._mql = window.matchMedia && window.matchMedia('print')
     if (this._mql) {
       const handler = (e) => (e.matches ? this._before() : this._after())

@@ -18,7 +18,7 @@ export const filterSelectValues = (values) => {
     if (Object.prototype.hasOwnProperty.call(item, 'pk')) {
       selects.push(item)
     } else {
-      // 格式校验：不以:开头，不以:结尾
+      // Format validation: must not start or end with ':'
       const reg = /^:|:$/
       if (item.name.indexOf(':') > -1 && !reg.test(item.name)) {
         const [name, value] = item.name.split(':')
@@ -171,7 +171,8 @@ export const assetFieldsMeta = (vm, category, type) => {
       },
       on: {
         change: updatePlatform,
-        // 初始化和用户选择都会触发 input；与 change 共用防抖，避免同一次选择重复初始化。
+        // Both initialization and user selection trigger input; it shares the debounce
+        // with change to avoid re-initializing for the same selection.
         input: updatePlatform
       }
     },

@@ -343,7 +343,7 @@ export default {
 }
 
 .workspace-tab {
-  // 标签页头与下方编辑器/变量表左对齐(原先 margin-left:30px 让 main.yml 标签比编辑器右移错位)
+  // Align the tab header with the editor/variable table below (previously margin-left:30px shifted the main.yml tab right, misaligning it with the editor)
   :deep(.el-tabs__header) {
     margin: 0 0 15px 0 !important;
   }

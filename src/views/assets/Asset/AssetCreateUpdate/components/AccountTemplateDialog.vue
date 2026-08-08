@@ -64,7 +64,7 @@ export default {
         columnsMeta: {
           name: {
             formatter: (row) => <span>{row.name}</span>
-            // 暂禁用远程应用中账号模板的详情跳转
+            // Detail navigation for account templates in remote apps is temporarily disabled
             // formatterArgs: {
             //   route: 'AccountTemplateDetail'
             // }
@@ -122,7 +122,7 @@ export default {
     },
     handleConfirm() {
       this.$emit('update:visible', false)
-      // 过滤掉添加里还没有id的账号
+      // Filter out accounts in the addition list that don't have an id yet
       const templates = this.accounts.filter((i) => i?.template).map((item) => item.template)
       const newAddAccounts = this.accountsSelected
         .filter((i) => {
@@ -149,7 +149,7 @@ export default {
     hasSelectValue(row) {
       return this.accountsSelected.some((item) => item.id === row.id)
     },
-    // 判断是否有相同类型的账号, 有则不允许选择
+    // Check whether an account of the same type already exists; if so, disallow selection
     hasSameTypeAccount(row) {
       const notIdAccounts = this.accounts.filter((i) => !i?.id)
       const needFilterAccounts = [...notIdAccounts, ...this.accountsSelected]

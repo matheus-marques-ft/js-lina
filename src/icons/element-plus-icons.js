@@ -1,5 +1,5 @@
-// 全局注册 Element Plus 图标组件（PascalCase 名称）
-// 模板中可直接使用：<el-icon><InfoFilled /></el-icon>，无需逐文件 import
+// Globally register Element Plus icon components (PascalCase names)
+// Can be used directly in templates: <el-icon><InfoFilled /></el-icon>, no need to import per file
 import * as ElementPlusIcons from '@element-plus/icons-vue'
 import { legacyIconComponents } from './legacy-icon-map'
 
@@ -8,7 +8,7 @@ export function installElementPlusIcons(app) {
     app.component(name, component)
   }
 
-  // 兼容旧 Element UI 图标名，允许继续直接写 <el-icon-download /> 这类模板。
+  // Compatible with legacy Element UI icon names, allowing templates like <el-icon-download /> to keep working.
   for (const [legacyName, component] of Object.entries(legacyIconComponents)) {
     app.component(legacyName, component)
   }

@@ -332,7 +332,7 @@ export default {
                 })
                 return
               }
-              // nested objects like dates_metrics_total: { "密码": [..] }
+              // nested objects like dates_metrics_total: { "password": [..] }
               if (v && typeof v === 'object') {
                 Object.entries(v).forEach(([innerKey, innerArr]) => {
                   if (!Array.isArray(innerArr)) return

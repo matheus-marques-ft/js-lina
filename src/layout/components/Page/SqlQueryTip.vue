@@ -1,7 +1,8 @@
 <template>
   <!--
-    调试用 SQL 计数条。不用 el-alert（其内部布局会撑出一块多余高度、且不易左对齐），
-    改为一个紧凑的、左对齐的纯 div 单行条，右侧自带关闭按钮。
+    Debug-only SQL count bar. Not using el-alert (its internal layout adds extra height and
+    is hard to left-align); instead this is a compact, left-aligned plain single-line div bar
+    with its own close button on the right.
   -->
   <div v-if="showSqlQueryCounter && !noContent" class="sql-query-tip">
     <div class="sql-query-tip__tags">

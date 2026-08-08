@@ -285,7 +285,8 @@ export default {
   line-height: 1.5;
 }
 
-// 底部通过/拒绝/撤销/回复按钮统一到全站 30px 规范(原 size="small" 偏矮),图标与文字留 4px 间距
+// Unify the bottom approve/reject/cancel/reply buttons to the site-wide 30px standard
+// (the original size="small" was too short); keep a 4px gap between icon and text
 :deep(.el-form-item .el-button) {
   height: 30px;
   min-height: 30px;

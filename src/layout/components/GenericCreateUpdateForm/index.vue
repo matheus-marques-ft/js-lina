@@ -39,17 +39,17 @@ export default {
     'update:object'
   ],
   props: {
-    // 创建对象的地址
+    // Address for creating the object
     url: {
       type: String,
       default: ''
     },
-    // 更新的对象
+    // The object to update
     object: {
       type: Object,
       default: null
     },
-    // form的默认值
+    // Default value of the form
     initial: {
       type: Object,
       default: () => ({})
@@ -58,7 +58,7 @@ export default {
       type: Function,
       default: (value) => value
     },
-    // 提交前，清理form的值
+    // Clean up the form value before submitting
     cleanFormValue: {
       type: Function,
       default: (value) => value
@@ -71,12 +71,12 @@ export default {
       type: Boolean,
       default: true
     },
-    // 获取 meta
+    // Get meta
     afterGetRemoteMeta: {
       type: Function,
       default: null
     },
-    // 当提交的时候，怎么处理
+    // How to handle it when submitting
     onSubmit: {
       type: Function,
       default: null
@@ -85,35 +85,35 @@ export default {
       type: Boolean,
       default: null
     },
-    // 如何提交数据
+    // How to submit the data
     performSubmit: {
       type: Function,
       default(validValues) {
         return this.$axios[this.method](this.iUrl, validValues)
       }
     },
-    // 创建成功的msg
+    // Message for successful creation
     createSuccessMsg: {
       type: String,
       default: function () {
         return 'CreateSuccessMsg'
       }
     },
-    // 保存成功，继续添加的msg
+    // Message for saved successfully, continue adding
     saveSuccessContinueMsg: {
       type: String,
       default: function () {
         return 'SaveSuccessContinueMsg'
       }
     },
-    // 更新成功的msg
+    // Message for successful update
     updateSuccessMsg: {
       type: String,
       default: function () {
         return 'UpdateSuccessMsg'
       }
     },
-    // 创建成功的跳转路由
+    // Route to navigate to after successful creation
     createSuccessNextRoute: {
       type: Object,
       default: function () {
@@ -122,7 +122,7 @@ export default {
         return { name: routeName }
       }
     },
-    // 更新成功的跳转路由
+    // Route to navigate to after successful update
     updateSuccessNextRoute: {
       type: Object,
       default: function () {
@@ -139,7 +139,7 @@ export default {
         return { name: routeName }
       }
     },
-    // 获取下一个路由
+    // Get the next route
     getNextRoute: {
       type: Function,
       default(res, method) {
@@ -153,12 +153,12 @@ export default {
         return 'Duplicate'.toLowerCase()
       }
     },
-    // 获取提交的方法
+    // Get the submit method
     submitMethod: {
       type: [Function, String],
       default: null
     },
-    // 获取创建和更新的url function
+    // Get the URL function for create and update
     getUrl: {
       type: Function,
       default: function () {
@@ -191,8 +191,8 @@ export default {
         if (addContinue) {
           msg = this.saveSuccessContinueMsg
         }
-        // 这些默认值是原始英文 key（如 CreateSuccessMsg），在此翻译；缺 key 时原样返回，
-        // 调用方传入已翻译的文案也不受影响。
+        // These default values are original English keys (e.g. CreateSuccessMsg), translated here;
+        // if the key is missing it's returned as-is, and callers passing already-translated text are unaffected.
         msg = this.$t(msg)
         let msgLinkName = ''
         if (res.name) {
@@ -255,7 +255,7 @@ export default {
         const response = error.response
         const data = response.data
         if (response.status === 400 && data && typeof data === 'object') {
-          // 覆盖式设置错误映射，避免触发表单内容重建
+          // Set the error map by overwriting, to avoid triggering a form content rebuild
           this.$refs.form.setErrors(data)
         }
         this.$emit('performError', data)
@@ -294,7 +294,7 @@ export default {
   },
   computed: {
     iUrl() {
-      // 更新或创建的url
+      // The URL for updating or creating
       return this.getUrl()
     },
     iHasSaveContinue() {
@@ -374,7 +374,7 @@ export default {
       return ['put', 'patch'].indexOf(this.method.toLowerCase()) > -1
     },
     encryptFields(values) {
-      // 批量提交，clean 后可能是个数组
+      // Batch submit; after cleaning it may be an array
       if (values instanceof Array) {
         return values.map((item) => this.encryptFields(item))
       }

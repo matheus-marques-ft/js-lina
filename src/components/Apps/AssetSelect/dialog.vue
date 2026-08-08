@@ -179,16 +179,22 @@ export default {
 
 <style lang="scss">
 /* =====================================================================
-   资产选择弹窗 —— 满幅「主从」布局
-   - body 与双栏容器都不留 padding:内容铺到弹窗内容区边缘。
-     框架由标题栏底线、底部按钮栏顶线,以及中间一条贯穿竖线共同构成,
-     不再用浮动卡片,也就没有卡片边框内的空洞。
-   - 左:资产树侧栏,满高(tab 作头部);右:搜索 + 表格,自带内边距。
-   - 高度随右侧表格自然铺开,竖线满高,分页贴底,无多余空白。
+   Asset selection dialog — full-width "master-detail" layout
+   - Neither the body nor the two-column container has padding: content
+     spans the full edge of the dialog content area. The frame is formed
+     by the bottom line of the title bar, the top line of the bottom
+     button bar, and a single vertical divider running through the middle,
+     instead of floating cards, so there are no gaps inside card borders.
+   - Left: asset tree sidebar, full height (tab acts as the header);
+     right: search + table, with its own inner padding.
+   - Height expands naturally with the right-hand table, the vertical
+     divider spans the full height, pagination sits flush at the bottom,
+     with no extra whitespace.
    ===================================================================== */
 .asset-dialog {
-  // Dialog 组件全局有 `.el-dialog.dialog .el-dialog__body { padding:20px 30px!important }`(0,3,0),
-  // 这里必须用更高优先级(0,4,0)才能压过它,让内容真正满幅铺到边缘。
+  // The Dialog component globally has `.el-dialog.dialog .el-dialog__body { padding:20px 30px!important }`
+  // (0,3,0); a higher specificity (0,4,0) is needed here to override it so the content
+  // truly spans full width to the edges.
   &.el-dialog.dialog .el-dialog__body {
     padding: 0 !important;
   }
@@ -202,12 +208,12 @@ export default {
     align-items: stretch;
   }
 
-  // ---------- 左:资产树 / 类型树 侧栏 ----------
+  // ---------- Left: asset tree / type tree sidebar ----------
   .tree-table .left {
-    position: relative; // 锚点:树体绝对定位、不参与撑高,侧栏高度自动 = 右侧表格高度
-    border-right: 1px solid var(--color-border); // 中间贯穿竖线
+    position: relative; // Anchor: tree body is absolutely positioned and doesn't affect height; sidebar height auto = right-hand table height
+    border-right: 1px solid var(--color-border); // Vertical divider running through the middle
 
-    // tab + 树体铺满整个侧栏
+    // Tab + tree body fill the entire sidebar
     .auto-data-ztree.tree-tab {
       position: absolute;
       inset: 0;
@@ -215,13 +221,13 @@ export default {
       flex-direction: column;
     }
 
-    // tab 作侧栏头部:左右留白
+    // Tab acts as the sidebar header: left/right padding
     .page-submenu {
       flex: 0 0 auto;
       padding: 0 16px;
     }
 
-    // 树体:填满头部下方并独立滚动
+    // Tree body: fills the space below the header and scrolls independently
     .data-z-tree {
       flex: 1 1 auto;
       min-height: 0;
@@ -235,24 +241,26 @@ export default {
     }
   }
 
-  // ---------- 右:搜索 + 表格 ----------
+  // ---------- Right: search + table ----------
   .tree-table .right {
-    min-width: 0; // 允许表格在弹窗内正确收缩
+    min-width: 0; // Allow the table to shrink correctly inside the dialog
 
-    // 折叠按钮隐藏后,表格区填满右栏
+    // Once the collapse button is hidden, the table area fills the right column
     .transition-box {
       flex: 1 1 auto;
       min-width: 0;
       padding: 14px 20px;
     }
 
-    // 顶部工具栏:把「标签按钮 + 搜索框」收成一个统一边框的紧凑控件(按内容宽度,不拉满整行),
-    // 消除并排小框与框中框(标签按钮自带边框、搜索框自带边框、框内 / 徽标又带边框)。
+    // Top toolbar: combine the "label button + search box" into a single compact
+    // control with one shared border (sized to content, not stretched full width),
+    // removing the side-by-side small boxes and box-within-box look (the label
+    // button, the search box, and the inner badge each previously had their own border).
     .search {
-      flex: 0 0 auto; // 按内容宽度收紧,右侧多余空间归工具栏(无边框),避免拉出空的带框盒子
+      flex: 0 0 auto; // Shrink to content width; leftover space on the right belongs to the toolbar (borderless), avoiding an empty bordered box
       width: auto;
-      margin-right: 0; // 覆盖全局 `.container:not(:has(.left-side)) .search { margin-right:auto }`
-      margin-left: auto; // 将搜索控件推到工具栏右侧
+      margin-right: 0; // Overrides the global `.container:not(:has(.left-side)) .search { margin-right:auto }`
+      margin-left: auto; // Push the search control to the right side of the toolbar
       align-items: center;
       min-height: 30px;
       border: 1px solid var(--color-border);
@@ -263,7 +271,7 @@ export default {
         margin-right: 0;
       }
 
-      // 标签按钮:去掉自身边框,仅以一条右分隔线与搜索框分隔
+      // Label button: remove its own border, separated from the search box only by a right divider line
       .label-button {
         height: 28px;
         border: none !important;
@@ -271,20 +279,20 @@ export default {
         border-radius: 0 !important;
       }
 
-      // 搜索框:去掉自身外层边框(统一由 .search 提供),保持其自然宽度
+      // Search box: remove its own outer border (now provided uniformly by .search), keep its natural width
       .right-side-item.action-search {
         border: none !important;
         border-radius: 0 !important;
       }
 
-      // 隐藏搜索框内的「/」快捷键徽标(自带边框,嵌在搜索框内形成框中框)
+      // Hide the "/" shortcut badge inside the search box (it has its own border, forming a box-within-box)
       .keydown-focus {
         display: none;
       }
     }
   }
 
-  // 满幅主从布局下树折叠按钮意义不大,隐藏以保持整洁
+  // The tree collapse button doesn't add much value in this full-width master-detail layout; hide it to keep things tidy
   .tree-table .mini {
     display: none;
   }

@@ -455,7 +455,7 @@ export default {
   padding-left: 20px;
 }
 
-// 导入选项行用 flex：创建/更新单选项 + 下载模板链接一行内均匀排列、垂直居中、可换行
+// Import options row uses flex: create/update radios + download template link are evenly spaced on one line, vertically centered, wraps
 .import-option :deep(.el-form-item__content) {
   display: flex;
   flex-wrap: wrap;
@@ -467,8 +467,8 @@ export default {
   margin: 0;
 }
 
-// 下载模板提示单独占一行，展示在「创建/更新」单选项下方；
-// 用 flex + align-items:center 让文字(17)与 el-link(21) 垂直居中对齐，字号统一 13px
+// The download-template hint takes its own line, shown below the "create/update" radios;
+// use flex + align-items:center to vertically align the text(17) with the el-link(21), font size unified at 13px
 .download-tpl {
   flex-basis: 100%;
   display: flex;

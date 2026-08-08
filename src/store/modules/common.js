@@ -16,7 +16,7 @@ const state = getDefaultState()
 
 const mutations = {
   reload: (state) => {
-    // 通过切换 key 来强制 router-view 重新渲染，避免使用 v-if 反复销毁/重建根节点导致的 DOM 插入错误
+    // Force router-view to re-render by toggling the key, avoiding the DOM insertion errors caused by using v-if to repeatedly destroy/recreate the root node
     state.isRouterAlive = !state.isRouterAlive
   },
   addSQLQueryCounter: (state, { url, count }) => {

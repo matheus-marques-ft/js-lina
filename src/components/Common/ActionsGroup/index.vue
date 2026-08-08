@@ -30,7 +30,7 @@ export default {
     moreActionsPlacement: {
       type: String,
       default: 'bottom'
-      // 居中对齐
+      // Center-aligned
     }
   },
   computed: {

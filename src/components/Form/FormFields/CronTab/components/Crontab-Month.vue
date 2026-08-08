@@ -139,7 +139,7 @@ export default {
     })
   },
   methods: {
-    // 单选按钮值变化时
+    // when the radio button value changes
     radioChange() {
       if (this.radioValue === 1) {
         this.$emit('update', 'month', '*')
@@ -169,19 +169,19 @@ export default {
           break
       }
     },
-    // 周期两个值变化时
+    // when the two cycle values change
     cycleChange() {
       if (this.radioValue === 2) {
         this.$emit('update', 'month', this.cycleTotal)
       }
     },
-    // 平均两个值变化时
+    // when the two average values change
     averageChange() {
       if (this.radioValue === 3) {
         this.$emit('update', 'month', this.averageTotal)
       }
     },
-    // checkbox值变化时
+    // when the checkbox value changes
     checkboxChange() {
       if (this.radioValue === 4) {
         this.$emit('update', 'month', this.checkboxString)

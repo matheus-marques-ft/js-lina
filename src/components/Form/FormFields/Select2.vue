@@ -72,7 +72,7 @@ export default {
       type: Object,
       default: () => ({})
     },
-    // 是否是多选
+    // whether it is multi-select
     multiple: {
       type: Boolean,
       default: true
@@ -81,7 +81,7 @@ export default {
       type: Boolean,
       default: true
     },
-    // 初始化值，也就是选中的值
+    // the initial value, i.e. the selected value
     value: {
       type: [Array, String, Number, Boolean, Object],
       default: undefined
@@ -151,7 +151,7 @@ export default {
       hasMore: true,
       pageSize: vm.defaultPageSize
     }
-    // 设置axios全局报错提示不显示
+    // suppress the axios global error prompt from being shown
     const validateStatus = (status) => {
       if (status === 403) {
         setTimeout(() => {
@@ -302,7 +302,7 @@ export default {
       try {
         await this.initialSelect()
       } catch {
-        // 请求错误已由 axios 拦截器提示，选择器仍需结束初始化才能继续搜索
+        // the request error has already been shown by the axios interceptor; the selector still needs to finish initializing before it can continue searching
         this.requestError = true
       } finally {
         setTimeout(() => {
@@ -313,12 +313,13 @@ export default {
         }, 100)
       }
     }
-    // 由于在新增时有些 Select 会存在初始值，而有些没有，就会导致动态类名判断出现相反的情况
-    // 此处强制设置没有初始值的动态类名
+    // Since some Selects have an initial value on creation and others don't, the
+    // dynamic class-name check can end up backwards.
+    // Force-set the dynamic class name for the case with no initial value here.
     if (Array.isArray(this.iValue) && this.iValue.length === 0) this.transformed = false
 
     this.$nextTick(() => {
-      // 因为elform存在问题，这个来清楚验证
+      // because el-form has an issue, this clears validation
       const elFormItem = this.$refs.select?.elFormItem
       if (elFormItem && elFormItem.clearValidate) {
         elFormItem.clearValidate()
@@ -428,7 +429,7 @@ export default {
       try {
         await load()
       } catch {
-        // 失败后保留当前页，允许下次滚动重试同一页
+        // after a failure, keep the current page so the next scroll can retry the same page
         this.params.page = previousPage
         this.requestError = true
       } finally {
@@ -451,7 +452,7 @@ export default {
       try {
         await this.getOptions()
       } catch {
-        // 请求错误后保持可搜索状态，下一次输入可正常重试
+        // after a request error, stay in a searchable state so the next input can retry normally
         this.requestError = true
       }
     },
@@ -485,7 +486,7 @@ export default {
           this.addOption(v)
         }
       })
-      // 如果还有其它页，继续获取, 如果没有就停止
+      // if there are more pages, keep fetching; otherwise stop
       if (!data.pagination) {
         this.$emit('loadInitialOptionsDone', this.initialOptions)
         this.params.hasMore = false
@@ -535,7 +536,7 @@ export default {
       try {
         await this.getOptions()
       } catch {
-        // 请求错误已统一提示，保留组件交互能力
+        // the request error has already been shown uniformly; keep the component interactive
         this.requestError = true
       }
     },
@@ -659,8 +660,9 @@ export default {
   }
 
   :deep(.el-select__input-wrapper) {
-    // 只需容纳光标即可，避免因 120px 硬门槛在标签后剩余宽度不足时把光标挤到下一行、
-    // 撑高整个控件;flex-grow 让它在同一行内自动填满剩余空间。
+    // Only needs to accommodate the cursor: this avoids a 120px hard threshold pushing
+    // the cursor to the next line and stretching the whole control's height when the
+    // remaining width after the tags is insufficient; flex-grow lets it automatically fill the remaining space on the same line.
     flex: 1 1 30px;
     min-width: 30px;
   }

@@ -42,7 +42,7 @@ const mutations = {
     const index = chats.findIndex((chat) => chat.message.id === data.message.id)
 
     if (index === -1) {
-      // 如果没有记录，直接添加新消息
+      // If there's no existing record, add the new message directly
       chats.push({
         message: { id: data.message.id },
         reasoning: { content: data.reasoning.content },

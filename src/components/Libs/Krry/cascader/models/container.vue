@@ -60,12 +60,12 @@ export default {
       type: Array,
       default: () => []
     },
-    // 地域数据
+    // Region data
     dataObj: {
       type: Object,
       default: () => {}
     },
-    // 已选数据
+    // Already-selected data
     selectedData: {
       type: Array,
       default: () => []
@@ -85,18 +85,18 @@ export default {
   },
   data() {
     return {
-      flag: false, // 分仓对应的省id变量的监听器的锁，第一次触发不执行，数据还未初始化
-      provinceList: [], // 省级数据
-      cityList: [], // 市级数据
-      countyList: [], // 区县级数据
-      checkedDistrict: [], // 已选数据
-      filterProvince: [], // 省级过滤id
-      filterCity: [], // 市级过滤id
-      filterCounty: [] // 区县级过滤id
+      flag: false, // Lock for the watcher on the province-id variable used for the split warehouse; not executed on the first trigger since data isn't initialized yet
+      provinceList: [], // Province-level data
+      cityList: [], // City-level data
+      countyList: [], // County/district-level data
+      checkedDistrict: [], // Already-selected data
+      filterProvince: [], // Province-level filter ids
+      filterCity: [], // City-level filter ids
+      filterCounty: [] // County/district-level filter ids
     }
   },
   computed: {
-    // 映射出选中区域的数据Id
+    // Maps the data ids of the selected regions
     selectDistrictId() {
       return this.checkedDistrict.map((val) => val.id)
     }
@@ -122,29 +122,30 @@ export default {
     this.getDistrict()
   },
   methods: {
-    // 获取区域数据
+    // Get region data
     async getDistrict() {
-      // 从后台传回经过处理的数据
-      this.flag = true // 数据加载完成，解锁
-      // 执行已选数据的过滤
+      // Data returned from the backend after processing
+      this.flag = true // Data finished loading, unlock
+      // Filter the already-selected data
       this.checkedDistrict = JSON.parse(JSON.stringify(this.selectedData))
       this.initFilter(this.checkedDistrict)
-      // 获取省级数据
+      // Get province-level data
       this.getProvince()
     },
-    // 获取省级数据
+    // Get province-level data
     getProvince() {
-      this.provinceList = [] // 首先清空
+      this.provinceList = [] // Clear first
       for (const key in this.dataObj.province) {
         this.provinceList.push({
           id: key,
           label: this.dataObj.province[key]
         })
-        // 省级过滤处理
+        // Province-level filtering
         this.handleFilterProvince()
       }
     },
-    // 获取市级数据，子组件自定义的穿梭框传回的数据，val：[区域obj, 区域obj,...]
+    // Get city-level data; val comes back from the child component's custom
+    // transfer box: [regionObj, regionObj, ...]
     checkProvince(val) {
       const obj = val[val.length - 1]
       let flag = true
@@ -152,14 +153,14 @@ export default {
         const id = obj.id
         for (const key in this.dataObj.city) {
           if (id === key) {
-            // 匹配到的id，将对应的市级数据传递到子组件
+            // Matched id, pass the corresponding city-level data to the child component
             this.cityList = this.dataObj.city[key]
-            // 过滤处理
+            // Filtering
             this.handleFilterCity()
-            // 过滤处理
-            // 再清空上一次的县级数据
+            // Filtering
+            // Then clear the previous county-level data
             this.countyList = []
-            // 将父级对象放进市级组件
+            // Put the parent object into the city-level component
             this.$refs.city.father = {
               id: id,
               label: obj.label
@@ -169,13 +170,14 @@ export default {
           }
         }
       }
-      // 如果市级没有匹配到，市级和区级都显示为空
+      // If no city-level match, clear both city and county levels
       if (flag) {
         this.cityList = []
         this.countyList = []
       }
     },
-    // 获取县级数据，子组件自定义的穿梭框传回的数据，val：[区域obj, 区域obj,...]
+    // Get county-level data; val comes back from the child component's custom
+    // transfer box: [regionObj, regionObj, ...]
     checkCity(val) {
       const obj = val[val.length - 1]
       let flag = true
@@ -183,14 +185,14 @@ export default {
         const id = obj.id
         for (const key in this.dataObj.county) {
           if (id.toString() === key) {
-            // 匹配到的id，将对应的区级数据传递到子组件
+            // Matched id, pass the corresponding county-level data to the child component
             this.countyList = this.dataObj.county[key]
-            // 过滤处理
+            // Filtering
             this.handleFilterCounty()
-            // 获取省级的数据
+            // Get province-level data
             const fatherId = this.$refs.city.father.id
             const fatherText = this.$refs.city.father.label
-            // 拼接上市级数据放进县级组件
+            // Concatenate the city-level data into the county-level component
             this.$refs.county.father = {
               id: fatherId + '-' + id,
               label: fatherText + '-' + obj.label
@@ -200,65 +202,68 @@ export default {
           }
         }
       }
-      // 区级没有匹配到，显示为空
+      // No county-level match, show empty
       if (flag) {
         this.countyList = []
       }
     },
-    // 从省级添加到已选区域，参数：val：省级对象数组，filterId：所选择的省级id数组
+    // Add from province level to the selected region; params: val: array of province
+    // objects, filterId: array of the selected province ids
     selectedProvince(val, filterId) {
       this.checkedDistrict = this.checkedDistrict.concat(val)
       this.filterProvince = this.filterProvince.concat(filterId)
-      // 如果过滤的市级区域，还有县级区域，合并成一个市级
+      // If a filtered city-level region still has county-level regions, merge into one city
       for (const val of filterId) {
         for (const vq of this.checkedDistrict) {
           const selectId = vq.id.split('-')
-          // 拆分的数组长度大于1，说明有市级以下的区域，合并成一个省级区域
+          // If the split array length is greater than 1, there is a region below city
+          // level, so merge it into one province-level region
           if (selectId.length > 1 && selectId[0] === val) {
-            // 在已选择的区域中删除市级数据，合并成一个省级
+            // Remove the city-level data from the selected regions, merging into one province
             this.checkedDistrict = this.checkedDistrict.filter((vl) => vl !== vq)
-            // 当前省级已被合并，从过滤数组中删除该市级和县级数据
+            // The current province has been merged, remove that city and county data from the filter arrays
             this.filterCity = this.filterCity.filter((vf) => vf.toString() !== selectId[1])
             this.filterCounty = this.filterCounty.filter((vs) => vs.toString() !== selectId[2])
           }
         }
       }
-      // 清空下面的市级和县级区域
+      // Clear the city and county regions below
       this.cityList = []
       this.countyList = []
-      // 过滤处理
+      // Filtering
       this.handleFilterProvince()
     },
-    // 从市级添加到已选区域
+    // Add from city level to the selected region
     selectedCity(val, filterId) {
       this.checkedDistrict = this.checkedDistrict.concat(val)
       this.filterCity = this.filterCity.concat(filterId)
-      // 如果过滤的市级区域，还有县级区域，合并成一个市级
+      // If a filtered city-level region still has county-level regions, merge into one city
       for (const val of filterId) {
         for (const vq of this.checkedDistrict) {
           const selectId = vq.id.split('-')
-          // 拆分的数组长度为3，说明有县级区域，并且该市级区域与当前加入市级区域的id相同，合并成一个市级区域
+          // If the split array length is 3, there is a county-level region, and that
+          // city-level region's id matches the one currently being added, merge into one city-level region
           if (selectId.length === 3 && selectId[1] === val.toString()) {
-            // 在已选择的区域中删除县级数据，合并成一个市级
+            // Remove the county-level data from the selected regions, merging into one city
             this.checkedDistrict = this.checkedDistrict.filter((vl) => vl !== vq)
-            // 当前市级已被合并，从过滤数组中删除该县级数据
+            // The current city has been merged, remove that county data from the filter array
             this.filterCounty = this.filterCounty.filter((vs) => vs.toString() !== selectId[2])
           }
         }
       }
-      // 清空下面的县级区域
+      // Clear the county region below
       this.countyList = []
-      // 过滤处理
+      // Filtering
       this.handleFilterCity()
     },
-    // 从县级添加到已选区域
+    // Add from county level to the selected region
     selectedCountry(val, filterId) {
       this.checkedDistrict = this.checkedDistrict.concat(val)
       this.filterCounty = this.filterCounty.concat(filterId)
-      // 过滤处理
+      // Filtering
       this.handleFilterCounty()
     },
-    // 省级过滤处理
+    // Province-level filtering
     handleFilterProvince() {
       let newPro = Array.from(this.provinceList)
       for (const val of this.filterProvince) {
@@ -266,7 +271,7 @@ export default {
       }
       this.provinceList = Array.from(newPro)
     },
-    // 市级过滤处理
+    // City-level filtering
     handleFilterCity() {
       let newCity = Array.from(this.cityList)
       for (const val of this.filterCity) {
@@ -274,7 +279,7 @@ export default {
       }
       this.cityList = Array.from(newCity)
     },
-    // 区县级过滤处理
+    // County-level filtering
     handleFilterCounty() {
       let newCounty = Array.from(this.countyList)
       for (const val of this.filterCounty) {
@@ -282,48 +287,50 @@ export default {
       }
       this.countyList = Array.from(newCounty)
     },
-    // 删除已选区域，参数：deleteVal：要删除的区域对象数组
+    // Remove a selected region; params: deleteVal: array of region objects to remove
     deleteCheck(deleteVal) {
       for (const val of deleteVal) {
         const selectId = val.id.split('-')
         const length = selectId.length
         switch (length) {
           case 1: {
-            // 长度只有1，只有省级数据，删除对应省级的filter中的数据
+            // Length of only 1 means only province-level data; remove the corresponding
+            // province from the filter data
             this.filterProvince = this.filterProvince.filter((vs) => vs !== selectId[0])
-            // 重新获取县级数据
+            // Re-fetch the county-level data
             this.getProvince()
             break
           }
           case 2: {
-            // 长度为2，到达市级数据，删除对应市级的filter中的数据
+            // Length of 2 reaches city-level data; remove the corresponding city from the filter data
             this.filterCity = this.filterCity.filter((vs) => vs.toString() !== selectId[1])
-            // 重新获取市级数据
+            // Re-fetch the city-level data
             if (this.$refs.prov.selectedDistrict.length) {
-              // 省级已勾选才显示区级
+              // Only show the county level once the province level is checked
               this.checkProvince([this.$refs.city.father])
             }
             break
           }
           case 3: {
-            // 长度为3，到达县级数据，删除对应县级的filter中的数据
+            // Length of 3 reaches county-level data; remove the corresponding county from the filter data
             this.filterCounty = this.filterCounty.filter((vs) => vs.toString() !== selectId[2])
             if (this.$refs.city.selectedDistrict.length) {
-              // 市级已勾选才显示区级
+              // Only show the county level once the city level is checked
               const fatherId = this.$refs.county.father.id.split('-')[1]
               const fatherText = this.$refs.county.father.label.split('-')[1]
               const obj = [{ id: fatherId, label: fatherText }]
-              // 重新获取县级数据，参数：当前市级ID的对象数组：obj:[{id:id,label:label}]
+              // Re-fetch the county-level data; params: array of objects for the current
+              // city id: obj:[{id:id,label:label}]
               this.checkCity(obj)
             }
             break
           }
         }
-        // 刷新已选区域
+        // Refresh the selected region
         this.checkedDistrict = this.checkedDistrict.filter((vd) => vd.id !== val.id)
       }
     },
-    // 初始化过滤器 参数：addVal：要增加的区域对象数组
+    // Initialize the filters; params: addVal: array of region objects to add
     initFilter(addVal) {
       for (const val of addVal) {
         const selectId = val.id.split('-')

@@ -199,7 +199,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// 作为 method 下拉右侧的 append 按钮:等高、去掉左侧圆角与左边框,和下拉拼成一体的 input-group。
+// Acts as the append button to the right of the method dropdown: equal height, no
+// left border-radius or left border, forming one input-group together with the dropdown.
 .proto-setting {
   width: 32px;
   min-width: 32px;

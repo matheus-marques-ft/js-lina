@@ -1,17 +1,17 @@
 <template>
   <el-row :gutter="gutter">
     <template v-if="$slots.right">
-      <!-- 默认插槽内容 -->
+      <!-- Default slot content -->
       <el-col :md="left" :sm="24">
         <slot />
       </el-col>
-      <!-- 右侧插槽 -->
+      <!-- Right-side slot -->
       <el-col :md="right" :sm="24">
         <slot name="right" />
       </el-col>
     </template>
     <template v-else>
-      <!-- 默认插槽内容，全宽 -->
+      <!-- Default slot content, full width -->
       <el-col :md="single" :offset="(24 - single) / 2" :sm="24">
         <slot />
       </el-col>

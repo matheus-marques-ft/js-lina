@@ -218,7 +218,7 @@ export default {
     },
     toPercent(num) {
       num = num instanceof Array ? num.length : num
-      return Math.round((num / this.componentMetric.total) * 10000) / 100.0 // 小数点后两位百分比
+      return Math.round((num / this.componentMetric.total) * 10000) / 100.0 // percentage with two decimal places
     },
     routeToList(name) {
       this.$router.replace({

@@ -123,7 +123,7 @@ export default {
       this.$emit('currentSizeChange', val)
     },
     getPageQuery(currentPage, pageSize) {
-      // 构造query对象
+      // Build the query object
       let query = {}
       query[this.pageSizeKey] = this.hasPagination ? pageSize : this.noPaginationSize
 
@@ -184,7 +184,7 @@ export default {
   border-radius: 2px;
   font-size: 12px;
   font-weight: 400;
-  /* 非当前页统一白底(覆盖 is-background 默认的浅灰填充),仅当前页保留主色填充 */
+  /* Non-current pages uniformly use a white background (overriding is-background's default light-gray fill); only the current page keeps the primary-color fill */
   background-color: #fff;
 }
 

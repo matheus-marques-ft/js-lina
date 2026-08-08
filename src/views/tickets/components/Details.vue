@@ -87,8 +87,9 @@ export default {
   display: inline-block;
 }
 
-// 长文本(如申请运行的命令 SQL)按需换行,不溢出卡片;
-// min-width:0 让 flex 子项可收缩,overflow-wrap:anywhere 允许在超长无空格串处断行
+// Wrap long text (e.g. the requested SQL command) as needed so it doesn't overflow the card;
+// min-width:0 lets the flex child shrink, overflow-wrap:anywhere allows breaking within
+// extremely long strings that have no spaces
 .item-text {
   flex: 1;
   min-width: 0;

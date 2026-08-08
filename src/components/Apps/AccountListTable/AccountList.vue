@@ -463,7 +463,7 @@ export default {
     this.setActions()
   },
   activated() {
-    // 由于组件嵌套较深，有可能导致 Error in activated hook: "TypeError: Cannot read properties of undefined (reading 'getList')" 的问题
+    // Due to deep component nesting, this may cause: Error in activated hook: "TypeError: Cannot read properties of undefined (reading 'getList')"
     if (this.tabDeactivated) {
       clearTimeout(this.activatedReloadTimer)
       this.activatedReloadTimer = setTimeout(() => this.refresh(), 300)

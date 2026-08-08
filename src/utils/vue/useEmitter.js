@@ -3,17 +3,17 @@ import { provide, inject } from 'vue'
 const EMITTER_KEY = Symbol('emitter')
 
 /**
- * useEmitter - 组件间通信的 composable
- * 替代 Emitter mixin（使用 $children/$parent 的旧模式）
+ * useEmitter - a composable for communication between components
+ * Replaces the Emitter mixin (the old pattern based on $children/$parent)
  *
- * 使用方式：
- * // 父组件
+ * Usage:
+ * // parent component
  * import { useProvideEmitter } from '@/utils/vue/useEmitter'
  * setup() {
  *   useProvideEmitter()
  * }
  *
- * // 子组件
+ * // child component
  * import { useInjectEmitter } from '@/utils/vue/useEmitter'
  * setup() {
  *   const emitter = useInjectEmitter()
@@ -22,7 +22,7 @@ const EMITTER_KEY = Symbol('emitter')
  */
 
 /**
- * 在父组件中使用，提供 emitter 功能
+ * Used in the parent component to provide the emitter functionality
  */
 export function useProvideEmitter() {
   const listeners = new Map()
@@ -60,7 +60,7 @@ export function useProvideEmitter() {
 }
 
 /**
- * 在子组件中使用，注入 emitter 功能
+ * Used in the child component to inject the emitter functionality
  */
 export function useInjectEmitter() {
   const emitter = inject(EMITTER_KEY, null)
@@ -71,8 +71,8 @@ export function useInjectEmitter() {
 }
 
 /**
- * 向上查找指定组件并发送事件
- * 替代 dispatch 方法
+ * Look upward for the specified component and send an event
+ * Replaces the dispatch method
  */
 export function useDispatch() {
   const emitter = useInjectEmitter()
@@ -87,8 +87,8 @@ export function useDispatch() {
 }
 
 /**
- * 向下广播事件到指定组件
- * 替代 broadcast 方法
+ * Broadcast an event downward to the specified component
+ * Replaces the broadcast method
  */
 export function useBroadcast() {
   const emitter = useInjectEmitter()

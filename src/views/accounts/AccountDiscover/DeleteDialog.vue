@@ -19,7 +19,7 @@
               :model-value="iDeleteAccount"
               @update:model-value="iDeleteAccount = $event"
             >
-              <!-- 发现资产账号列表中，存在该账号，是否同步删除 ? -->
+              <!-- This account exists in the discovered asset account list, delete it in sync too? -->
               {{ $t('FoundAccountInAssetDeleteMsg') }} ?
             </el-checkbox>
             <ul>
@@ -40,7 +40,7 @@
           <div v-if="hasDeleteRemote && account.present" class="delete-item">
             <el-checkbox :model-value="iDeleteRemote" @update:model-value="iDeleteRemote = $event">
               {{ $t('RemoteAssetFoundAccountDeleteMsg') }} ?
-              <!-- 远端主机上存在该账号，是否要同步删除 ? -->
+              <!-- This account exists on the remote host, delete it in sync too? -->
             </el-checkbox>
           </div>
         </div>

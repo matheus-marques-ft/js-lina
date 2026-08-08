@@ -39,7 +39,7 @@ export function generateColors(themeColors) {
   return colors
 }
 
-/* 将rgb颜色转成hex */
+/* Convert an rgb color to hex */
 export function colorRgbToHex(rgb) {
   const [r, g, b] = rgb.replace(/(?:\(|\)|rgb|RGB)*/g, '').split(',')
   return '#' + ((1 << 24) + (Number(r) << 16) + (Number(g) << 8) + Number(b)).toString(16).slice(1)
@@ -142,8 +142,9 @@ export function changeMenuColor(themeColors) {
   const white = 'ffffff'
   const black = '000000'
 
-  // 旧主题的 --menu-hover 是占位值，需要根据强调色生成浅色 hover 背景。
-  // 返回了完整菜单状态的新主题（如 deep_black）则直接使用 theme_info。
+  // In the old theme, --menu-hover was a placeholder value that needed a light hover
+  // background generated from the accent color. New themes that return a complete menu
+  // state (e.g. deep_black) use theme_info directly instead.
   const menuActiveTextColor = colors['--menu-text-active']
   const hasCompleteMenuState = colors['--menu-hover-bg'] || colors['--menu-active-bg']
   if (!hasCompleteMenuState && menuActiveTextColor) {

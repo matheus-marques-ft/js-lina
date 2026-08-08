@@ -115,8 +115,10 @@ export default {
     ...mapGetters(['currentOrg']),
     treeSetting() {
       this.$log.debug('Settings: ', this.setting)
-      // 必须 merge 到新对象,否则会就地修改响应式的 this.defaultSetting(本计算属性的依赖),
-      // 形成自触发循环,导致反复重渲染 / 重新初始化树 / 重复请求
+      // Must merge into a new object, otherwise it would mutate the reactive
+      // this.defaultSetting in place (a dependency of this computed property),
+      // forming a self-triggering loop that causes repeated re-renders / tree
+      // re-initialization / duplicate requests
       return _.merge({}, this.defaultSetting, this.setting)
     },
     treeAttrs() {
@@ -194,7 +196,7 @@ export default {
         return
       }
       if (currentNode) {
-        // 从节点名称中提取资产数量并保存
+        // Extract the assets amount from the node name and save it
         const nameMatch = currentNode.name.match(/^(.+?)\s*\((\d+)\)$/)
 
         if (nameMatch) {
@@ -202,7 +204,7 @@ export default {
           const assetsAmount = parseInt(nameMatch[2])
 
           currentNode.name = pureName
-          currentNode.meta.data['assetsAmount'] = assetsAmount // 保存资产数量，确保重命名时不会丢失
+          currentNode.meta.data['assetsAmount'] = assetsAmount // Save the assets amount so it isn't lost on rename
         } else {
           currentNode.name = currentNode.meta.data.value
         }
@@ -323,7 +325,7 @@ export default {
       }
       this.currentNode = treeNode
       this.currentNodeId = treeNode.meta?.data?.id || treeNode.id
-      // 屏蔽收藏资产
+      // Suppress favorite assets
       if (treeNode?.id === '-12') {
         return
       }
@@ -348,7 +350,7 @@ export default {
       if (!targetNode) {
         return false
       }
-      // TODO 修改默认确认框
+      // TODO Change the default confirmation dialog
       const msg = this.$t('DropConfirmMsg', { src: treeNodesNames.join(','), dst: targetNode.name })
       return confirm(msg)
     },

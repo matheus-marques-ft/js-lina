@@ -57,7 +57,7 @@ export const specialEmojiCheck = {
   trigger: ['blur', 'change']
 }
 
-// 只能输入字母、数字、下划线
+// Only letters, digits, and underscores are allowed
 export const matchAlphanumericUnderscore = {
   validator: (rule, value, callback) => {
     value = value?.trim()
@@ -70,7 +70,7 @@ export const matchAlphanumericUnderscore = {
   trigger: ['blur', 'change']
 }
 
-// 不能包含()
+// Cannot contain ()
 export const MatchExcludeParenthesis = {
   validator: (rule, value, callback) => {
     value = value?.trim()
@@ -125,14 +125,14 @@ export default {
 }
 
 /**
- * @description 表单唯一性校验
+ * @description Form uniqueness validation
  *
  * @param {Object} options
- * @param {string} 列表查询地址
- * @param {string} 查询参数名
- * @param {string} 字段中文名
- * @param {string} 字段名
- * @param {function(): (string|number)} 返回更新场景下的当前对象 id
+ * @param {string} options.url - the list query URL
+ * @param {string} options.param - the query parameter name
+ * @param {string} options.label - the field's display label
+ * @param {string} options.fieldName - the field name
+ * @param {function(): (string|number)} options.getIgnoreId - returns the current object's id in an update scenario
  */
 export function UniqueCheck(options = {}) {
   const { url, param, label, fieldName, getIgnoreId } = options
@@ -169,7 +169,7 @@ export function UniqueCheck(options = {}) {
           if (curId) {
             const ids = extractIds(res)
 
-            // 查询结果只包含自身,因此不被视为重复
+            // The query result only contains itself, so it is not considered a duplicate
             if (ids.length >= 1 && ids.every((id) => id === curId)) {
               duplicated = false
             }

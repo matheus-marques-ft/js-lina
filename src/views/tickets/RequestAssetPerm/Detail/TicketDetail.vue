@@ -289,8 +289,9 @@ export default {
   margin-top: 14px;
 }
 
-/* 开始/失效日期:与上方字段一致 50% 宽度;并修正时钟前缀图标
-   (全站 mixin 的 .el-input__icon{vertical-align:super} 会让图标偏上/错位) */
+/* Start/expiration date: keep the same 50% width as the fields above; also fix the clock
+   prefix icon (the site-wide mixin's .el-input__icon{vertical-align:super} pushes the icon
+   up/misaligns it) */
 .assets :deep(.el-date-editor.el-input) {
   width: 50%;
 

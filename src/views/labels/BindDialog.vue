@@ -158,7 +158,7 @@ export default {
   margin: 20px 0;
 }
 
-// 资源类型行:label 在左,select 占满剩余宽度(右边缘与下方穿梭框对齐)
+// Resource type row: label on the left, select fills the remaining width (right edge aligns with the transfer box below)
 .type-row {
   display: flex;
   align-items: center;

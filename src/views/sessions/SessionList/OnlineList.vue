@@ -29,7 +29,7 @@ export default {
           type: 'danger',
           can: ({ row }) => row['can_terminate'] && vm.$hasPerm('terminal.terminate_session'),
           callback: function ({ reload, row }) {
-            // 终断 session reload
+            // Terminate session then reload
             const data = [row.id]
             terminateSession(data).then((res) => {
               const msg = vm.$t('TerminateTaskSendSuccessMsg')

@@ -31,7 +31,7 @@ export default {
       type: Boolean,
       default: true
     },
-    // 自定义label字段的name
+    // the name of the custom label field
     customLabelKeyName: {
       type: String,
       default: 'name'

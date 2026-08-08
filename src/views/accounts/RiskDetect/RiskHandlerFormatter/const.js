@@ -16,7 +16,7 @@ async function checkAccountExist(username, asset) {
 }
 
 async function checkAccountsExist() {
-  // 批量选择,所有都存在返回 true
+  // Bulk selection, return true only if all accounts exist
   if (this.rows.length > 0) {
     for (const row of this.rows) {
       if (!(await checkAccountExist.call(this, row.username, row.asset.id))) {
@@ -25,7 +25,7 @@ async function checkAccountsExist() {
     }
     return true
   }
-  // 单个选择
+  // Single selection
   if (this.row.username) {
     return await checkAccountExist.call(this, this.row.username, this.row.asset.id)
   }

@@ -2,9 +2,9 @@
 import _ from 'lodash'
 import { markRaw, toRaw } from 'vue'
 /**
- * content 的每一项会浅拷贝一层
- * 只可以在 item 层新增修改属性，如 item.a = b
- * 不可以直接修改值，避免影响原 content，如 item.a.b = c
+ * Each item of content is shallow-copied one level deep
+ * Properties may only be added/modified at the item level, e.g. item.a = b
+ * Values must not be modified directly to avoid affecting the original content, e.g. item.a.b = c
  */
 export default function transformContent(content) {
   return content.map(({ ...item }) => {
@@ -13,11 +13,11 @@ export default function transformContent(content) {
     } else {
       removeDollarInKey(item)
       extractRulesFromComponent(item)
-      // 有些旧写法是 checkboxGroup & radioGroup
+      // Some old code writes it as checkboxGroup & radioGroup
       item.type = _.kebabCase(item.type)
     }
 
-    // 使用 markRaw 标记组件定义，避免被 Vue 变成响应式对象
+    // Use markRaw to mark the component definition, to avoid Vue turning it into a reactive object
     if (item.component && typeof item.component !== 'string') {
       item.component = markRaw(toRaw(item.component))
     }
@@ -36,7 +36,7 @@ function removeDollarInKey(item) {
 export function extractRulesFromComponent(item) {
   if (item.overrideRules) return
   const { component } = item
-  // 使用全局注册的组件暂时无法处理
+  // Cannot currently handle globally registered components
   if (!component || typeof component === 'string') return
 
   const { rules = [] } = component

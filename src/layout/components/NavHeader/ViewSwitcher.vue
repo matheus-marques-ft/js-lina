@@ -126,7 +126,7 @@ export default {
       const viewRoute = this.viewsMapper[key]
       const routeTarget = this.getViewTarget(viewRoute)
       localStorage.setItem('preView', key)
-      // Next 之前要重置 init 状态，否则这些路由守卫就不走了
+      // The init state must be reset before Next, otherwise these route guards won't run
       await store.dispatch('app/reset')
       if (!this.tipHasRead) {
         this.tipHasRead = '1'

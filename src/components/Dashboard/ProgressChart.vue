@@ -52,8 +52,9 @@ export default {
         let num = (current.total / total) * 100
         num = _.floor(num, 2)
         const fallback = '#' + Math.floor(Math.random() * (256 * 256 * 256 - 1)).toString(16)
-        // 颜色必须是静态值：ECharts 图例(legend)无法对函数回调求值，
-        // 用回调会导致图例前的颜色小方块渲染不出来。
+        // The color must be a static value: ECharts legend cannot evaluate a function
+        // callback, so using a callback would prevent the color swatch before the
+        // legend label from rendering.
         const itemColor = this.colors[i] || fallback
         seriesList.push({
           type: 'bar',
@@ -128,7 +129,7 @@ export default {
             let tip = ''
             for (let i = 0; i < this.data.length; i++) {
               const current = this.data[i]
-              tip += current.label + '：' + current.total + '<br/>'
+              tip += current.label + ': ' + current.total + '<br/>'
             }
             return tip
           },

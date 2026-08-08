@@ -202,7 +202,7 @@ export default {
         height: 100%;
       }
 
-      // 未找到与之对应的
+      // No matching selector found for this
       & :deep(.el-sub-menu__title) {
         font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         padding: 0 8px;
@@ -210,7 +210,7 @@ export default {
         height: $headerHeight;
       }
 
-      // 未找到与之对应的
+      // No matching selector found for this
       & :deep(.svg-icon) {
         color: #fff !important;
       }

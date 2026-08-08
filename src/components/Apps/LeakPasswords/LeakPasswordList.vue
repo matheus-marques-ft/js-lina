@@ -42,7 +42,7 @@ export default {
         hasExport: true,
         hasImport: true,
         importOptions: {
-          encryptFields: [''], // 这里不加密 password，''只是为了保证数组有值
+          encryptFields: [''], // password is not encrypted here, '' is just to keep the array non-empty
           canImportUpdate: false
         },
         hasCreate: true,

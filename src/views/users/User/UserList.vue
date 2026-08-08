@@ -502,7 +502,7 @@ export default {
     handleDialogUpdate() {
       this.updateSelectedDialogSetting.visible = false
 
-      // 此处必须显示重新赋值才能在更新用户时使得 Groups 数据重新刷新
+      // This must be explicitly reassigned here so the Groups data refreshes when a user is updated
       this.tableConfig.columnsMeta.groups = {
         formatter: AmountFormatter,
         formatterArgs: {

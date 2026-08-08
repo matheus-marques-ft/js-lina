@@ -41,7 +41,7 @@
           >{{ city.label }}</el-checkbox
         >
       </el-checkbox-group>
-      <p v-else class="no-data">无数据</p>
+      <p v-else class="no-data">No Data</p>
     </div>
     <div class="vip-footer">
       <el-button
@@ -73,7 +73,7 @@ export default {
       type: Number,
       default: () => 0
     },
-    // 区域数据
+    // Region data
     districtList: {
       type: Array,
       default: () => []
@@ -89,9 +89,9 @@ export default {
   },
   data() {
     return {
-      districtListMock: [], // 展示的数据 （搜索会自动修改这个数组）
-      selectedDistrict: [], // 已选择，数据格式：[区域id,id,id...]
-      father: {}, // 父级数据
+      districtListMock: [], // Displayed data (search automatically updates this array)
+      selectedDistrict: [], // Already selected, data format: [regionId, id, id...]
+      father: {}, // Parent data
       isIndeterminate: false,
       checkAll: false,
       searchWord: '',
@@ -99,30 +99,30 @@ export default {
     }
   },
   watch: {
-    // 搜索框的监听器
+    // Watcher on the search box
     searchWord(newWord, oldWord) {
-      // 重新获取数据
+      // Re-fetch the data
       this.districtListMock = this.districtList
-      // 过滤掉数据，保留搜索的数据
+      // Filter out the data, keeping only what matches the search
       this.districtListMock = this.districtListMock.filter((val) => val.label.includes(newWord))
     },
-    // 当点击省级或市级，自动监听并更新市级或区级的列表
+    // Watches the province or city selection and automatically updates the city or county list
     districtList() {
       this.getDistrict()
-      // 如果区域数据为空，则已选择的数据也要清空
+      // If the region data is empty, the selected data must also be cleared
       if (this.districtList.length === 0) {
         this.selectedDistrict = []
       }
     },
-    // districtListMock 和 checkAll 的监听器
+    // Watcher on districtListMock and checkAll
     districtListMock() {
-      // 当方框中无已选择的数据时，不能勾选checkBox
+      // The checkbox cannot be checked when there is no selected data in the box
       if (this.selectedDistrict.length === 0) {
         this.checkAll = false
         this.isIndeterminate = false
       }
     },
-    // 当列表中无数据时，不能勾选checkBox
+    // The checkbox cannot be checked when the list has no data
     checkAll() {
       this.checkAll = this.districtListMock.length === 0 ? false : this.checkAll
     }
@@ -131,32 +131,32 @@ export default {
     this.getDistrict()
   },
   methods: {
-    // 获取区域数据
+    // Get region data
     getDistrict() {
       this.districtListMock = this.districtList
-      // 已选择的清空
+      // Clear the selection
       this.selectedDistrict = []
     },
-    // 单选
+    // Single check
     handleCheckedChange(value) {
       const checkedCount = value.length
       this.checkAll = checkedCount === this.districtListMock.length
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.districtListMock.length
       this.$emit('check-district', value)
     },
-    // 全选
+    // Select all
     handleCheckAllChange(val) {
       this.selectedDistrict = val
         ? this.districtListMock.filter((val) => !val.disabled).map((val) => val)
         : []
       this.isIndeterminate = false
     },
-    // 添加至已选 或 删除已选区域
+    // Add to the selection or remove a selected region
     checkedSelected() {
       const selectedList = []
       const filterId = []
       if (this.operateId === 0) {
-        // 省级添加
+        // Add at province level
         for (const val of this.selectedDistrict) {
           selectedList.push({
             id: val.id,
@@ -166,7 +166,7 @@ export default {
         }
         this.$emit('selected-checked', selectedList, filterId)
       } else if (this.operateId === 1 || this.operateId === 2) {
-        // 市级或县级添加
+        // Add at city or county level
         for (const val of this.selectedDistrict) {
           selectedList.push({
             id: this.father.id + '-' + val.id,
@@ -176,7 +176,7 @@ export default {
         }
         this.$emit('selected-checked', selectedList, filterId)
       } else {
-        // 删除已选区域
+        // Remove a selected region
         for (const val of this.selectedDistrict) {
           selectedList.push({
             id: val.id,

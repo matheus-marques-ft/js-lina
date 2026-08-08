@@ -106,14 +106,14 @@ export default {
 
       let filteredData = []
 
-      // 只要有一个大于零 则展示全部的
+      // Show all items as long as at least one is greater than zero
       if (data.some((item) => item.value > 0)) {
         filteredData = data
       } else {
         filteredData = data.slice(0, 7)
       }
 
-      // 找出所有数据中最大的值，并设置为 x 轴的 max。如果全是零则设置为 10
+      // Find the max value across all data and use it as the x-axis max. If all are zero, use 10
       const maxValue = Math.max(...filteredData.map((item) => item.value))
       const max = maxValue > 0 ? maxValue : 10
       const primaryColor = this.getPrimaryColor()

@@ -164,8 +164,8 @@ export default {
       this.longPressTimer = setTimeout(() => {
         this.showHistory = !this.showHistory
         localStorage.setItem('showHistory', this.showHistory ? '1' : '0')
-        // 在这里执行长按事件的操作
-      }, 1000) // 设置长按持续时间，单位为毫秒
+        // Perform the long-press action here
+      }, 1000) // Set the long-press duration, in milliseconds
     },
     endLongPress() {
       clearTimeout(this.longPressTimer)
@@ -182,8 +182,9 @@ export default {
 @use '@/styles/variables' as *;
 
 .page {
-  // 这个不加的话，page title 也会滚动
-  // 高度需与固定头部 $headerHeight（40px）一致，否则底部内容滚不到 / 顶部留白
+  // Without this, the page title would scroll too
+  // Height must match the fixed header's $headerHeight (40px), otherwise the bottom content
+  // can't be scrolled to / there's blank space at the top
   height: calc(100vh - #{$headerHeight});
   display: flex;
   flex-direction: column;
@@ -195,8 +196,8 @@ export default {
   }
 
   .page-content {
-    flex: 1; /* 占用剩余高度 */
-    min-height: 0; /* flex 子项默认 min-height:auto 不会收缩，导致内部滚动底部被裁剪 */
+    flex: 1; /* Take up the remaining height */
+    min-height: 0; /* flex items default to min-height:auto and won't shrink, cutting off the bottom of inner scrolling */
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
@@ -204,9 +205,9 @@ export default {
     scrollbar-gutter: stable;
 
     :deep(> div) {
-      // 这个当时为什么设置的
+      // Why was this set at the time?
       //margin-bottom: 50px;
-      // 别设置，用户列页面会被撑开
+      // Don't set this, the user list page would get stretched
       //height: 100%;
     }
   }

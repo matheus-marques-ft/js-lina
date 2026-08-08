@@ -90,7 +90,7 @@ export default {
         if (!nameComponentMap[name]) {
           continue
         }
-        // 如果报错，需要在上面的 submenu 中添加对应的组件
+        // If this errors, add the corresponding component to the submenu above
         nameComponentMap[name]['hidden'] = false
         nameComponentMap[name]['title'] = item.label
       }
@@ -99,7 +99,7 @@ export default {
   },
   methods: {
     handleTabClick(tab) {
-      // 这样不行，会闪
+      // This doesn't work, it flickers
       // const query = _.cloneDeep(this.$route.query)
       // const newQuery = {
       //   ...query,

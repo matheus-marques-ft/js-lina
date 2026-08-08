@@ -43,11 +43,13 @@ export default {
 
 <style lang="scss" scoped>
 /*
- * 统一约定：
- * - card 直接外层（.ibox / .el-card）不设任何 padding，padding 全部落在 __body / __header。
- * - __body 内部统一 flex 列布局，左右 padding 20px。
- * - __header 同样左右 20px。
- * 特殊场景（表格类贴边、详情页 quick-update、撑满高度）由各自组件穿透覆盖。
+ * Unified convention:
+ * - The card's direct outer wrapper (.ibox / .el-card) sets no padding at all; all padding
+ *   lives on __body / __header.
+ * - __body uses a uniform flex column layout, with 20px left/right padding.
+ * - __header likewise has 20px left/right padding.
+ * Special cases (edge-to-edge tables, detail-page quick-update, full-height stretch) are
+ * overridden by each component's own deep selectors.
  */
 .ibox {
   clear: both;
@@ -69,14 +71,16 @@ export default {
   align-items: center;
 }
 
-// 间距挂在 icon 上（仅在有 icon 时存在），不用容器级 gap，避免无 icon 时也“预留”出间隙的歧义
+// Spacing is attached to the icon (only present when there is an icon) rather than a
+// container-level gap, to avoid the ambiguity of "reserving" a gap even when there's no icon
 .ibox-title > .fa {
   margin-right: 8px;
 }
 
-// 图标迁移后 <i class="fa fa-xxx"> 的字形（::before）已被移除，这类 fa 图标实际是不可见的
-// 空元素（:empty），却仍占用上面的 margin，导致“没图标却空出一节”。直接隐藏渲染不出内容的
-// fa 图标（连同其 margin），有真实内容的图标不受影响。
+// After the icon migration, the glyph (::before) of <i class="fa fa-xxx"> has been removed,
+// so these fa icons are actually invisible empty elements (:empty), yet they still occupy the
+// margin above, resulting in "an empty gap where there's no icon". Directly hide fa icons that
+// render no content (along with their margin); icons with real content are unaffected.
 .ibox-title > .fa:empty {
   display: none;
 }

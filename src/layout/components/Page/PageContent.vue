@@ -21,10 +21,12 @@ export default {
 }
 
 /*
- * 内容组件常用单个 <div>（无 class 或 class=""）包裹多个区块，该 wrapper 会成为 .wrapper-content
- * 唯一的 flex 子节点，使外层 gap 对其内部区块失效。Page 的 slot 无 transition 包裹，故对这类纯
- * 结构 wrapper 用 display: contents 让其在布局上透明，子元素直接成为 .wrapper-content 的 flex
- * 子项、与 .page-alert 同级并直接吃到外层 gap。带 class 的 wrapper 有自身样式，保持不变。
+ * Content components often wrap multiple blocks in a single <div> (no class, or class=""),
+ * which becomes the only flex child of .wrapper-content, causing the outer gap to have no
+ * effect on its inner blocks. Page's slot isn't wrapped in a transition, so for this kind of
+ * purely structural wrapper, display: contents makes it transparent in layout terms: its
+ * children become direct flex items of .wrapper-content, siblings of .page-alert, and pick
+ * up the outer gap directly. Wrappers with a class have their own styles and are left as-is.
  */
 .wrapper-content > :deep(div:not([class])),
 .wrapper-content > :deep(div[class='']) {
@@ -32,8 +34,9 @@ export default {
 }
 
 /*
- * 统一原则：卡片自身不出现内部滚动条，只有外层 .wrapper-content（page-content）整体滚动。
- * 强制卡片相关容器不自带滚动 / 高度上限，把溢出交还给外层滚动容器。
+ * Unified principle: cards themselves never show an inner scrollbar; only the outer
+ * .wrapper-content (page-content) scrolls as a whole. Card-related containers are forced to
+ * not have their own scroll / max-height, handing overflow back to the outer scroll container.
  */
 .wrapper-content :deep(.el-card__body),
 .wrapper-content :deep(.ibox),
@@ -47,9 +50,9 @@ export default {
 }
 
 /*
- * 统一页面级 el-alert（含 settings 页手写的 el-alert）的字号/图标尺寸，使其与 console 中
- * 通过 help-tip 渲染的 .page-alert 一致。表单内的提示（.el-form 内 / .help-block）有自身
- * 样式，排除在外。
+ * Unify the font size / icon size of page-level el-alert (including hand-written el-alert on
+ * settings pages) so it matches the .page-alert rendered via help-tip in console. Tips inside
+ * forms (within .el-form / .help-block) have their own styles and are excluded.
  */
 .wrapper-content :deep(.el-alert:not(.help-warning)) {
   margin: 0;

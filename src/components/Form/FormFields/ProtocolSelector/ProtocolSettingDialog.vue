@@ -129,9 +129,10 @@ export default {
       this.$emit('update:visible', visible)
     },
     onSubmit(form) {
-      // protocol 是只读 prop，不能重新赋值或就地 mutate（会触发 proxy set 陷阱报错）。
-      // 先把编辑后的表单值通过 confirm 抛给父组件（由父组件合并到自己的协议项数据上），
-      // 再关闭弹窗，避免关闭触发 v-if 卸载导致 confirm 尚未派发。
+      // protocol is a read-only prop; it cannot be reassigned or mutated in place
+      // (that would trigger a proxy set trap error). First emit the edited form value
+      // to the parent via confirm (the parent merges it into its own protocol item
+      // data), then close the dialog, to avoid closing triggering a v-if unmount before confirm has been dispatched.
       this.$emit('confirm', form)
       this.closeDialog()
     },

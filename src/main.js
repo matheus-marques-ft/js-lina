@@ -3,12 +3,12 @@ import ElementPlus from 'element-plus'
 import { getElementLocale } from '@/i18n/langs'
 import { getLangCode } from '@/i18n/utils'
 import 'element-plus/dist/index.css'
-// 导入 Element Plus CSS 变量配置（需要在 Element Plus 样式之后，自定义样式之前）
+// Import the Element Plus CSS variable config (must come after Element Plus styles, before custom styles)
 import '@/styles/element-plus-vars.scss'
-// 导入默认主题配置（包含 :root CSS 变量定义）
+// Import the default theme config (contains the :root CSS variable definitions)
 import '@/styles/default-theme.scss'
 import '@/styles/index.scss' // global css
-// 导入默认主题配置并初始化
+// Import and initialize the default theme config
 import { setRootColors } from '@/utils/theme/color'
 import App from './App.vue'
 import store from './store'
@@ -38,8 +38,8 @@ import { ElMessageBox } from 'element-plus'
 
 moment.locale('zh-cn')
 
-// 构建时间：生产环境为 Docker 构建时刻，开发环境为 dev server 启动时刻（见 vite.config.js）
-// 用双色徽章样式打印，与其它 console 信息区分开。
+// Build time: in production this is the Docker build moment, in development it's when the dev server started (see vite.config.js)
+// Printed with a two-tone badge style to stand out from other console messages.
 console.log(
   `%c 🚀 Lina %c Build Time: ${__BUILD_TIME__} %c`,
   'background:#409eff;color:#fff;padding:4px 8px;border-radius:4px 0 0 4px;font-weight:bold',
@@ -79,7 +79,7 @@ async function initApp() {
   app.use(ChartsPlugin)
   app.use(createContextService({ router }))
 
-  // v-sanitize: 手动注册(v-sanitize npm 包用 Vue.prototype 不兼容 Vue 3)
+  // v-sanitize: registered manually (the v-sanitize npm package uses Vue.prototype, incompatible with Vue 3)
   const sanitizeOptions = {
     ALLOW_DATA_ATTR: true
   }
@@ -95,7 +95,7 @@ async function initApp() {
   installSvgIcon(app)
   installElementPlusIcons(app)
 
-  // 全局注册动态组件(被 GenericDetailPage submenu 按字符串 name 引用)
+  // Register the dynamic component globally (referenced by GenericDetailPage submenu via string name)
   app.component('ResourceActivity', ResourceActivity)
 
   app.config.globalProperties.$moment = moment
@@ -113,14 +113,14 @@ async function initApp() {
   app.config.globalProperties.$t = identityT
   app.config.globalProperties.$tc = identityTc
 
-  // 设置全局错误处理器
+  // Set up the global error handler
   setupErrorHandler(app, message)
 
   window._ = _
-  // v-html 在模板编译阶段统一转换为 window.$xss.process(...)
+  // v-html is uniformly transformed to window.$xss.process(...) during template compilation
   window.$xss = xss
 
-  // 初始化默认主题变量（确保在应用启动时就注入 CSS 变量）
+  // Initialize default theme variables (ensures CSS variables are injected as soon as the app starts)
   setRootColors()
 
   await fetchTranslationsFromAPI()

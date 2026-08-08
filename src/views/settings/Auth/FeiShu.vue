@@ -84,7 +84,7 @@ export default {
         encryptedFields: this.encryptedFields,
         fields: this.formFields,
         fieldsMeta: this.formFieldsMeta,
-        // 不清理的话，编辑secret，在删除提交会报错
+        // Without this cleanup, editing the secret would error on submit after deletion
         cleanFormValue(data) {
           this.encryptedFields.forEach((field) => {
             if (!data[field]) {

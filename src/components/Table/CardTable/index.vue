@@ -70,7 +70,7 @@ export default {
     Pagination
   },
   props: {
-    // 定义 table 的配置
+    // Define the table configuration
     columns: {
       type: Number,
       default: 3
@@ -233,7 +233,7 @@ export default {
           this.$message.success(this.$tc('DeleteSuccessMsg'))
         }
       }).catch(() => {
-        /* 取消*/
+        /* Cancel */
       })
     }
   }
@@ -263,7 +263,7 @@ export default {
   max-width: 1600px;
   text-align: center;
 
-  // 空状态时不受卡片网格 1600px 上限约束,让 empty 卡片撑满整行宽度
+  // In the empty state, ignore the card grid's 1600px cap so the empty card fills the whole row width
   &.is-empty {
     max-width: none;
   }
@@ -320,7 +320,7 @@ export default {
 }
 
 // .el-col {
-//   min-width: 330px; 设置完后，remote app 列表会有问题
+//   min-width: 330px; setting this causes issues with the remote app list
 // }
 
 .no-data {

@@ -455,7 +455,7 @@ export default {
           const routeFilter = this.checkInTableColumns(newVal)
           if (oldVal.length > 0 && newVal.length !== oldVal.length) {
             const beforeRouteFilter = this.checkInTableColumns(oldVal)
-            // 如果2次过滤的参数相同就不在重复请求
+            // If the two filter's parameters are the same, don't send a duplicate request
             if (_.isEqual(routeFilter, beforeRouteFilter)) {
               return
             }
@@ -563,8 +563,8 @@ export default {
     },
     handleCompositionEnd() {
       this.isComposing = false
-      // 第一次 Enter 只确认输入法候选词。compositionend 会先于 keyup 触发，
-      // 因此跳过紧随其后的 keyup，让第二次 Enter 再执行搜索。
+      // The first Enter only confirms the IME candidate word. compositionend fires before keyup,
+      // so skip the keyup that immediately follows, and let the second Enter run the search.
       this.skipNextEnter = true
       setTimeout(() => {
         this.skipNextEnter = false
@@ -585,7 +585,7 @@ export default {
       this.isFocus = false
       this.$emit('blur')
     },
-    // 获取url中的查询条件，判断是不是包含在当前查询条件里
+    // Get the query conditions from the url and check whether they're included in the current query conditions
     checkInTableColumns(options) {
       const searchFieldOptions = {}
       const queryInfoValues = options.map((i) => i.value)
@@ -1462,7 +1462,7 @@ export default {
       this.filterTags[conditionKey] = tag
       // this.$emit('tagSearch', this.filterMaps)
 
-      // 修改查询参数时改变url中保存的参数
+      // Change the params saved in the url when the query params are modified
       // if (this.getUrlQuery) {
       // let newQuery = _.cloneDeep(this.$route.query)
       // if (this.filterKey.startsWith('search')) {
@@ -1520,7 +1520,7 @@ export default {
       this.focusSearchInput()
     },
     handleKeyUp(event) {
-      // 如果当前有输入框聚焦，不触发搜索
+      // Don't trigger a search if an input is currently focused
       const activeElement = event.target
       const isInputFocused =
         activeElement &&
@@ -1529,8 +1529,8 @@ export default {
           activeElement.contentEditable === 'true')
       if (isInputFocused) return
 
-      // 当目标对象为一个 length 为 0 的伪数组时表明此时是在全局情况下调用
-      // 若存在遮罩层等组件在调用时，其 length 将会为 1
+      // When the target object is a pseudo-array with length 0, it means this is being called in the global context
+      // If a mask or similar component is calling it, its length will be 1
       if (event.target.classList.length === 0 && event.key === '/') {
         this.$refs.SearchInput.focus()
         this.isFocus = true
@@ -1545,7 +1545,7 @@ export default {
       this.$refs.Cascade?.togglePopperVisible?.(false)
       this.$nextTick(() => this.$refs.SearchInput?.blur?.())
     },
-    // 删除查询条件时改变url
+    // Change the url when a query condition is removed
     checkUrlFields(evt) {
       let newQuery = _.omit(
         this.$route.query,
@@ -1798,7 +1798,7 @@ a {
 
 <style lang="scss">
 .tag-search-field-popper {
-  // 字段菜单直接与整个搜索框左边缘对齐，不显示浮层指向箭头。
+  // The field menu is aligned directly with the left edge of the whole search box, no popper arrow shown.
   &.el-popper[data-popper-placement^='bottom'] {
     margin-top: -6px;
     margin-left: 0;
@@ -1808,8 +1808,8 @@ a {
     display: none;
   }
 
-  // Element Plus 使用透明 SVG 三角区保持鼠标从一级菜单平滑移动到二级菜单。
-  // 全局 `path { fill: inherit !important; }` 会把透明区域染黑，因此在此恢复透明。
+  // Element Plus uses a transparent SVG triangle zone to keep the mouse moving smoothly from the first-level menu to the second-level menu.
+  // The global `path { fill: inherit !important; }` rule turns that transparent zone black, so restore transparency here.
   .el-cascader-menu__hover-zone path {
     fill: transparent !important;
     stroke: transparent !important;
@@ -1849,7 +1849,7 @@ a {
     flex: 0 0 auto;
   }
 
-  // 字段选择只负责切换搜索维度，一级、二级菜单均隐藏对勾和选中背景。
+  // Field selection is only responsible for switching the search dimension; both first- and second-level menus hide the checkmark and selected background.
   .el-cascader-node__prefix {
     display: none;
   }

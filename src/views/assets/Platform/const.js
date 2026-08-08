@@ -136,7 +136,7 @@ export const setAutomations = (vm) => {
     const itemMethodKey = item + '_method'
     const itemParamsKey = item + '_params'
     const itemEnabled = automation[itemEnabledKey]
-    // 设置 enableKey disabled 和 默认值
+    // Set enableKey disabled state and default value
     if (itemEnabled === false) {
       initial[itemEnabledKey] = false
       _.set(autoFieldsMeta, `${itemEnabledKey}.el.disabled`, true)
@@ -144,22 +144,24 @@ export const setAutomations = (vm) => {
       initial[itemEnabledKey] = true
     }
 
-    // 设置 enableKey Hidden
+    // Set enableKey hidden
     _.set(autoFieldsMeta, `${itemEnabledKey}.hidden`, (formValue) => {
       return !formValue['ansible_enabled']
     })
-    // 设置 enableMethod Hidden
+    // Set enableMethod hidden
     _.set(autoFieldsMeta, `${itemMethodKey}.hidden`, (formValue) => {
       return !formValue[itemEnabledKey] || !formValue['ansible_enabled']
     })
     _.set(autoFieldsMeta, `${itemEnabledKey}.attrs.class`, 'item-enable')
-    // 设置 enableMethod className
+    // Set enableMethod className
     _.set(autoFieldsMeta, `${itemMethodKey}.attrs.class`, 'item-method')
-    // 设置 enableParams Hidden
-    // params 字段不再单独渲染(齿轮按钮已并入 method 的组合组件),但其值仍需随表单提交,
-    // 因此恒隐藏其表单行、只保留取值。
+    // Set enableParams hidden
+    // The params field is no longer rendered separately (the gear button has been merged
+    // into the method composite component), but its value still needs to be submitted
+    // with the form, so its form row is always hidden and only its value is kept.
     _.set(autoFieldsMeta, `${itemParamsKey}.hidden`, () => true)
-    // method 字段改用组合组件:el-select 与参数设置按钮拼成一体的 input-group
+    // The method field now uses a composite component: el-select joined with the
+    // params-setting button into a single input-group
     const methods = automation[itemMethodKey + 's'] || []
     const options = methods.map((method) => {
       return { value: method['id'], label: method['name'] }
@@ -180,8 +182,9 @@ export const setAutomations = (vm) => {
     _.set(autoFieldsMeta, `${itemMethodKey}.el.paramsValue`, initial[itemParamsKey] || {})
     _.set(initial, `${itemMethodKey}`, options[0]?.value)
 
-    // 参数写回:组合组件抛出的 paramsChange 事件,借助 updateForm 合并回 _params 字段;
-    // 保留 method 已有的 on(如 change_secret 的联动 change)。
+    // Write the params back: the paramsChange event emitted by the composite component
+    // is merged back into the _params field via updateForm; the existing on handlers
+    // for method (e.g. change_secret's cascading change) are preserved.
     const existingOn = autoFieldsMeta[itemMethodKey].on || {}
     _.set(autoFieldsMeta, `${itemMethodKey}.on`, {
       ...existingOn,

@@ -84,7 +84,7 @@ export default {
       drawerVisible: false,
       drawerComponent: '',
       drawerContext: null,
-      isReopeningDrawer: false // 标志：是否正在重新打开抽屉
+      isReopeningDrawer: false // flag: whether the drawer is being reopened
     }
   },
   computed: {
@@ -162,7 +162,7 @@ export default {
             this.isReopeningDrawer
           )
           this.$nextTick(() => {
-            // 如果正在重新打开抽屉，不清空组件
+            // If the drawer is being reopened, don't clear the component
             if (!this.isReopeningDrawer) {
               this.$log.debug('>>> drawerVisible: calling afterCloseDrawer')
               this.afterCloseDrawer()
@@ -430,13 +430,13 @@ export default {
       })
 
       try {
-        // 1. 设置 action
+        // 1. Set action
         this.action = action
         this.$log.debug('>>> showDrawer step 1: action set to', action)
 
         this.syncLegacyRouteState({ query })
 
-        // 2. 先获取组件
+        // 2. Get the component first
         const component = this.getDrawerComponent(action, payload) || this.getDefaultDrawer(action)
         this.$log.debug('>>> showDrawer step 2: got component', {
           component: component
@@ -448,29 +448,29 @@ export default {
           getDefaultDrawer: this.getDefaultDrawer(action) ? 'EXISTS' : 'EMPTY'
         })
 
-        // 3. 如果还是没有组件，报错
+        // 3. If there's still no component, throw an error
         if (!component) {
           throw new Error(`No drawer component found for action: ${action}`)
         }
 
-        // 4. 如果组件已存在且相同，且抽屉已打开，直接返回
+        // 4. If the component already exists, is the same, and the drawer is already open, return directly
         if (this.drawerComponent === component && this.drawerVisible) {
           this.$log.debug('>>> showDrawer: drawer already open with same component, returning')
           return
         }
 
-        // 5. 设置标志，防止关闭时清空组件
+        // 5. Set the flag to prevent the component from being cleared on close
         this.isReopeningDrawer = true
         this.$log.debug('>>> showDrawer step 5: isReopeningDrawer set to true')
 
-        // 6. 先设置组件（在关闭之前设置）
+        // 6. Set the component first (before closing)
         this.drawerComponent = markRaw(toRaw(component))
         this.$log.debug('>>> showDrawer step 6: drawerComponent set', {
           drawerComponent: this.drawerComponent ? 'EXISTS' : 'EMPTY',
           drawerVisible: this.drawerVisible
         })
 
-        // 7. 如果抽屉已打开，先关闭
+        // 7. If the drawer is already open, close it first
         if (this.drawerVisible) {
           this.$log.debug('>>> showDrawer step 7: closing existing drawer')
           this.drawerVisible = false
@@ -479,14 +479,14 @@ export default {
             '>>> showDrawer step 7: after close, drawerComponent =',
             this.drawerComponent ? 'EXISTS' : 'EMPTY'
           )
-          // 确保组件没有被清空
+          // Make sure the component wasn't cleared
           if (!this.drawerComponent) {
             this.$log.debug('>>> showDrawer step 7: drawerComponent was cleared, restoring it')
             this.drawerComponent = markRaw(toRaw(component))
           }
         }
 
-        // 8. 获取标题
+        // 8. Get the title
         if (this.getDrawerTitle) {
           const actionMeta = this.drawerContext || (await getRuntimeActionMeta(this))
           this.title = this.getDrawerTitle({ action, ...actionMeta })
@@ -494,14 +494,14 @@ export default {
         this.drawerTitle = this.getActionDrawerTitle({ action, row, col, cellValue, payload })
         this.$log.debug('>>> showDrawer step 8: title set to', this.drawerTitle)
 
-        // 9. 等待下一个 tick，确保组件已设置
+        // 9. Wait for the next tick to make sure the component is set
         await this.$nextTick()
         this.$log.debug('>>> showDrawer step 9: after nextTick', {
           drawerComponent: this.drawerComponent ? 'EXISTS' : 'EMPTY',
           drawerVisible: this.drawerVisible
         })
 
-        // 10. 显示抽屉
+        // 10. Show the drawer
         this.drawerVisible = true
         this.$log.debug('>>> showDrawer step 10: drawerVisible set to true', {
           drawerComponent: this.drawerComponent ? 'EXISTS' : 'EMPTY',
@@ -509,7 +509,7 @@ export default {
           action: this.action
         })
 
-        // 11. 再等待一个 tick，确保 DOM 已更新
+        // 11. Wait one more tick to make sure the DOM has updated
         await this.$nextTick()
         this.$log.debug('>>> showDrawer step 11: final state', {
           drawerComponent: this.drawerComponent ? 'EXISTS' : 'EMPTY',
@@ -559,10 +559,10 @@ export default {
     },
     async onDetail({ row, col, cellValue, detailRoute, formatterArgs }) {
       this.$log.debug('>>> onDetail: ', detailRoute, formatterArgs)
-      // 因为使用 detail formatter 时，id 可能并非 row 的，比如 execution 的 task id
+      // Because when using the detail formatter, the id may not belong to the row, e.g. execution's task id
       const query = detailRoute?.query || {}
       const params = detailRoute?.params || {}
-      // 有可能来自 params 或者 row
+      // May come from params or row
       const id = params.id || row.id
       this.syncLegacyRouteState({
         params: {

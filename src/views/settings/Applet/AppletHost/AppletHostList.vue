@@ -103,11 +103,11 @@ export default {
     this.renderHelp()
   },
   activated() {
-    // keep-alive 切回该 tab 时也重渲，确保帮助文案一定出现
+    // Re-render when switching back to this tab via keep-alive, to ensure the help text always shows
     this.renderHelp()
   },
   methods: {
-    // 命令式渲染帮助文案：绕开 v-html 编译转换在 keep-alive/时序下对内联 $t 不重算的问题。
+    // Render the help text imperatively: works around inline $t not being recomputed by the v-html compile transform under keep-alive/timing.
     renderHelp() {
       this.$nextTick(() => {
         const el = this.$refs.helpRef

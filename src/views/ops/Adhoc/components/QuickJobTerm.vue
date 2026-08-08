@@ -153,7 +153,7 @@ export default {
       this.showScrollButton = position > 0
     },
     scrollToTop() {
-      // 不能改，只有这么写才能保证上箭头和下箭头不消失
+      // Don't change this; only this order keeps the up/down arrows from disappearing
       this.$nextTick(() => {
         this.xterm.scrollToTop()
       })

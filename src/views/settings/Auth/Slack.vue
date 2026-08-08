@@ -64,7 +64,7 @@ export default {
           },
           SLACK_ORG_IDS: getOrgSelect2Meta()
         },
-        // 不清理的话，编辑secret，在删除提交会报错
+        // Without this cleanup, editing the secret would error on submit after deletion
         cleanFormValue(data) {
           const needDeleteValues = ['SLACK_CLIENT_SECRET', 'SLACK_BOT_TOKEN']
           needDeleteValues.map((k) => {

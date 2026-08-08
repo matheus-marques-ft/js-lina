@@ -2,7 +2,7 @@ import { constantRoutes } from '@/router'
 import store from '@/store'
 import { getAssetUrlOr } from '@/utils/assets'
 
-let openedTaskWindow = null // 保存已打开的窗口对象
+let openedTaskWindow = null // Holds a reference to the already-opened window object
 
 function openOrReuseWindow(
   url,
@@ -14,12 +14,12 @@ function openOrReuseWindow(
   const iTop = (window.screen.height - 30 - iHeight) / 2
   const iLeft = (window.screen.width - 10 - iWidth) / 2
 
-  // 检查窗口是否已经打开
+  // Check whether the window is already open
   if (openedTaskWindow && !openedTaskWindow.closed) {
-    openedTaskWindow.location.href = url // 如果窗口未关闭，更新其地址
-    openedTaskWindow.focus() // 将窗口置于前台
+    openedTaskWindow.location.href = url // If the window isn't closed, update its address
+    openedTaskWindow.focus() // Bring the window to the foreground
   } else {
-    // 如果窗口未打开或已关闭，创建新窗口
+    // If the window isn't open or has been closed, create a new window
     openedTaskWindow = window.open(
       url,
       windowName,
@@ -44,7 +44,7 @@ export function checkPermission(permsRequired, permsAll) {
     permsRequired = [permsRequired]
   }
   return permsRequired.every((perm) => {
-    // 包含 | 是或的关系, 单独处理
+    // A '|' indicates an OR relationship, handled separately
     if (perm.indexOf('|') === -1) {
       return permsAll.includes(perm)
     }
@@ -111,12 +111,13 @@ export function hasActionPerm(route, action) {
 }
 
 export function getPermedViews() {
-  // 看不懂，别特么瞎改
-  // 当用户访问某个 path 时，如果没有权限，应该 404，但是我们有个组织切换的功能，
-  // 当用户从 A 组织切换到 B 组织时，如果切换到 B 组织没有权限，404 显然不够优雅。
-  // 当用户访问某个 path 时，会从 path 提取 view，判断是否拥有权限，
-  // 如果没有权限，则 自上而下，寻找第一个有权限的 view。
-  // 这里应该拥有所有 view, 否则刷新页面时，有可能也会跳转
+  // If you don't understand this, don't mess with it.
+  // When a user visits a path without permission, it should normally 404 — but we have an
+  // organization-switching feature. When a user switches from org A to org B, if they lack
+  // permission in org B, a plain 404 isn't graceful. When a user visits a path, we extract the
+  // view from the path and check whether they have permission for it; if not, we search
+  // top-down for the first view they do have permission for.
+  // This should include every view, otherwise refreshing the page could also cause a redirect.
   const viewShowMapper = [
     ['console', store.getters.consoleOrgs.length > 0],
     ['audit', store.getters.auditOrgs.length > 0],

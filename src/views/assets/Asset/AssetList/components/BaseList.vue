@@ -98,7 +98,7 @@ export default {
       type: Object,
       default: () => ({})
     },
-    // url中需要添加额外的参数
+    // Extra params need to be added to the url
     extraQuery: {
       type: Object,
       default: () => ({})
@@ -180,7 +180,8 @@ export default {
       recentPlatformIds: (state) => state.assets.recentPlatformIds
     }),
     iTableConfig() {
-      // merge 到新对象,避免就地修改响应式 this.defaultConfig 造成计算属性自触发循环
+      // Merge into a new object to avoid mutating the reactive this.defaultConfig in place,
+      // which would cause the computed property to trigger itself in a loop
       return _.merge({}, this.defaultConfig, this.tableConfig, {
         url: this.url,
         ...(this.category && { category: this.category })
@@ -220,7 +221,7 @@ export default {
     },
     recentPlatformIds(newValue, oldValue) {
       this.setRecentPlatforms()
-      // 在这里执行需要的操作
+      // Perform whatever is needed here
     }
   },
   mounted() {

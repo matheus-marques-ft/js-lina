@@ -77,7 +77,7 @@ export function formatDate(inputTime) {
   return y + '-' + m + '-' + d + 'T' + h + ':' + minute + ':' + second
 }
 
-// 将标准时间转换成时间戳
+// Convert a standard time string into a timestamp
 export function getDateTimeStamp(dateStr) {
   return Date.parse(dateStr.replace(/-/gi, '/'))
 }

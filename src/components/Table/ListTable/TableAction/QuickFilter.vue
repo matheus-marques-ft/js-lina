@@ -239,7 +239,7 @@ export default {
     .quick-filter-zone {
       display: flex;
       justify-content: flex-start;
-      flex-wrap: wrap; /* 允许 item-zone 换行 */
+      flex-wrap: wrap; /* allow item-zone to wrap */
       gap: 10px;
 
       h5 {
@@ -268,9 +268,9 @@ export default {
           margin-left: 4px;
           margin-bottom: 2px;
           vertical-align: middle;
-          width: 1px; /* 分割线宽度 */
-          height: 8px; /* 分割线高度 */
-          background-color: var(--color-icon-primary); /* 分割线颜色 */
+          width: 1px; /* divider width */
+          height: 8px; /* divider height */
+          background-color: var(--color-icon-primary); /* divider color */
           display: inline-block;
         }
 
@@ -283,8 +283,8 @@ export default {
           margin-left: -3px;
         }
 
-        // 高亮不只靠颜色:Deep black 等主题下 --color-primary 接近正文色,单纯变色看不出;
-        // 叠加加粗 + 下划线,任何主题下选中态都清晰可辨
+        // Highlighting doesn't rely on color alone: under themes like Deep black, --color-primary is close to the body text color, so a plain color change isn't visible;
+        // adding bold + underline makes the selected state clearly distinguishable under any theme
         &.active {
           color: var(--color-primary);
           font-weight: 600;

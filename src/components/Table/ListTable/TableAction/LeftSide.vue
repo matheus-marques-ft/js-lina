@@ -265,7 +265,7 @@ export default {
           }
         }
       }).catch(() => {
-        /* 取消*/
+        /* cancelled */
       })
     },
     async defaultPerformBulkDelete(selectedRows) {

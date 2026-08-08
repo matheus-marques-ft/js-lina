@@ -2,7 +2,7 @@
   <div>
     <TwoCol>
       <template #default>
-        <!-- 左上：设备驱动状态 -->
+        <!-- Top left: device driver status -->
         <IBox :title="$t('DeviceDriverStatus')">
           <table class="cp-info-table">
             <tbody>
@@ -24,7 +24,7 @@
           </table>
         </IBox>
 
-        <!-- 左中：操作按钮 -->
+        <!-- Middle left: operation buttons -->
         <IBox :title="$t('Operation')" style="margin-top: 10px">
           <table v-if="operationWhenPassed && visibleOperations.length > 0" class="cp-action-table">
             <tbody>
@@ -51,7 +51,7 @@
           </div>
         </IBox>
 
-        <!-- 左下：操作日志 -->
+        <!-- Bottom left: operation logs -->
         <IBox v-if="logs.length > 0" :title="$t('OperationLogs')" style="margin-top: 10px">
           <div ref="logBox" class="cp-logs-box">
             <div v-for="(log, i) in logs" :key="i" :class="['cp-log-item', `cp-log-${log.level}`]">
@@ -63,7 +63,7 @@
       </template>
 
       <template #right>
-        <!-- 右上：证书信息 -->
+        <!-- Top right: certificate info -->
         <IBox :title="$t('CertificateInfo')">
           <div v-if="infoWhenPassed && certLoading" class="cp-cert-loading">
             <i class="el-icon-loading" />
@@ -98,7 +98,7 @@
       </template>
     </TwoCol>
 
-    <!-- 通用输入弹框（步骤内 input 配置驱动） -->
+    <!-- Generic input dialog (driven by step-level input config) -->
     <el-dialog
       :title="inputDialog.title"
       v-model="inputDialog.visible"
@@ -150,23 +150,23 @@ const CONFIG_API = '/api/v1/authentication/ukey/ukey-sdk-config/'
 
 const SCRIPT_TAG_ID = 'ukey-sdk-script'
 
-// 模块级单例 — 防止 Vue 响应式代理污染第三方 SDK 对象
-let _instance = null // UKey SDK 实例
-let _ukey = {} // ukey.* 命名空间（sdk.setup.steps register 的变量）
-let _userOverride = null // user.* 命名空间覆盖（操作步骤 register: user 写入）
+// Module-level singletons — prevent Vue's reactive proxy from polluting third-party SDK objects
+let _instance = null // UKey SDK instance
+let _ukey = {} // ukey.* namespace (variables registered by sdk.setup.steps)
+let _userOverride = null // user.* namespace override (written by operation step register: user)
 
 export default {
   name: 'UKeyPanel',
   components: { TwoCol, IBox },
 
   props: {
-    /** 'admin': 管理员管理他人证书；'user': 用户自管理 */
+    /** 'admin': administrator manages another user's certificate; 'user': user self-manages */
     mode: {
       type: String,
       default: 'user',
       validator: (v) => ['admin', 'user'].includes(v)
     },
-    /** 被管理的用户对象（admin 模式必传） */
+    /** The user object being managed (required when mode is 'admin') */
     object: {
       type: Object,
       default: null
@@ -181,7 +181,7 @@ export default {
       sdkLoaded: false,
 
       deviceInfoItems: [], // [{ key, label, value, scope }]
-      certInfoItems: [], // [{ key, label, value, tag? }]
+      certInfoItems: [], // [{ key, label, value, tag? }] (same shape as above)
       certLoading: true,
       hasCert: false,
       infoWhenFalseLogged: false,
@@ -191,7 +191,7 @@ export default {
       currentOperation: '',
       logs: [],
 
-      ukeySnapshot: {}, // _ukey 的响应式镜像，驱动 computed 重算
+      ukeySnapshot: {}, // Reactive mirror of _ukey, drives computed recalculation
 
       inputDialog: {
         visible: false,
@@ -228,7 +228,7 @@ export default {
       return this.evaluateWhen(this.operationsConfig.when)
     },
 
-    // ── 左上状态面板：固定行 + config.info.device 动态行 ──────────────────────────
+    // ── Top-left status panel: fixed rows + config.info.device dynamic rows ─────
     statusItems() {
       const fixed = [
         {
@@ -251,13 +251,13 @@ export default {
       return [...fixed, ...dynamic]
     },
 
-    // ── 根据 scope / hidden 过滤后的操作按钮 ────────────────────────────────────
+    // ── Operation buttons filtered by scope / hidden ────────────────────────────
     visibleOperations() {
       if (!this.sdkConfig) return []
       const operationItems = this.operationsConfig.items
       if (!Array.isArray(operationItems) || operationItems.length === 0) return []
       if (!this.operationWhenPassed) return []
-      // 引用 ukeySnapshot 使 computed 在 _ukey 变化时自动重算
+      // Reference ukeySnapshot so this computed auto-recalculates when _ukey changes
       const ukey = this.ukeySnapshot
       const ctx = {
         ukey,
@@ -274,7 +274,7 @@ export default {
           if (scope === 'admin' && this.mode !== 'admin') return false
           if (scope === 'user' && this.mode !== 'user') return false
           if (!this.evaluateWhen(op.when, ctx)) return false
-          // hidden 支持布尔值或 {{ }} 模板（解析结果为真值时隐藏）
+          // hidden supports a boolean or a {{ }} template (hidden when the resolved result is truthy)
           if (op.hidden !== undefined) {
             const resolved = this.resolveValue(op.hidden, ctx)
             if (resolved === true || resolved === 'true' || resolved === 1) return false
@@ -282,7 +282,7 @@ export default {
           return true
         })
         .map((op) => {
-          // disabled 支持布尔值或 {{ }} 模板（解析结果为真值时禁用）
+          // disabled supports a boolean or a {{ }} template (disabled when the resolved result is truthy)
           let opDisabled = false
           if (op.disabled !== undefined) {
             const resolved = this.resolveValue(op.disabled, ctx)
@@ -298,7 +298,7 @@ export default {
   },
 
   async mounted() {
-    this.pollTimer = null // 非响应式，直接挂实例
+    this.pollTimer = null // non-reactive, attached directly to the instance
     await this.loadConfig()
     this.loadSDKScript()
   },
@@ -348,7 +348,7 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 1. 配置加载
+    // 1. Config loading
     // ═══════════════════════════════════════════════════════════════════════════
     async loadConfig() {
       try {
@@ -362,13 +362,13 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 2. 驱动脚本注入
+    // 2. Driver script injection
     // ═══════════════════════════════════════════════════════════════════════════
     loadSDKScript() {
       if (!this.sdkConfig) return
 
       if (document.getElementById(SCRIPT_TAG_ID)) {
-        // 脚本已注入（页面复用），直接初始化实例
+        // Script already injected (page reused), initialize the instance directly
         this.initSDKInstance()
         return
       }
@@ -390,10 +390,10 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 3. UKey 实例创建 + setup 步骤执行
+    // 3. UKey instance creation + setup step execution
     // ═══════════════════════════════════════════════════════════════════════════
     async initSDKInstance() {
-      // 3a. 创建实例
+      // 3a. Create the instance
       try {
         const constructorName = this.sdkConfig.sdk?.create?.constructor
         if (!constructorName || !window[constructorName]) {
@@ -412,7 +412,7 @@ export default {
         return
       }
 
-      // 3b. 执行 setup 步骤（各厂商按需配置，结果可注册到 ukey.* 供后续使用）
+      // 3b. Execute setup steps (each vendor configures as needed; results can be registered to ukey.* for later use)
       try {
         const setupSteps = this.sdkConfig.sdk?.setup?.steps || []
         for (const step of setupSteps) {
@@ -430,11 +430,11 @@ export default {
         this.syncUkeySnapshot()
       }
 
-      // 3c. 读取设备信息和证书信息（无论 setup 是否成功都执行）
+      // 3c. Read device info and certificate info (runs regardless of whether setup succeeded)
       await this.readDeviceInfo()
       await this.readCertInfo()
 
-      // 3d. 启动轮询，定时刷新设备状态和证书信息
+      // 3d. Start polling to periodically refresh device status and certificate info
       const interval = this.config.poll_interval || 5000
       if (interval > 0) {
         this.pollTimer = setInterval(() => this.pollStatus(), interval)
@@ -442,7 +442,7 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 4. 设备信息读取（填充左上动态行）
+    // 4. Device info reading (fills the top-left dynamic rows)
     // ═══════════════════════════════════════════════════════════════════════════
     async readDeviceInfo() {
       if (!this.infoWhenPassed) {
@@ -455,7 +455,7 @@ export default {
       const ctx = this.buildContext({ vars: {}, input: {} })
       this.deviceInfoItems = fields
         .map((field) => {
-          // hidden 支持布尔值或 {{ }} 模板，为真时跳过该字段
+          // hidden supports a boolean or a {{ }} template; the field is skipped when it resolves truthy
           if (field.hidden !== undefined) {
             const resolved = this.resolveValue(field.hidden, ctx)
             if (resolved) return null
@@ -464,7 +464,7 @@ export default {
           const value = raw == null ? '-' : raw
           const item = { key: field.key, label: field.label, value, scope: field.scope || 'both' }
 
-          // status.cases：通过 source 表达式的值匹配 case，决定显示文本和标签颜色
+          // status.cases: match a case against the value of the source expression to decide the displayed text and tag color
           if (field.status && Array.isArray(field.status.cases)) {
             const sourceVal =
               field.source !== undefined ? this.resolveValue(field.source, ctx) : raw
@@ -478,7 +478,7 @@ export default {
               item.value = matched.text || value
               if (matched.type) item.tag = matched.type
             }
-            // register：将匹配 case 的 value 写入指定路径
+            // register: write the matched case's value to the specified path
             if (field.register && matched && 'value' in matched) {
               this.applyRegister(field.register, matched.value, {})
             }
@@ -491,18 +491,18 @@ export default {
           return item
         })
         .filter((item) => item !== null)
-      // 同步响应式镜像，触发 visibleOperations 重算
+      // Sync the reactive mirror to trigger a recalculation of visibleOperations
       this.syncUkeySnapshot()
       this.syncWhenGateLogs()
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 5. 轮询：定时刷新设备状态与证书信息
+    // 5. Polling: periodically refresh device status and certificate info
     // ═══════════════════════════════════════════════════════════════════════════
     async pollStatus() {
-      if (this.running) return // 操作进行中，跳过本次轮询
+      if (this.running) return // Operation in progress, skip this poll
       try {
-        // 重新执行 setup 步骤检测设备是否仍然在线
+        // Re-run the setup steps to check whether the device is still online
         const setupSteps = this.sdkConfig?.sdk?.setup?.steps || []
         for (const step of setupSteps) {
           const ctx = this.buildContext({ vars: {}, input: {} })
@@ -518,11 +518,12 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 6. 证书信息读取（填充右上）
-    //    支持两种模式：
-    //    - per-field：config.info.cert 为数组，每个字段独立 call / value
-    //    - batch：config.info.cert 为对象 { fetch, fields }，先统一调用一次
-    //             fetch 结果注入 cert.* 命名空间，字段用 {{ cert.xxx }} 引用
+    // 6. Certificate info reading (fills the top-right panel)
+    //    Supports two modes:
+    //    - per-field: config.info.cert is an array, each field has its own call / value
+    //    - batch: config.info.cert is an object { fetch, fields }; a single unified call is
+    //             made first, its result is injected into the cert.* namespace, and fields
+    //             reference it via {{ cert.xxx }}
     // ═══════════════════════════════════════════════════════════════════════════
     async readCertInfo() {
       if (!this.infoWhenPassed) {
@@ -533,7 +534,7 @@ export default {
         return
       }
       const certConfig = this.sdkConfig && this.sdkConfig.info && this.sdkConfig.info.cert
-      // 兼容数组（旧格式）和对象（新格式 { check?, fields }）
+      // Support both array (old format) and object (new format { check?, fields })
       const fields = Array.isArray(certConfig)
         ? certConfig
         : (certConfig && certConfig.fields) || []
@@ -541,12 +542,12 @@ export default {
 
       const ctx = this.buildContext({ vars: {}, input: {} })
 
-      // cert 级别 check 钩子：false → hasCert = false，显示「暂未签发证书」
+      // cert-level check hook: false → hasCert = false, displays "No certificate issued yet"
       if (certCheck !== undefined) {
         let passed = false
         try {
           if (certCheck && typeof certCheck === 'object' && certCheck.call) {
-            // call + 可选 expr
+            // call + optional expr
             const result = this.callUKeyMethod(certCheck, ctx)
             if (certCheck.expr) {
               passed = !!this.resolveValue(
@@ -557,7 +558,7 @@ export default {
               passed = result != null
             }
           } else {
-            // 字符串表达式
+            // String expression
             passed = !!this.resolveValue(certCheck, ctx)
           }
         } catch (_) {
@@ -607,13 +608,13 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 6. 操作按钮处理入口
+    // 6. Operation button handler entry point
     // ═══════════════════════════════════════════════════════════════════════════
 
     /**
-     * 执行 op.event 声明的刷新事件
-     * 支持字符串或数组：'refresh.info.cert' / ['refresh.info.device', 'refresh.info.cert']
-     * 无 event 配置时默认刷新 cert
+     * Execute the refresh events declared by op.event
+     * Supports a string or an array: 'refresh.info.cert' / ['refresh.info.device', 'refresh.info.cert']
+     * Defaults to refreshing cert when no event config is provided
      */
     async handleEvents(event) {
       const events =
@@ -630,7 +631,7 @@ export default {
       }
     },
     async handleOperation(op) {
-      // 操作前全局确认（op.confirm 配置）
+      // Global confirmation before the operation (op.confirm config)
       if (op.confirm) {
         try {
           await this.$confirm(
@@ -650,8 +651,8 @@ export default {
       this.running = true
       this.currentOperation = op.key
       try {
-        const operationVars = {} // vars.* 命名空间，仅当前操作可见
-        const collectedInput = {} // input.* 命名空间，跨步骤累积
+        const operationVars = {} // vars.* namespace, visible only to the current operation
+        const collectedInput = {} // input.* namespace, accumulated across steps
         for (const step of op.steps || []) {
           await this.executeStep(step, operationVars, collectedInput)
         }
@@ -669,10 +670,10 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 7. 单步执行器
+    // 7. Single-step executor
     // ═══════════════════════════════════════════════════════════════════════════
     async executeStep(step, operationVars, collectedInput = {}) {
-      // 7a. 若步骤声明了 input，先弹对话框收集用户输入
+      // 7a. If the step declares input, show a dialog first to collect user input
       if (step.input) {
         try {
           const inputCtx = this.buildContext({ vars: operationVars, input: collectedInput })
@@ -697,12 +698,12 @@ export default {
           result = this.callUKeyMethod(step, ctx)
         }
 
-        // 7b. 返回值校验（check 配置）
+        // 7b. Return-value validation (check config)
         if (step.check !== undefined) {
           const checkExpr = typeof step.check === 'string' ? step.check : step.check?.expr
           const checkMsg = step.check?.message
           if (checkExpr) {
-            // 将 result 注入上下文，供表达式引用
+            // Inject result into the context for the expression to reference
             const checkCtx = { ...ctx, result }
             const passed = this.resolveValue(checkExpr, checkCtx)
             if (!passed && passed !== undefined) {
@@ -727,14 +728,14 @@ export default {
         throw new Error(msg)
       }
 
-      // 7b. 将返回值注册到对应命名空间
+      // 7b. Register the return value into the corresponding namespace
       if (step.register && result !== undefined) {
         this.applyRegister(step.register, result, operationVars)
       }
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 8. API 步骤（type: api）
+    // 8. API step (type: api)
     // ═══════════════════════════════════════════════════════════════════════════
     async executeApiStep(step, ctx) {
       const method = (step.method || 'post').toLowerCase()
@@ -746,14 +747,14 @@ export default {
       const apiKey = apiKeyMatch ? apiKeyMatch[1] : ''
       let url = apiKey ? apiConfig[apiKey] : ''
 
-      // URL 仅允许从 config.api.xxx 的 xxx 获取
+      // URL may only be obtained from config.api.xxx's xxx
       if (typeof url !== 'string' || !url) {
         throw new Error(
           `API key "${apiKey || stepUrlTpl}" ${this.$t('ApiNotConfiguredUnsupported')}`
         )
       }
 
-      // method 仅允许从 api_method[apiKey] 中读取
+      // method may only be read from api_method[apiKey]
       const apiMethodConfig =
         (this.config && typeof this.config.api_method === 'object' && this.config.api_method) || {}
       const allowedMethods = apiKey ? apiMethodConfig[apiKey] : undefined
@@ -774,7 +775,7 @@ export default {
         )
       }
 
-      // url_format: 将 {key} 占位符替换为解析后的值
+      // url_format: replace {key} placeholders with the resolved values
       if (step.url_format && typeof url === 'string') {
         const formatParams = this.resolveObjectValues(step.url_format, ctx)
         url = url.replace(/\{(\w+)\}/g, (_, key) => {
@@ -786,17 +787,17 @@ export default {
       const params = step.params ? this.resolveObjectValues(step.params, ctx) : undefined
       const axiosConfig = params ? { params } : undefined
 
-      // === 只保留允许的 body 字段（仅按 config.api.xxx 的 xxx 匹配）===
+      // === Keep only the allowed body fields (matched solely against config.api.xxx's xxx) ===
       if (body && this.config.api_body && typeof this.config.api_body === 'object') {
         const allowedFields = apiKey ? this.config.api_body[apiKey] : undefined
 
-        // api_body 未配置该 URL（或字段列表为空）时，不限制 body
+        // Do not restrict body when api_body has no config for this URL (or the field list is empty)
         if (Array.isArray(allowedFields) && allowedFields.length > 0) {
           body = Object.fromEntries(Object.entries(body).filter(([k]) => allowedFields.includes(k)))
         }
       }
 
-      // GET/DELETE: (url, config)；其他方法: (url, body, config)
+      // GET/DELETE: (url, config); other methods: (url, body, config)
       if (method === 'get' || method === 'delete') {
         return await this.$axios[method](url, axiosConfig)
       }
@@ -804,7 +805,7 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 9. UKey 方法调用
+    // 9. UKey method invocation
     // ═══════════════════════════════════════════════════════════════════════════
     callUKeyMethod(step, ctx) {
       if (!step.call) return undefined
@@ -816,13 +817,13 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 10. 变量解析工具
+    // 10. Variable resolution utilities
     // ═══════════════════════════════════════════════════════════════════════════
 
     /**
-     * 解析 compare 配置，返回比对结果：true / false / null（无法比对）
-     * 支持：
-     *   compare: "{{ ukey.devSN }}"          → fieldValue vs 解析值
+     * Resolve the compare config and return the comparison result: true / false / null (cannot compare)
+     * Supports:
+     *   compare: "{{ ukey.devSN }}"          → fieldValue vs the resolved value
      *   compare: { key1: "...", key2: "..." } → key1 vs key2
      */
     resolveCompare(compare, fieldValue, ctx) {
@@ -844,8 +845,8 @@ export default {
     },
 
     /**
-     * 读取一个 info 字段的值，优先级：call > value（支持模板）
-     * 任何错误均静默返回 null
+     * Read the value of an info field, priority: call > value (supports templates)
+     * Any error silently returns null
      */
     resolveFieldValue(field, ctx) {
       if (field.call) {
@@ -855,7 +856,7 @@ export default {
         } catch (_) {
           return null
         }
-        // 调用成功后对返回值做校验（check 配置），未通过则不显示该字段
+        // After a successful call, validate the return value (check config); the field is not displayed if it fails
         if (field.check !== undefined) {
           const checkExpr =
             typeof field.check === 'string' ? field.check : field.check && field.check.expr
@@ -873,7 +874,7 @@ export default {
       return null
     },
 
-    /** 构建上下文对象，供模板解析使用 */
+    /** Build the context object used for template resolution */
     buildContext({ vars = {}, input = {} }) {
       const ukey =
         _ukey && typeof _ukey === 'object' && Object.keys(_ukey).length > 0
@@ -892,10 +893,10 @@ export default {
     },
 
     /**
-     * 解析单个模板值：
-     *   - 整体为 {{ expr }}  → 求值后返回（保留原始类型，如数字/布尔）
-     *   - 包含多个 {{ }}     → 字符串插值，所有片段替换后拼接返回字符串
-     *   - 无 {{ }}           → 原样返回
+     * Resolve a single template value:
+     *   - Entirely {{ expr }}  → evaluate and return (preserving the original type, e.g. number/boolean)
+     *   - Contains multiple {{ }} → string interpolation, all fragments replaced and concatenated into a string
+     *   - No {{ }}             → returned as-is
      */
     resolveValue(tpl, ctx) {
       if (typeof tpl !== 'string') return tpl
@@ -908,7 +909,7 @@ export default {
         user: ctx.user,
         settings: ctx.settings,
         config: ctx.config,
-        // 透传 ctx 中的其他临时变量（如 result）
+        // Pass through other temporary variables in ctx (e.g. result)
         ...Object.fromEntries(
           Object.entries(ctx).filter(
             ([k]) =>
@@ -919,7 +920,7 @@ export default {
 
       const evalExpr = (expr) => {
         const e = expr.trim()
-        // 纯路径快速路径
+        // Fast path for a plain path
         if (/^[\w.]+$/.test(e)) {
           const parts = e.split('.')
           const ns = parts[0]
@@ -931,9 +932,9 @@ export default {
           }
           return val
         }
-        // 表达式求值
+        // Expression evaluation
         try {
-          // 兼容配置里常见的路径写法：ukey.devSN.0 -> ukey.devSN[0]
+          // Support the path notation commonly used in configs: ukey.devSN.0 -> ukey.devSN[0]
           const normalizedExpr = e.replace(/\.([0-9]+)(?=\b)/g, '[$1]')
           const keys = Object.keys(nsMap)
           const vals = keys.map((k) => nsMap[k])
@@ -944,11 +945,11 @@ export default {
         }
       }
 
-      // 整体是单个 {{ expr }}：保留原始类型
+      // The whole thing is a single {{ expr }}: preserve the original type
       const singleMatch = tpl.match(/^\{\{\s*([\s\S]+?)\s*\}\}$/)
       if (singleMatch) return evalExpr(singleMatch[1])
 
-      // 含有至少一个 {{ }}：字符串插值
+      // Contains at least one {{ }}: string interpolation
       if (/\{\{/.test(tpl)) {
         return tpl.replace(/\{\{\s*([\s\S]+?)\s*\}\}/g, (_, expr) => {
           const val = evalExpr(expr)
@@ -956,20 +957,20 @@ export default {
         })
       }
 
-      // 纯文本
+      // Plain text
       return tpl
     },
 
     /**
-     * 解析参数列表
-     * 支持：字符串模板、复杂对象参数 { type: 'csv'|'json', value: {...} }
+     * Resolve the argument list
+     * Supports: string templates, complex object arguments { type: 'csv'|'json', value: {...} }
      */
     resolveArgs(argsDef, ctx) {
       return argsDef.map((arg) => {
         if (arg == null || typeof arg !== 'object') {
           return this.resolveValue(arg, ctx)
         }
-        // 复杂参数：将 value dict 各字段解析后格式化为字符串
+        // Complex argument: resolve each field of the value dict, then format as a string
         if (arg.type === 'csv' || arg.type === 'json') {
           const resolved = {}
           for (const [k, v] of Object.entries(arg.value || {})) {
@@ -982,12 +983,12 @@ export default {
           }
           return JSON.stringify(resolved)
         }
-        // 普通对象：递归解析所有值
+        // Plain object: recursively resolve all values
         return this.resolveObjectValues(arg, ctx)
       })
     },
 
-    /** 递归解析对象（或数组）中所有字符串模板值 */
+    /** Recursively resolve all string template values within an object (or array) */
     resolveObjectValues(obj, ctx) {
       if (obj == null || typeof obj !== 'object') return this.resolveValue(obj, ctx)
       if (Array.isArray(obj)) return obj.map((i) => this.resolveObjectValues(i, ctx))
@@ -999,12 +1000,12 @@ export default {
     },
 
     /**
-     * 将步骤返回值写入 ukey.* 或 vars.* 命名空间
-     * register 格式：ukey.appHandle  /  vars.certData  /  vars.certData.certificate
+     * Write the step's return value into the ukey.* or vars.* namespace
+     * register format: ukey.appHandle  /  vars.certData  /  vars.certData.certificate
      */
     applyRegister(register, value, operationVars) {
       const dot = register.indexOf('.')
-      // 无点号：整体替换命名空间
+      // No dot: replace the whole namespace
       if (dot === -1) {
         if (register === 'ukey') {
           _ukey = value && typeof value === 'object' ? value : {}
@@ -1022,7 +1023,7 @@ export default {
       } else if (ns === 'vars') {
         target = operationVars
       } else if (ns === 'user') {
-        // 确保有可写对象（不直接修改 prop）
+        // Ensure a writable object exists (don't mutate the prop directly)
         if (!_userOverride) _userOverride = Object.assign({}, this.object || {})
         target = _userOverride
       } else {
@@ -1043,7 +1044,7 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 11. 通用输入弹框
+    // 11. Generic input dialog
     // ═══════════════════════════════════════════════════════════════════════════
     getInputDialogLabelWidth(fields) {
       const maxWeightedLen = (fields || []).reduce((max, f) => {
@@ -1078,7 +1079,7 @@ export default {
     },
 
     confirmInputDialog() {
-      // 校验各字段
+      // Validate each field
       for (const f of this.inputDialog.fields) {
         if (!f.validate) continue
         const val = this.inputDialog.form[f.key]
@@ -1119,7 +1120,7 @@ export default {
     },
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 12. 日志
+    // 12. Logging
     // ═══════════════════════════════════════════════════════════════════════════
     appendLog(message, level = 'info') {
       const time = new Date().toLocaleTimeString()
@@ -1133,7 +1134,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// ── 信息展示表格（左上状态 / 右上证书）─────────────────────────────────────────
+// ── Info display table (top-left status / top-right certificate) ───────────
 .cp-info-table {
   width: 100%;
   border-collapse: collapse;
@@ -1174,7 +1175,7 @@ export default {
   }
 }
 
-// ── 证书空状态 ──────────────────────────────────────────────────────────────────
+// ── Certificate empty state ──────────────────────────────────────────────────
 .cp-cert-empty {
   display: flex;
   flex-direction: column;
@@ -1183,7 +1184,7 @@ export default {
   padding: 20px 0;
 }
 
-// ── 证书加载中 ──────────────────────────────────────────────────────────────────
+// ── Certificate loading ───────────────────────────────────────────────────────
 .cp-cert-loading {
   display: flex;
   align-items: center;
@@ -1198,7 +1199,7 @@ export default {
   }
 }
 
-// ── 操作按钮表格（左中）─────────────────────────────────────────────────────────
+// ── Operation button table (middle left) ────────────────────────────────────
 .cp-action-table {
   width: 100%;
   border-collapse: collapse;
@@ -1242,7 +1243,7 @@ export default {
   }
 }
 
-// ── 操作日志（左下）──────────────────────────────────────────────────────────────
+// ── Operation logs (bottom left) ─────────────────────────────────────────────
 .cp-logs-box {
   background: #1e1e1e;
   border-radius: 4px;
@@ -1279,7 +1280,7 @@ export default {
 </style>
 
 <style lang="scss">
-// ── 输入弹框（custom-class 不受 scoped 限制）────────────────────────────────────
+// ── Input dialog (custom-class is not restricted by scoped) ─────────────────
 .cp-input-dialog {
   .el-dialog__body {
     padding: 16px 20px 8px;
@@ -1294,7 +1295,7 @@ export default {
     margin-bottom: 14px;
   }
 
-  // 英文标签更长，固定单行避免中间断行
+  // English labels are longer, keep them on a single fixed line to avoid mid-word breaks
   .el-form-item__label {
     white-space: nowrap;
     word-break: keep-all;
@@ -1306,7 +1307,7 @@ export default {
 
 @media (max-width: 640px) {
   .cp-input-form {
-    // 小屏改为上下布局，避免横向空间不足导致标签可读性下降
+    // On small screens switch to a stacked layout, avoiding reduced label readability from limited horizontal space
     .el-form-item__label {
       float: none;
       display: block;

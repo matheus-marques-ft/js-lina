@@ -59,8 +59,8 @@ export default {
           }
         },
         template_content: {
-          // 保留表单 label 列的占位，使编辑器左边界与上方名称控件对齐。
-          // 不能用空格：字段生成器会 trim；零宽空格不会显示，也不会被 trim。
+          // Keep a placeholder in the form's label column so the editor's left edge aligns with the name field above.
+          // Cannot use a regular space: the field generator trims it; a zero-width space isn't visible and isn't trimmed.
           label: '\u200B',
           component: MarkDownEditor,
           on: {

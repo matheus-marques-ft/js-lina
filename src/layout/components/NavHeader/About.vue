@@ -77,8 +77,8 @@ export default {
       }
     },
     iVersion() {
-      // 'version-dev' 是构建时 sed 替换的占位符（替换为如 v4.0.0-build01）。
-      // 展示时去掉 -build<编号> 及其后面的内容：v4.0.0-build01 -> v4.0.0
+      // 'version-dev' is a placeholder replaced by sed at build time (e.g. with v4.0.0-build01).
+      // When displaying, strip -build<number> and everything after it: v4.0.0-build01 -> v4.0.0
       return 'version-dev'.replace(/-build\d+.*/i, '')
     },
     versionType() {
@@ -135,7 +135,7 @@ export default {
           window.open('/core/download/', '_blank')
           break
         case 'github':
-          window.open('https://github.com/jumpserver/jumpserver', '_blank')
+          window.open('https://github.com/matheus-marques-ft/js-jumpserver', '_blank')
           break
       }
     }

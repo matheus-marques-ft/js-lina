@@ -65,7 +65,7 @@ export default {
         selectSyncToRoute: false,
         url: '/api/v1/accounts/gathered-accounts/',
         nodeUrl: '/api/v1/assets/nodes/',
-        // ?assets=0不显示资产. =1显示资产
+        // ?assets=0 don't show assets. =1 show assets
         treeUrl: '/api/v1/assets/nodes/children/tree/?assets=1&asset_amount=0',
         menu: [
           {

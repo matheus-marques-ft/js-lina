@@ -48,16 +48,16 @@ export default {
         defaultAlign: 'left',
         dataPath: 'results',
         totalPath: 'count',
-        saveQuery: false, // 关闭路径保存查询参数
-        persistSelection: true, // 切换页面 已勾选项不会丢失
-        hasEdit: userTableActions.hasEdit !== false, // 有编辑按钮
+        saveQuery: false, // disable saving query params in the path
+        persistSelection: true, // selected items are not lost when switching pages
+        hasEdit: userTableActions.hasEdit !== false, // has edit button
         hasDelete: userTableActions.hasDelete !== false,
         hasNew: false,
         buttonSize: 'mini',
         tableAttrs: {
-          stripe: false, // 斑马纹表格
-          border: true, // 表格边框
-          fit: true, // 宽度自适应,
+          stripe: false, // striped table
+          border: true, // table border
+          fit: true, // width auto-fit,
           tooltipEffect: 'dark',
           rowClassName: ({ row }) => {
             const selected = this.dataTable.selected.find((item) => item.id === row.id)
@@ -127,9 +127,9 @@ export default {
     },
     tableConfig() {
       const tableDefaultConfig = this.defaultConfig || {}
-      // 注意:必须用 Object.assign({}, ...) 生成新对象,不能直接 Object.assign(tableDefaultConfig, ...)
-      // 否则会就地修改响应式的 this.defaultConfig —— 而本计算属性又依赖 this.defaultConfig,
-      // 形成「计算属性修改自身依赖」的自触发循环,导致 Maximum recursive updates。
+      // Note: must use Object.assign({}, ...) to generate a new object, not Object.assign(tableDefaultConfig, ...) directly,
+      // otherwise it would mutate the reactive this.defaultConfig in place — and since this computed property also depends on this.defaultConfig,
+      // it would form a self-triggering loop of "computed property modifying its own dependency", causing Maximum recursive updates.
       const tableAttrs = Object.assign({}, tableDefaultConfig.tableAttrs, this.config.tableAttrs)
       const config = Object.assign({}, tableDefaultConfig, this.config)
       config.tableAttrs = tableAttrs

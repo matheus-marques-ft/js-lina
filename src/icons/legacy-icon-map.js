@@ -1,5 +1,5 @@
-// 旧 Element UI 字体图标名 -> Element Plus 图标组件 的映射表
-// 供 compat 全局注册 与 通用 Icon 组件共用
+// Mapping table from legacy Element UI font icon names -> Element Plus icon components
+// Shared by the compat global registration and the generic Icon component
 import {
   ArrowDown,
   ArrowLeft,

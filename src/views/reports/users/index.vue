@@ -197,7 +197,7 @@ export default {
           if (!this.catalogLoaded) {
             return
           }
-          // catalog 已加载但找不到 report_id，可能是 API 返回了旧数据（竞争条件），重试一次
+          // Catalog already loaded but report_id not found; the API may have returned stale data (race condition), retry once
           if (!this.syncRetryPending) {
             this.syncRetryPending = true
             this.loadCatalog()

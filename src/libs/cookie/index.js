@@ -1,10 +1,10 @@
 import { VueCookieNext } from 'vue-cookie-next'
 
 /**
- * 创建 cookie 兼容对象
- * 提供统一的 cookie 操作接口
+ * Create a cookie compatibility object
+ * Provides a unified cookie operation interface
  *
- * @returns {Object} cookie 兼容对象
+ * @returns {Object} cookie compatibility object
  */
 function createCookieCompat() {
   return {
@@ -18,27 +18,27 @@ function createCookieCompat() {
 }
 
 /**
- * Cookie 插件
- * 统一封装 cookie 相关的所有设置
+ * Cookie plugin
+ * Unified wrapper for all cookie-related setup
  */
 const CookiePlugin = {
   install(app) {
-    // 注册 VueCookieNext 插件
+    // Register the VueCookieNext plugin
     app.use(VueCookieNext)
 
-    // 创建 cookie 兼容对象
+    // Create the cookie compatibility object
     const cookieCompat = createCookieCompat()
 
-    // 设置到 Vue 全局属性
+    // Attach it to the Vue global properties
     app.config.globalProperties.$cookie = cookieCompat
 
-    // 设置到 window 对象
+    // Attach it to the window object
     window.$cookie = cookieCompat
   }
 }
 
-// 导出插件，供 app.use() 使用
+// Export the plugin for use with app.use()
 export default CookiePlugin
 
-// 导出 VueCookieNext，供其他地方使用
+// Export VueCookieNext for use elsewhere
 export { VueCookieNext }

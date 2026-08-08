@@ -482,16 +482,16 @@ export default {
           if (oldIndex === newIndex) {
             return
           }
-          // 检测表格是否有选择列
+          // Check whether the table has a selection column
           const hasSelectionColumn = this.$el.querySelector('.el-table-column--selection') !== null
           if (hasSelectionColumn) {
-            // 如果有选择列，调整索引
+            // If there is a selection column, adjust the index
             if (oldIndex > 0) oldIndex -= 1
             if (newIndex > 0) newIndex -= 1
           }
 
           const displayedColumnNames = this.iConfig.columns.map((item) => item.prop)
-          // 边界
+          // Boundary check
           if (
             oldIndex >= 0 &&
             oldIndex < displayedColumnNames.length &&
@@ -508,20 +508,20 @@ export default {
             }
 
             this.$log.debug('Column moved: ', movedItem, oldIndex, ' => ', newIndex)
-            // 保存更新的列顺序
+            // Save the updated column order
             this.tableColumnsStorage.set(columnNames)
 
-            // 更新内部状态
+            // Update internal state
             this.cleanedColumnsShow.show = columnNames
             this.popoverColumns.currentCols = columnNames
 
-            // 重新应用列顺序
+            // Re-apply the column order
             this.filterShowColumns()
 
             this.loading = true
             setTimeout(() => {
               this.loading = false
-              // 在DOM完全更新后重新初始化拖拽
+              // Re-initialize drag-and-drop after the DOM has fully updated
               this.$nextTick(() => {
                 setTimeout(() => this.setColumnDraggable(), 200)
               })
@@ -553,8 +553,10 @@ export default {
           : `${this.config.url}&display=1`
 
       /**
-       * 原有代码无法正确的同步 storage 的原因是 currentOrder 总是在 totalColumns 之前进行的
-       * 这导致在首次加载时，currentOrder总是为空数组，因为此时cleanedColumnsShow.show还未初始化
+       * The reason the original code could not correctly sync with storage is that
+       * currentOrder was always computed before totalColumns. This meant that on the
+       * first load, currentOrder was always an empty array, because cleanedColumnsShow.show
+       * had not yet been initialized at that point.
        */
       try {
         const data = this.getTableMetadata
@@ -597,16 +599,16 @@ export default {
       tableName = replaceAllUUID(tableName)
       return new ObjectLocalStorage('tableColumns', tableName)
     },
-    // 生成给子组件使用的TotalColList
+    // Generate the TotalColList used by child components
     cleanColumnsShow() {
       const totalColumnsNames = this.totalColumns.map((obj) => obj.prop)
-      // 默认列
+      // Default columns
       let defaultColumnsNames = _.get(this.iConfig, 'columnsShow.default', [])
       if (defaultColumnsNames.length === 0) {
         defaultColumnsNames = totalColumnsNames
       }
 
-      // 最小列
+      // Minimum columns
       const minColumnsNames = _.get(this.iConfig, 'columnsShow.min', ['actions', 'id']).filter(
         (n) => totalColumnsNames.includes(n)
       )
@@ -616,7 +618,7 @@ export default {
       if (showColumnsNames.length === 0) {
         showColumnsNames = [...totalColumnsNames]
       }
-      // 校对显示的列，是不是包含最小列
+      // Verify whether the displayed columns include the minimum columns
       minColumnsNames.forEach((v, i) => {
         if (showColumnsNames.indexOf(v) === -1) {
           showColumnsNames.push(v)

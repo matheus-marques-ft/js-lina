@@ -78,7 +78,7 @@ export default {
         return 'patch'
       },
       cleanFormValue(data) {
-        // 这个页面不去提交auth这些
+        // This page does not submit auth-related fields
         const removeFields = ['SET_UP']
         for (const i of removeFields) {
           delete data[i]

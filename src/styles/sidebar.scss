@@ -3,8 +3,8 @@
 #app {
   .main-container {
     position: relative;
-    // 导航栏空间已由 .app-wrapper 的 padding-top 统一预留（见 layout/index.vue），
-    // 这里不再用 margin-top/top 二次下移，否则会与 padding 叠加出顶部空白。
+    // Navbar space is already uniformly reserved via .app-wrapper's padding-top (see layout/index.vue);
+    // don't re-offset with margin-top/top here, otherwise it stacks with the padding and creates a gap at the top.
     min-height: 100%;
     height: 100%;
     transition: margin-left 0.28s;

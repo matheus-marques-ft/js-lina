@@ -88,9 +88,11 @@ export default {
   align-items: center;
   width: 100%;
 
-  // 展开输入态:整控件做成单边框容器(compound-field 约定,与 PhoneInput 同一套)。
-  // 容器出唯一一圈边框,内部 input wrapper 与 append 全部去边、融为一体,
-  // 避免 EP input-group 各段自带边框叠成「右侧一个独立灰按钮」。
+  // Expanded input state: the whole control is made into a single-border container
+  // (the compound-field convention, the same one used by PhoneInput).
+  // The container draws the only border ring; the inner input wrapper and append are
+  // all borderless and merge into one, avoiding EP input-group's per-segment borders
+  // stacking into "an independent gray button on the right".
   &.compound-field {
     height: 30px;
     box-sizing: border-box;
@@ -103,7 +105,7 @@ export default {
       border-color: var(--el-border-color-hover);
     }
 
-    // 聚焦时高亮整圈容器边框(而非某一段),刷新图标本身不产生高亮
+    // On focus, highlight the whole container border ring (rather than one segment); the refresh icon itself does not produce a highlight
     &:focus-within {
       border-color: var(--el-color-primary);
     }
@@ -114,14 +116,14 @@ export default {
     height: 100%;
   }
 
-  // 内部输入框 wrapper 去边、去 box-shadow:边框统一由容器提供
+  // The inner input wrapper has no border/box-shadow: the border is uniformly provided by the container
   :deep(.el-input__wrapper) {
     border: 0 !important;
     border-radius: 0;
     box-shadow: none !important;
   }
 
-  // append(刷新按钮)去边、透明,与输入框无缝融为一体
+  // append (the refresh button) has no border, is transparent, and blends seamlessly with the input box
   :deep(.el-input-group__append) {
     padding: 0 2px;
     border: 0;
@@ -147,7 +149,7 @@ export default {
   background-color: transparent;
   color: var(--color-text-secondary);
   cursor: pointer;
-  outline: none; // 去掉原生 button 点击后的 focus 描边,图标本身不产生高亮
+  outline: none; // remove the native button's focus outline after click; the icon itself does not produce a highlight
 
   &:focus,
   &:focus-visible {

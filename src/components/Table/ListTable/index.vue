@@ -76,12 +76,12 @@ export default {
     return { listTableContext }
   },
   props: {
-    // 定义 table 的配置
+    // Defines the table's config
     tableConfig: {
       type: Object,
       default: () => ({})
     },
-    // 是否显示table左侧的action
+    // Whether to show the action on the left side of the table
     headerActions: {
       type: Object,
       default: () => ({})
@@ -160,7 +160,7 @@ export default {
       return this.$refs.dataTable?.$refs.dataTable
     },
     iHeaderActions() {
-      // 如果路由中锁定了 root 组织，就不在检查 root 组织下是否可以创建等
+      // If the route has locked the root organization, don't check whether creation etc. is allowed under the root organization
       const checkRoot = !(this.$route.meta?.disableOrgsChange === true)
       const actions = {
         canCreate: { action: 'add', checkRoot: checkRoot },
@@ -229,7 +229,7 @@ export default {
       return this.tableConfig.url || ''
     },
     permissions() {
-      // 获取 permissions，获取不到通过 url 解析
+      // Get permissions; if unavailable, parse them from the url
       const permissions = this.tableConfig.permissions || {}
       const { app: apiApp, resource: apiResource } = getResourceFromApiUrl(this.tableUrl)
       const app = permissions.app || apiApp
@@ -460,7 +460,7 @@ export default {
   // }
 }
 
-//修改颜色
+// Change color
 .el-button--text {
   color: var(--color-primary);
 }

@@ -40,7 +40,7 @@ export default {
       loading: true,
       currentValue: '',
       formConfig: {
-        // 为了方便更新，避免去取 fields 的索引
+        // to make updating easier, avoiding having to look up the index of fields
         hasSaveContinue: false,
         fields: [
           {
@@ -56,7 +56,7 @@ export default {
             }),
             on: {
               change: ([val], updateForm) => {
-                // 变化会影响 match 的选项
+                // the change affects the match options
                 const attr = this.attrs.find((attr) => attr.name === val)
                 if (!attr) return
                 const matchOption = vm.updateMatchOptions(attr)
@@ -73,7 +73,7 @@ export default {
             options: attrMatchOptions,
             on: {
               change: ([value], updateForm) => {
-                // 变化会影响 value 的选项
+                // the change affects the value options
                 setTimeout(() => {
                   this.formConfig.fields[2].el.match = value
                 }, 10)

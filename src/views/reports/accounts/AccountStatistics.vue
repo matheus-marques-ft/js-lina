@@ -433,7 +433,7 @@ export default {
             type: 'line',
             smooth: true,
             areaStyle: {
-              // 区域填充样式
+              // Area fill style
               normal: {
                 color: new echarts.graphic.LinearGradient(
                   0,

@@ -1,8 +1,8 @@
 <template>
   <svg
-    id="图层_1"
+    id="Layer_1"
     xmlns="http://www.w3.org/2000/svg"
-    data-name="图层 1"
+    data-name="Layer 1"
     viewBox="0 0 71.69 52.76"
     :class="className"
     :stroke-width="strokeWidth"

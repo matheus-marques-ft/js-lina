@@ -145,7 +145,7 @@ export default {
           return this.items.push(object)
         }
 
-        // 如果是空数组，那么循环体将不会执行
+        // If the array is empty, the loop body will not execute
         for (const [index, item] of value.entries()) {
           if (tp === 'object') {
             const firstValue = value[0]

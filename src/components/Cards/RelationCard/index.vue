@@ -97,7 +97,7 @@ export default {
       type: String,
       default: 'primary'
     },
-    // 地址，发送给select2的，查询所有的objects, 和select2 ajax一样
+    // The address sent to select2 to query all objects, same as select2 ajax
     objectsAjax: {
       type: Object,
       default: () => ({})
@@ -106,7 +106,7 @@ export default {
       type: [Array, null],
       default: null
     },
-    // 已选择的objects Id, 会转换成select2的value, 作为默认选择项, 和objectsAjax类似
+    // The IDs of already-selected objects; converted to select2's value as the default selection, similar to objectsAjax
     hasObjectsId: {
       type: Array,
       default: () => []
@@ -146,11 +146,11 @@ export default {
     onDeleteSuccess: {
       type: Function,
       default(obj, that) {
-        // 从 hasObjects 中移除这个object
+        // Remove this object from hasObjects
         const theRemoveIndex = that.iHasObjects.findIndex((v) => v.value === obj.value)
         that.iHasObjects.splice(theRemoveIndex, 1)
 
-        // 从 disabled values 中移除这个 value
+        // Remove this value from disabled values
         while (that.select2.disabledValues.indexOf(obj.value) !== -1) {
           const i = that.select2.disabledValues.indexOf(obj.value)
           that.$log.debug('disabled values remove index: ', i)
@@ -312,7 +312,7 @@ export default {
           }
         })
       }
-      // 如果还有其它页，继续获取, 如果没有就停止
+      // If there are more pages, keep fetching; otherwise stop
       this.params.hasMore = !!data.pagination
       this.totalHasObjectsLength = data.total
     },

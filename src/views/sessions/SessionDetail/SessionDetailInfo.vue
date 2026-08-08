@@ -45,7 +45,7 @@ export default {
           },
           callbacks: {
             click: function () {
-              // 终断 session reload
+              // Terminate session then reload
               terminateSession(vm.session.id).then((res) => {
                 const msg = vm.$t('TerminateTaskSendSuccessMsg')
                 vm.$message.success(msg)
@@ -68,7 +68,7 @@ export default {
           },
           callbacks: {
             click: function () {
-              // 跳转到luna页面
+              // Navigate to the luna page
               const joinUrl = '/luna/monitor/' + vm.session.id
               window.open(
                 joinUrl,

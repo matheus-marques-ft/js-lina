@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       submitBtnText: this.$t('Confirm'),
-      // 防止缓存form remoteMeta
+      // Prevent caching of the form's remoteMeta
       url: `/api/v1/ops/variables/form-data/?t=${new Date().getTime()}&` + this.queryParam,
       form: {},
       hasSaveContinue: false,

@@ -464,8 +464,8 @@ export default {
       })
     },
     handleLabelSearchShowChange() {
-      // 标签搜索的展开不应联动折叠旁边的普通搜索框(action-search)——两者相互独立。
-      // 原先 `this.foldSearch = val` 会在标签搜索展开时把 action-search 折成图标并一直保持。
+      // Expanding label search should not fold the adjacent regular search box (action-search) — the two are independent.
+      // Previously `this.foldSearch = val` would collapse action-search into an icon and keep it that way whenever label search expanded.
     },
     handleActionsDone(actions) {
       this.iHasLeftActions = actions.filter((i) => i && i.has !== false).length > 0
@@ -651,7 +651,7 @@ $color-drop-menu-border: #e4e7ed;
 }
 
 .table-header {
-  // 主要是 Table 中的操作列
+  // Mainly the action column in the Table
   // :deep(.data-actions) {
   //   display: flex;
   //   justify-content: center;
@@ -672,7 +672,7 @@ $color-drop-menu-border: #e4e7ed;
   //     text-overflow: ellipsis;
   //     white-space: nowrap;
 
-  //     // 确保按钮内部所有内容都垂直居中
+  //     // Ensure everything inside the button is vertically centered
   //     :deep(span) {
   //       display: inline-flex;
   //       align-items: center;
@@ -741,7 +741,7 @@ $color-drop-menu-border: #e4e7ed;
       margin-left: 6px;
     }
 
-    // 搜索框与前后的图标按钮保持清晰间距。
+    // Keep clear spacing between the search box and the icon buttons before/after it.
     .right-side-item.action-search {
       flex: 0 0 280px;
       box-sizing: border-box;

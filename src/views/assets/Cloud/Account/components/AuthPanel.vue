@@ -79,7 +79,7 @@ export default {
             encryptedFields: ['access_key_secret'],
             fields: ACCOUNT_PROVIDER_ATTRS_MAP[this.provider].attrs,
             fieldsMeta: {
-              // 必须放在最上面，下面特殊制定的字段才会覆盖默认
+              // Must be placed first, so the specially configured fields below can override the defaults
               ...setFieldAttrs(this.provider),
               service_account_key: {
                 label: this.$t('ServerAccountKey'),
@@ -243,7 +243,8 @@ export default {
 }
 
 .form {
-  // 以表单宽度作为容器查询的基准，使抽屉变窄时（即便在大屏下）也能触发响应式
+  // Use the form width as the container query base, so responsive rules still trigger
+  // when the drawer narrows (even on large screens)
   container-type: inline-size;
   margin-right: 0;
 
@@ -286,7 +287,8 @@ export default {
     }
   }
 
-  // 正常宽度下：输入框设最小宽度兜底，避免被压缩到无法使用
+  // At normal width: set a minimum width fallback on inputs, to avoid being
+  // compressed to the point of being unusable
   :deep(.el-form-item__content) {
     .el-input,
     .el-select,
@@ -296,7 +298,8 @@ export default {
     }
   }
 
-  // 容器变窄时：label 移到输入框上方，输入框占满整行，保证可用宽度
+  // When the container narrows: move the label above the input, and let the
+  // input fill the whole row to guarantee usable width
   @container (max-width: 480px) {
     :deep(.el-form-item) {
       flex-direction: column;
@@ -325,7 +328,7 @@ export default {
       }
     }
 
-    // 子表单（认证设置）内部同步切换为 label-top
+    // Sync the sub-form (auth settings) to also switch to label-top
     :deep(.sub-form .el-form-item__label-wrap) {
       margin-left: 0 !important;
     }

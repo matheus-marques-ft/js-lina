@@ -49,7 +49,7 @@
 
       <div v-else class="excel-preview">
         <p>{{ reportName || $t('Report') }}</p>
-        <p>将下载当前报告的 Excel 文件。</p>
+        <p>The Excel file for the current report will be downloaded.</p>
       </div>
     </div>
   </Dialog>

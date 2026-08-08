@@ -168,8 +168,9 @@ export default {
     onSelectTemplate() {},
     goToAssetAccountsPage() {
       const assetId = this.$context.get('id')
-      // todo: 临时解决方案，后续需要优化 发布机的组织是 system，所以需要判断一下，否则
-      // 会跳转到其他组织的资产详情页，而不是发布机详情页
+      // todo: Temporary solution, needs improvement later. The applet host's org is "system",
+      // so a check is needed here, otherwise it would navigate to another org's asset detail
+      // page instead of the applet host's detail page
       if (this.$router.currentRoute.name === 'AppletHostUpdate') {
         this.$router.push({
           name: 'AppletHostDetail',

@@ -1,14 +1,16 @@
 <template>
   <div v-bind="rootAttrs" :class="rootClass" :style="rootStyle">
     <template v-if="showNoData">
-      <!--@slot 获取数据为空时的内容-->
+      <!--@slot Content to show when the data is empty-->
       <slot name="no-data" />
     </template>
     <template v-else>
       <!--
-        过滤 selection 相关事件的透传，避免父组件收到 el-table 原生的“当前页” selection，
-        导致跨页选择（persistSelection）被覆盖，只剩当页数据。
-        选择事件统一走 selectStrategy，在内部维护全量 selected 并向外 emit。
+        Filter out the passthrough of selection-related events, to avoid the parent
+        component receiving el-table's native "current page" selection, which would
+        overwrite cross-page selection (persistSelection), leaving only the current
+        page's data. Selection events all go through selectStrategy, which maintains
+        the full selected set internally and emits it outward.
       -->
       <div v-loading="tableLoading">
         <el-table
@@ -52,7 +54,7 @@
             />
           </template>
 
-          <!--非树-->
+          <!--not tree-->
           <template v-else>
             <el-data-table-column
               v-if="hasSelection"
@@ -140,7 +142,7 @@
         @confirm="onConfirm"
       >
         <template #default="scope">
-          <!-- @slot 表单作用域插槽。当编辑、查看时传入row；新增时row=null -->
+          <!-- @slot Form scoped slot. Row is passed in when editing/viewing; row=null when creating -->
           <slot :row="scope.row" name="form" />
         </template>
       </the-dialog>
@@ -178,7 +180,7 @@ export default {
 
   props: {
     /**
-     * 请求url, 如果为空, 则不会发送请求; 改变url, 则table会重新发送请求
+     * Request URL. If empty, no request is sent; changing the URL causes the table to send a new request
      */
     url: {
       type: String,
@@ -189,50 +191,50 @@ export default {
       default: null
     },
     /**
-     * 主键，默认值 id，
-     * 修改/删除时会用到,请求会根据定义的属性值获取主键,即row[this.id]
+     * Primary key, defaults to id.
+     * Used when editing/deleting - the request obtains the primary key from the defined property value, i.e. row[this.id]
      */
     id: {
       type: String,
       default: 'id'
     },
     /**
-     * 分页请求的第一页的值(有的接口0是第一页)
+     * The value of the first page for pagination requests (some APIs treat 0 as the first page)
      */
     firstPage: {
       type: Number,
       default: defaultFirstPage
     },
     /**
-     * 渲染组件的分页数据在接口返回的数据中的路径, 嵌套对象使用.表示即可
+     * The path of the pagination data to render within the data returned by the API. Use "." to indicate nested objects
      */
     dataPath: {
       type: String,
       default: 'payload.content'
     },
     /**
-     * 分页数据的总数在接口返回的数据中的路径, 嵌套对象使用.表示即可
+     * The path of the total count of paginated data within the data returned by the API. Use "." to indicate nested objects
      */
     totalPath: {
       type: String,
       default: 'payload.totalElements'
     },
     /**
-     * 请求的时候如果接口需要的页码的查询 key 不同的时候可以指定
+     * Can be specified if the API expects a different query key for the page number
      */
     pageKey: {
       type: String,
       default: 'page'
     },
     /**
-     * 请求的时候如果接口需要的分页数量的查询 key 不同的时候可以指定
+     * Can be specified if the API expects a different query key for the page size
      */
     pageSizeKey: {
       type: String,
       default: 'size'
     },
     /**
-     * 列属性设置, 详情见element-ui官网
+     * Column property settings, see the element-ui official site for details
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-column-attributes
      */
     columns: {
@@ -242,14 +244,15 @@ export default {
       }
     },
     /**
-     * 请求之前可以转换query的内容, 提供一种方式可以让自定义query, 如有的分页用的是offset机制, offset = page * size, limit = size
+     * Can transform the query content before the request, providing a way to customize the query -
+     * e.g. some pagination uses an offset mechanism, offset = page * size, limit = size
      */
     transformQuery: {
       type: Function,
       default: null
     },
     /**
-     * 查询字段渲染, 配置参考el-form-renderer
+     * Search field rendering, see el-form-renderer for configuration reference
      * @link https://femessage.github.io/el-form-renderer/
      */
     searchForm: {
@@ -259,44 +262,46 @@ export default {
       }
     },
     /**
-     * 是否开启搜索栏折叠功能
+     * Whether to enable the search bar collapse feature
      */
     canSearchCollapse: {
       type: Boolean,
       default: false
     },
     /**
-     * 点击查询按钮, 查询前执行的函数，参数form表单数据，需要返回Promise
+     * Function executed before the query when the search button is clicked. Parameter is the form data; must return a Promise
      */
     beforeSearch: {
       type: Function,
       default() {}
     },
     /**
-     * 单选, 适用场景: 不可以批量删除
+     * Single selection, use case: batch deletion not allowed
      */
     single: {
       type: Boolean,
       default: false
     },
     /**
-     * 切换页面时，已勾选项不会丢失
+     * Checked items are not lost when switching pages
      */
     persistSelection: {
       type: Boolean,
       default: false
     },
     /**
-     * 是否有操作列
+     * Whether there is an operation column
      */
     hasOperation: {
       type: Boolean,
       default: true
     },
     /**
-     * 操作列的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
-     * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true时显示, disabled: row => return true时禁用 }
-     * 点击事件 row参数 表示当前行数据, 需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
+     * Custom buttons for the operation column, rendered as element-ui buttons, supporting the following
+     * properties including style:
+     * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true to display, disabled: row => return true to disable }
+     * Click event row parameter represents the current row's data, must return a Promise; by default the
+     * table refreshes after clicking, resolve(false) to skip the refresh
      */
     extraButtons: {
       type: Array,
@@ -305,9 +310,11 @@ export default {
       }
     },
     /**
-     * 头部的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
-     * {type: '', text: '', atClick: selected => Promise.resolve(), show: selected => return true时显示, disabled: selected => return true时禁用}
-     * 点击事件 selected参数 表示选中行所组成的数组, 函数需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
+     * Custom buttons in the header, rendered as element-ui buttons, supporting the following properties
+     * including style:
+     * {type: '', text: '', atClick: selected => Promise.resolve(), show: selected => return true to display, disabled: selected => return true to disable}
+     * Click event selected parameter represents the array of selected rows; the function must return a
+     * Promise, by default the table refreshes after clicking, resolve(false) to skip the refresh
      */
     headerButtons: {
       type: Array,
@@ -316,49 +323,49 @@ export default {
       }
     },
     /**
-     * 是否有新增按钮
+     * Whether there is an add button
      */
     hasNew: {
       type: Boolean,
       default: true
     },
     /**
-     * 是否有动作按钮
+     * Whether there is an action button
      */
     hasAction: {
       type: Boolean,
       default: true
     },
     /**
-     * 是否有动作按钮
+     * Whether there is an action button
      */
     hasUpload: {
       type: Boolean,
       default: true
     },
     /**
-     * 是否有编辑按钮
+     * Whether there is an edit button
      */
     hasEdit: {
       type: Boolean,
       default: true
     },
     /**
-     * 是否有查看按钮
+     * Whether there is a view button
      */
     hasView: {
       type: Boolean,
       default: false
     },
     /**
-     * table头部是否有删除按钮(该按钮要多选时才会出现)
+     * Whether the table header has a delete button (this button only appears when multi-select is enabled)
      */
     hasDelete: {
       type: Boolean,
       default: true
     },
     /**
-     * 新增按钮文案
+     * Add button text
      */
     newText: {
       type: String,
@@ -367,7 +374,7 @@ export default {
       }
     },
     /**
-     * 修改按钮文案
+     * Edit button text
      */
     editText: {
       type: String,
@@ -376,7 +383,7 @@ export default {
       }
     },
     /**
-     * 查看按钮文案
+     * View button text
      */
     viewText: {
       type: String,
@@ -385,7 +392,7 @@ export default {
       }
     },
     /**
-     * 删除按钮文案
+     * Delete button text
      */
     deleteText: {
       type: String,
@@ -394,8 +401,8 @@ export default {
       }
     },
     /**
-     * 删除提示语。接受要删除的数据（单个对象或数组）；返回字符串
-     * @param {object|object[]} 要删除的数据 - 单个对象或数组
+     * Delete confirmation message. Accepts the data to be deleted (a single object or array); returns a string
+     * @param {object|object[]} data to delete - a single object or array
      * @return {string}
      */
     deleteMessage: {
@@ -405,7 +412,8 @@ export default {
       }
     },
     /**
-     * 某行数据是否可以删除, 返回true表示可以, 控制的是单选时单行的删除按钮
+     * Whether a row's data can be deleted; returning true means it can. Controls the single-row delete
+     * button when in single-select mode
      */
     canDelete: {
       type: Function,
@@ -420,8 +428,10 @@ export default {
       }
     },
     /**
-     * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用, 需要返回promise
-     * 参数(data, row) data 是form表单的数据, row 是当前行的数据, 只有isTree为true时, 点击操作列的新增按钮才会有值
+     * Method called when the add button is clicked; used when the default add method doesn't meet
+     * requirements, must return a promise.
+     * Parameters (data, row): data is the form data, row is the current row's data - only has a value
+     * when isTree is true and the add button in the operation column is clicked
      */
     onNew: {
       type: Function,
@@ -430,16 +440,19 @@ export default {
       }
     },
     /**
-     * 点击修改按钮时的方法, 当默认修改方法不满足需求时使用, 需要返回promise
-     * 参数(data, row) data 是form表单的数据, row 是当前行的数据
+     * Method called when the edit button is clicked; used when the default edit method doesn't meet
+     * requirements, must return a promise.
+     * Parameters (data, row): data is the form data, row is the current row's data
      */
     onEdit: {
       type: Function,
       default(row) {}
     },
     /**
-     * 点击删除按钮时的方法, 当默认删除方法不满足需求时使用, 需要返回promise
-     * 多选时, 参数为selected, 代表选中的行组成的数组; 非多选时参数为row, 代表单行的数据
+     * Method called when the delete button is clicked; used when the default delete method doesn't meet
+     * requirements, must return a promise.
+     * When multi-select: parameter is selected, an array of the selected rows; when not multi-select:
+     * parameter is row, a single row's data
      */
     onDelete: {
       type: Function,
@@ -450,10 +463,10 @@ export default {
       }
     },
     /**
-     * crud 操作成功后会调用的函数，默认是 this.$message.success('操作成功')
-     * 接受两个参数：
-     * type，操作的类型，可能的值有 new | edit | delete；
-     * data，操作的数据对象
+     * Function called after a successful crud operation, defaults to this.$message.success('SuccessfulOperation')
+     * Accepts two parameters:
+     * type - the operation type, possible values are new | edit | delete;
+     * data - the operation's data object
      */
     onSuccess: {
       type: Function,
@@ -462,14 +475,15 @@ export default {
       }
     },
     /**
-     * 是否分页。如果不分页，则请求传参page=-1
+     * Whether to paginate. If not paginated, the request is sent with page=-1
      */
     hasPagination: {
       type: Boolean,
       default: true
     },
     /**
-     * 分页组件的子组件布局，子组件名用逗号分隔，对应element-ui pagination的layout属性
+     * The pagination component's child-component layout, child component names separated by commas,
+     * corresponds to element-ui pagination's layout property
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationLayout: {
@@ -477,7 +491,8 @@ export default {
       default: 'total, sizes, prev, pager, next, jumper'
     },
     /**
-     * 分页组件的每页显示个数选择器的选项设置，对应element-ui pagination的page-sizes属性
+     * The option settings for the pagination component's page-size selector, corresponds to element-ui
+     * pagination's page-sizes property
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationSizes: {
@@ -489,7 +504,8 @@ export default {
       default: 5
     },
     /**
-     * 分页组件的每页显示个数选择器默认选项，对应element-ui pagination的page-size属性
+     * The default option for the pagination component's page-size selector, corresponds to element-ui
+     * pagination's page-size property
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationSize: {
@@ -498,50 +514,52 @@ export default {
     },
     /**
      * @deprecated
-     * 不分页时的size的大小(建议接口约定，不分页时传参page=-1，故一般不会用到此属性)
+     * The size value when not paginating (it's recommended the API convention sends page=-1 when not
+     * paginating, so this property is generally not used)
      */
     noPaginationSize: {
       type: Number,
       default: 999
     },
     /**
-     * 要渲染的数据是否是树形结构
+     * Whether the data to render is a tree structure
      */
     isTree: {
       type: Boolean,
       default: false
     },
     /**
-     * 树形结构相关: 子节点的字段名
+     * Tree structure related: the field name of the child node
      */
     treeChildKey: {
       type: String,
       default: 'children'
     },
     /**
-     * 树形结构相关: 父节点的字段名
+     * Tree structure related: the field name of the parent node
      */
     treeParentKey: {
       type: String,
       default: 'parentId'
     },
     /**
-     * 树形结构相关: 父节点字段值的来源字段。
-     * 新增/修改时会用到, 例如, 在id为2的节点新增子节点, 则子节点的parentId为2, 也即parentId的值来源于字段id, 故treeParentValue为id
+     * Tree structure related: the source field for the parent node field's value.
+     * Used when adding/editing - for example, adding a child node under a node with id 2 means the child's
+     * parentId is 2, i.e. the value of parentId comes from the field id, so treeParentValue is id
      */
     treeParentValue: {
       type: String,
       default: 'id'
     },
     /**
-     * 树形结构相关: 是否展开所有节点
+     * Tree structure related: whether to expand all nodes
      */
     expandAll: {
       type: Boolean,
       default: false
     },
     /**
-     * element table 属性设置, 详情配置参考element-ui官网
+     * element table property settings, see the element-ui official site for configuration reference
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-attributes
      */
     tableAttrs: {
@@ -551,7 +569,7 @@ export default {
       }
     },
     /**
-     * 操作列属性
+     * Operation column properties
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-column-attributes
      */
     operationAttrs: {
@@ -561,28 +579,28 @@ export default {
       }
     },
     /**
-     * 新增弹窗的标题，默认为newText的值
+     * The title of the add dialog, defaults to the value of newText
      */
     dialogNewTitle: {
       type: String,
       default: ''
     },
     /**
-     * 修改弹窗的标题，默认为editText的值
+     * The title of the edit dialog, defaults to the value of editText
      */
     dialogEditTitle: {
       type: String,
       default: ''
     },
     /**
-     * 查看弹窗的标题，默认为viewText的值
+     * The title of the view dialog, defaults to the value of viewText
      */
     dialogViewTitle: {
       type: String,
       default: ''
     },
     /**
-     * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
+     * Dialog form, used for adding and editing, see el-form-renderer for configuration reference
      * @link https://femessage.github.io/el-form-renderer/
      */
     form: {
@@ -592,7 +610,7 @@ export default {
       }
     },
     /**
-     * 弹窗表单属性设置, 详情配置参考element-ui官网
+     * Dialog form property settings, see the element-ui official site for configuration reference
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/form#form-attributes
      */
     formAttrs: {
@@ -602,7 +620,7 @@ export default {
       }
     },
     /**
-     * 对话框属性设置, 详情配置参考element-ui官网
+     * Dialog property settings, see the element-ui official site for configuration reference
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/dialog#attributes
      */
     dialogAttrs: {
@@ -612,7 +630,7 @@ export default {
       }
     },
     /**
-     * 同extraBody
+     * Same as extraBody
      * @deprecated
      */
     extraParams: {
@@ -622,7 +640,7 @@ export default {
       }
     },
     /**
-     * 新增/修改提交时，请求体带上额外的参数。
+     * Extra parameters included in the request body when submitting an add/edit.
      */
     extraBody: {
       type: Object,
@@ -631,8 +649,10 @@ export default {
       }
     },
     /**
-     * 在新增/修改弹窗 点击确认时调用，返回Promise, 如果reject, 则不会发送新增/修改请求
-     * 参数: (data, isNew) data为表单数据, isNew true 表示是新增弹窗, false 为 编辑弹窗
+     * Called when confirm is clicked in the add/edit dialog; returns a Promise - if rejected, the
+     * add/edit request is not sent
+     * Parameters: (data, isNew) data is the form data, isNew true means it's the add dialog, false means
+     * the edit dialog
      */
     beforeConfirm: {
       type: Function,
@@ -641,7 +661,7 @@ export default {
       }
     },
     /**
-     * 同extraQuery
+     * Same as extraQuery
      * @deprecated
      */
     customQuery: {
@@ -651,8 +671,8 @@ export default {
       }
     },
     /**
-     * 向请求url添加的额外参数。
-     * 可用.sync修饰，此时点击重置按钮后该参数也会被重置
+     * Extra parameters added to the request URL.
+     * Can use the .sync modifier, in which case this parameter is also reset after clicking the reset button
      */
     extraQuery: {
       type: Object,
@@ -661,22 +681,22 @@ export default {
       }
     },
     /**
-     * 是否开启使用url保存query参数的功能
+     * Whether to enable saving query parameters via the URL
      */
     saveQuery: {
       type: Boolean,
       default: true
     },
     /**
-     * 操作栏按钮类型
-     * `text` 为文本按钮, `button` 为普通按钮
+     * Operation bar button type
+     * `text` is a text button, `button` is a regular button
      */
     operationButtonType: {
       type: String,
       default: 'text'
     },
     /**
-     * 设置 `按钮` 大小
+     * Set the `button` size
      * @see https://element.eleme.cn/#/zh-CN/component/button#bu-tong-chi-cun
      */
     buttonSize: {
@@ -684,7 +704,7 @@ export default {
       default: 'small'
     },
     /**
-     * 设置axios的config参数
+     * Set axios config parameters
      */
     axiosConfig: {
       type: Object,
@@ -693,7 +713,7 @@ export default {
       }
     },
     /*
-     * 设置默认对齐方式
+     * Set the default alignment
      */
     defaultAlign: {
       type: String,
@@ -750,14 +770,14 @@ export default {
       // https://github.com/ElemeFE/element/issues/1153
       total: null,
       tableLoading: false,
-      // 多选项的数组
+      // Array of multi-selected items
       selected: [],
 
-      // 要修改的那一行
+      // The row being edited
       row: {},
 
-      // 初始的extraQuery值, 重置查询时, 会用到
-      // JSON.stringify是为了后面深拷贝作准备
+      // The initial extraQuery value, used when resetting the query
+      // JSON.stringify is for later deep-copy purposes
       initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
       isSearchCollapse: false,
       showNoData: false,
@@ -812,10 +832,10 @@ export default {
     },
     columnsAlign() {
       if (this.columns.some((col) => col.columns && col.columns.length)) {
-        // 多级表头默认居中
+        // Multi-level header centered by default
         return 'center'
       } else {
-        // 默认居中 //修改点
+        // Centered by default //modification point
         return this.defaultAlign
       }
     },
@@ -879,14 +899,16 @@ export default {
     iDialogViewTitle() {
       return this.dialogViewTitle || this.viewText
     },
-    // 过滤会与内部选择策略冲突的事件，避免父组件只拿到当前页 selection
+    // Filter out events that would conflict with the internal selection strategy, to avoid the parent
+    // component only getting the current page's selection
     forwardListeners() {
       const listeners = { ...pickVueListeners(this.$attrs) }
       delete listeners['selection-change']
       delete listeners['select']
       delete listeners['select-all']
-      // 外层如需监听 selection 变化，请监听本组件透出的 selection-change，
-      // 该事件来自选择策略，已汇总跨页后的全量 selected
+      // If the outer component needs to listen for selection changes, listen to this component's
+      // exposed selection-change event, which comes from the selection strategy and has already
+      // aggregated the full selected set across pages
       return listeners
     },
     searchLocatedSlotKeys() {
@@ -923,15 +945,16 @@ export default {
       handler(val) {
         if (!val) return
         this.page = defaultFirstPage
-        // mounted处有updateForm的行为，所以至少在初始执行时要等到nextTick
+        // mounted has updateForm behavior, so at least during the initial execution we need to wait
+        // for nextTick
         this.$nextTick(this.getList)
       },
       immediate: true
     },
     selected(val) {
       /**
-       * 多选项发生变化
-       * @property {array} rows - 已选中的行数据的数组
+       * The multi-select set changed
+       * @property {array} rows - array of the selected rows' data
        */
       this.$emit('selection-change', val)
     },
@@ -950,7 +973,7 @@ export default {
         this.page = parseInt(query[this.pageKey])
         this.size = parseInt(query[this.pageSizeKey])
 
-        // 恢复查询条件，但对 slot = search 无效
+        // Restore the query conditions, but this has no effect for slot = search
         if (this.$refs.searchForm) {
           delete query[this.pageKey]
           delete query[this.pageSizeKey]
@@ -973,15 +996,16 @@ export default {
       return markRaw(toRaw(col.formatter))
     },
     getColumnBindProps(col) {
-      // 排除 formatter，因为组件类型的 formatter 不应该传递给 el-table-column 的 formatter prop
-      // 函数类型的 formatter 已经通过 :formatter 显式传递了
-      // 但是我们需要保留 formatter 在 v-bind 中，以便 template slot 可以访问到
-      // 所以这里不排除 formatter，而是在 el-data-table-column 中处理
+      // Exclude formatter, because a component-type formatter should not be passed to el-table-column's
+      // formatter prop.
+      // A function-type formatter has already been explicitly passed via :formatter.
+      // But we need to keep formatter in v-bind so the template slot can access it,
+      // so we don't exclude formatter here - it's handled inside el-data-table-column instead
       const { pinOriginalFixed, pinState, ...columnProps } = col
       return { align: this.columnsAlign, ...columnProps }
     },
     getQuery() {
-      // 构造query对象
+      // Build the query object
       let query = {}
       let formValue = {}
       if (this.$refs.searchForm) {
@@ -992,11 +1016,11 @@ export default {
       Object.assign(query, this.innerQuery)
       query[this.pageSizeKey] = this.hasPagination ? this.size : this.noPaginationSize
 
-      // 根据偏移值计算接口正确的页数
+      // Compute the correct page number for the API based on the offset value
       const pageOffset = this.firstPage - defaultFirstPage
       query[this.pageKey] = this.hasPagination ? this.page + pageOffset : -1
 
-      // 无效值过滤，注意0是有效值
+      // Filter out invalid values, note that 0 is a valid value
       query = Object.keys(query)
         .filter((k) => !isFalsey(query[k]))
         .reduce((obj, k) => {
@@ -1049,9 +1073,10 @@ export default {
       if (loading) {
         this.tableLoading = true
       }
-      // 静态数据(totalData)模式下总数即数据长度。必须在此设置,
-      // 因为 totalData 的 watcher 仅在其"变化"时才更新 total,而初次挂载
-      // (totalData 创建时已就位、不再变化)不会触发,导致分页显示"共 0 条"。
+      // In static data (totalData) mode, the total is the data length. Must be set here,
+      // because the totalData watcher only updates total when it "changes", and on initial mount
+      // (totalData is already in place when created and doesn't change again) it won't fire, which
+      // would cause pagination to show "0 total".
       this.total = this.totalData.length
       const totalData = this.filterTotalData()
       if (!this.hasPagination) {
@@ -1074,9 +1099,9 @@ export default {
       return this.data
     },
     /**
-     * 手动刷新列表数据，选项的默认值为: { loading: true }
+     * Manually refresh the list data, default value of options is: { loading: true }
      * @public
-     * @param {object} options 方法选项
+     * @param {object} options method options
      */
     getListFromRemote({ loading = true } = {}) {
       const { url } = this
@@ -1092,12 +1117,12 @@ export default {
       }
       const queryStr = (url.indexOf('?') > -1 ? '&' : '?') + queryUtil.stringify(query, '=', '&')
 
-      // 请求开始
+      // Request starting
       this.tableLoading = loading
 
-      // 存储query记录, 便于后面恢复
+      // Store the query record, to make it easier to restore later
       if (this.saveQuery) {
-        // 存储的page是table的页码，无需偏移
+        // The stored page is the table's page number, no offset needed
         query[this.pageKey] = this.page
         const newUrl = queryUtil.set(location.href, query, this.routerMode)
         history.replaceState(history.state, 'el-data-table search', newUrl)
@@ -1108,19 +1133,20 @@ export default {
         .then(({ data: resp }) => {
           let data = []
 
-          // 不分页
+          // Not paginated
           if (!this.hasPagination) {
             data = _get(resp, this.dataPath) || _get(resp, noPaginationDataPath) || []
             this.total = data.length
           } else {
             data = _get(resp, this.dataPath) || []
-            // 获取不到值得时候返回 undefined, el-pagination 接收一个 null 或者 undefined 会导致没数据但是下一页可点击
+            // Return undefined when a value can't be obtained; el-pagination receiving null or
+            // undefined causes no data to show but the next page to still be clickable
             this.total = _get(resp, this.totalPath) || 0
           }
 
           this.data = data
 
-          // 树形结构逻辑
+          // Tree structure logic
           if (this.isTree) {
             this.data = this.tree2Array(data, this.expandAll)
           }
@@ -1132,20 +1158,20 @@ export default {
 
           this.tableLoading = false
           /**
-           * 请求返回, 数据更新后触发
-           * @property {object} data - table的数据
-           * @property {object} resp - 请求返回的完整response
+           * Fired after the request returns and the data has been updated
+           * @property {object} data - the table's data
+           * @property {object} resp - the full response returned by the request
            */
           this.$emit('data-update', data, resp)
 
-          // 开启persistSelection时，需要同步selected状态到el-table中
+          // When persistSelection is enabled, the selected state needs to be synced to el-table
           this.$nextTick(() => {
             this.selectStrategy?.updateElTableSelection()
           })
         })
         .catch((err) => {
           /**
-           * 请求数据失败，返回err对象
+           * Request failed, returns the err object
            * @event error
            */
           this.$emit('error', err)
@@ -1154,9 +1180,9 @@ export default {
         })
     },
     search(attrs, reset) {
-      // 重置搜索结果到第一页
+      // Reset the search results to the first page
       this.page = defaultFirstPage
-      // Orange 重置查询对象
+      // Orange reset the query object
       if (reset) {
         this.innerQuery = merge({}, attrs)
       } else {
@@ -1166,30 +1192,30 @@ export default {
       return this.getList()
     },
     searchDate(attrs) {
-      // 重置搜索结果到第一页
+      // Reset the search results to the first page
       this.page = defaultFirstPage
       this.innerQuery = merge(this.innerQuery, attrs)
       return this.getList()
     },
 
     /**
-     * 重置查询，相当于点击「重置」按钮
+     * Reset the query, equivalent to clicking the "Reset" button
      *
      * @public
      */
     resetSearch() {
-      // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
+      // After reset, the values in the form become undefined, and will be assigned to query on the next query
       this.$refs.searchForm.resetFields()
       this.page = defaultFirstPage
 
-      // 重置
+      // Reset
       if (this.saveQuery) {
         const newUrl = queryUtil.clear(location.href)
         history.replaceState(history.state, '', newUrl)
       }
 
       /**
-       * 按下重置按钮后触发
+       * Fired after the reset button is pressed
        */
       this.$emit('reset')
 
@@ -1223,27 +1249,28 @@ export default {
       }
     },
     /**
-     * 切换某一行的选中状态，如果使用了第二个参数，则是设置这一行选中与否
+     * Toggle a row's selected state; if the second parameter is used, it sets whether the row is
+     * selected or not
      *
      * @public
-     * @param {object} row - 要更新的数据行
-     * @param {boolean} isSelected - 是否被勾选
+     * @param {object} row - the data row to update
+     * @param {boolean} isSelected - whether it's checked
      */
     toggleRowSelection(row, isSelected) {
       return this.selectStrategy.toggleRowSelection(row, isSelected)
     },
     /**
-     * 清空多选项
+     * Clear the multi-selection
      *
      * @public
      */
     clearSelection() {
       return this.selectStrategy?.clearSelection()
     },
-    // 弹窗相关
-    // 除非树形结构在操作列点击新增, 否则 row 是 MouseEvent
+    // Dialog related
+    // Unless it's a tree structure and add is clicked in the operation column, row is a MouseEvent
     onDefaultNew(row) {
-      // 屏蔽默认New方法
+      // Suppress the default New method
       this.onNew()
     },
     onDefaultView(row) {
@@ -1277,18 +1304,19 @@ export default {
         this.onSuccess(isNew ? 'new' : 'edit', data)
         done()
       } catch (e) {
-        // 出错则不关闭dialog
+        // Don't close the dialog if there's an error
         done(false)
       }
     },
     /**
-     * 完整的删除方法，流程如下：
-     * 1. 弹出二次确认弹窗（使用 deleteMessage）；
-     * 2. 执行 onDelete，过程中确认按钮保持 loading；
-     * 3. 失败则报错误信息、弹窗不关闭；
-     * 4. 成功则报成功信息、弹窗关闭、重新请求数据、并校正页码（详见 correctPage）；
+     * The complete delete method, with the following flow:
+     * 1. Show a confirmation dialog (using deleteMessage);
+     * 2. Execute onDelete, keeping the confirm button in a loading state during the process;
+     * 3. On failure, report the error message and keep the dialog open;
+     * 4. On success, report the success message, close the dialog, re-fetch the data, and correct the
+     *    page number (see correctPage);
      * @public
-     * @param {object|object[]} - 要删除的数据对象或数组
+     * @param {object|object[]} - the data object or array to delete
      */
     onDefaultDelete(data) {
       this.$confirm(this.deleteMessage(data), this.$t('Info'), {
@@ -1314,12 +1342,12 @@ export default {
           }
         }
       }).catch(() => {
-        /* 取消*/
+        /* cancelled */
       })
     },
 
     /**
-     * 判断是否返回上一页
+     * Determine whether to go back to the previous page
      * @public
      */
     correctPage() {
@@ -1335,7 +1363,7 @@ export default {
       }
     },
 
-    // 树形table相关
+    // Tree table related
     // https://github.com/PanJiaChen/vue-element-admin/tree/master/@/components/TreeTable
     tree2Array(data, expandAll, parent = null, level = null) {
       let tmp = []
@@ -1348,7 +1376,7 @@ export default {
           _level = level + 1
         }
         record._level = _level
-        // 如果有父元素
+        // If there's a parent element
         if (parent) {
           Object.defineProperty(record, 'parent', {
             value: parent,
@@ -1375,12 +1403,12 @@ export default {
       row._show = show
       return show ? 'row-show' : 'row-hide'
     },
-    // 切换下级是否展开
+    // Toggle whether children are expanded
     toggleExpanded(trIndex) {
       const record = this.data[trIndex]
       record._expanded = !record._expanded
     },
-    // 图标显示
+    // Icon display
     iconShow(index, record) {
       //      return index ===0 && record.children && record.children.length > 0;
       return record[this.treeChildKey] && record[this.treeChildKey].length > 0
@@ -1399,7 +1427,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-// 自定义样式
+// Custom styles
 @use './index';
 
 .el-data-table {

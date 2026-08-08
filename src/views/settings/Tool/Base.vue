@@ -184,7 +184,7 @@ export default {
 
 :deep(.tool-form > .el-form-item),
 :deep(.tool-form > div > .el-form-item) {
-  // 由容器 gap 统一管理字段间距，避免被全局 el-form 规则覆盖或叠加。
+  // Field spacing is managed uniformly by the container's gap, to avoid being overridden or stacked by global el-form rules.
   margin-bottom: 0 !important;
 }
 
@@ -200,7 +200,7 @@ export default {
 }
 
 :deep(.tool-form > .tool-actions .el-form-item__content) {
-  // 小尺寸按钮默认按 30px 行高基线居中，会让可见边框比其它控件多出约 5px 间隙。
+  // Small-size buttons default to centering on a 30px line-height baseline, which adds about a 5px gap to the visible border compared to other controls.
   align-items: flex-start;
   line-height: normal;
 }

@@ -193,7 +193,7 @@ export default {
           autoComplete: true,
           query: (query, cb) => {
             const { hosts, nodes } = this.getSelectedNodesAndHosts()
-            cb([]) // 先返回空，避免输入时出现下拉闪烁
+            cb([]) // Return empty first to avoid dropdown flicker while typing
             this.$axios
               .post('/api/v1/ops/username-hints/', {
                 nodes: nodes,
@@ -331,7 +331,7 @@ export default {
       return { hosts, nodes }
     },
     truncateFileName(fullName) {
-      const maxLength = 130 // 显示的最大字符数
+      const maxLength = 130 // Maximum number of characters to display
       if (fullName.length <= maxLength) {
         return fullName
       }
@@ -399,7 +399,7 @@ export default {
         return
       }
 
-      // 立即禁用按钮并显示旋转图标
+      // Immediately disable the button and show the spinning icon
       this.setButtonLoading()
       this.showProgress = true
       this.progressLength = 0
@@ -497,7 +497,7 @@ export default {
   margin-left: 30px;
 }
 
-/* 顶部工具条：传输按钮 + 账号 + 上传目录 */
+/* Top toolbar: transfer button + account + upload directory */
 .transfer-toolbar {
   display: flex;
   align-items: center;
@@ -505,9 +505,9 @@ export default {
   gap: 12px;
   margin-bottom: 12px;
 
-  // el-autocomplete 根节点是 ElTooltip(多根 fragment),拿不到 scoped data-v,
-  // 普通 scoped class 选不中,需用 :deep 才能定宽;el-input 单根节点则两者皆可。
-  // 统一用 :deep 保证两个输入框宽度一致生效。
+  // el-autocomplete's root node is ElTooltip (a multi-root fragment) and doesn't get a scoped data-v,
+  // so a plain scoped class can't select it - :deep is needed to set the width; el-input has a single
+  // root node so either approach works. Use :deep consistently so both inputs' widths apply the same way.
   :deep(.account-field) {
     height: 30px;
     width: 280px;
@@ -518,7 +518,7 @@ export default {
     width: 360px;
   }
 
-  // 让 prepend 里的必填星号与文字对齐
+  // Align the required-field asterisk in the prepend slot with the text
   .required-mark {
     color: var(--color-danger);
     margin-right: 2px;
@@ -560,11 +560,11 @@ export default {
     }
   }
 
-  // 拖拽区（左）与文件列表（右）并排
+  // Drag-and-drop area (left) and file list (right) sit side by side
   .uploader-body {
     position: relative;
 
-    // el-upload 根节点是无 class 的 div，仅它直接包含 .el-upload-list
+    // el-upload's root node is a div with no class; only it directly contains .el-upload-list
     :deep(div:has(> .el-upload-list)) {
       display: flex;
       gap: 16px;

@@ -18,7 +18,7 @@ export default {
   computed: {
     ...mapGetters(['publicSettings', 'currentUser']),
     expireMsg() {
-      // 用户来源不是Local时不显示密码过期提示
+      // Don't show the password expiration tip when the user's source isn't Local
       if (this.currentUser.source.value !== 'local') {
         return false
       }

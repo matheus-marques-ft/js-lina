@@ -37,7 +37,7 @@ export default {
       type: Function,
       default: null
     },
-    // 建议折叠
+    // Suggested to fold
     fold: {
       type: Boolean,
       default: false

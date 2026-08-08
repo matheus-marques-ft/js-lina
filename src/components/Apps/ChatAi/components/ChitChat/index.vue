@@ -188,7 +188,7 @@ export default {
       return false
     },
     init() {
-      // 防止重复初始化时重复插入欢迎消息
+      // Prevent inserting the welcome message again on repeated initialization
       if (!this.activeChat?.chats || this.activeChat.chats.length === 0) {
         this.initChatMessage()
       }
@@ -565,7 +565,7 @@ export default {
       if (!base) {
         return window.location.origin
       }
-      // 如果包含 /api，去掉 /api 以便 ws 连接
+      // If it contains /api, strip it so the ws connection works
       base = base.replace(/\/api\/?$/, '')
       return base
     },
@@ -577,7 +577,7 @@ export default {
       const messages = []
       const history = this.activeChat?.chats || []
 
-      // 只带用户消息，跳过欢迎语和助手历史，保持与 Kael 一致
+      // Only include user messages, skip the greeting and assistant history, consistent with Kael
       history.forEach((chat) => {
         const role = chat?.message?.role
         if (role !== 'user') return
@@ -590,7 +590,7 @@ export default {
         })
       })
 
-      // 当前输入追加一次，避免重复
+      // Append the current input once, avoiding duplicates
       const lastUser = messages[messages.length - 1]
       if (!lastUser || lastUser.content !== userInput) {
         messages.push({
@@ -764,7 +764,7 @@ export default {
         }
       }
 
-      // 确保助手节点存在，即使未写入 activeChat 也补充进去
+      // Ensure the assistant node exists, adding it even if it wasn't written to activeChat
       if (assistantChat?.message) {
         const msg = assistantChat.message
         const id = msg.id || this.genId()
@@ -800,7 +800,7 @@ export default {
         }
       })
 
-      // 如果有目标消息，按 parentId 链回溯，保持与 Kael 相同的顺序
+      // If there's a target message, trace back via the parentId chain, keeping the same order as Kael
       if (targetMessageId && messageMap[targetMessageId]) {
         const chain = []
         let cursor = messageMap[targetMessageId]
@@ -811,9 +811,9 @@ export default {
         return chain.reverse()
       }
 
-      // 按时间和插入顺序排序，保证 messages 顺序稳定
+      // Sort by time and insertion order to keep the messages order stable
       const ordered = Object.values(messageMap).sort((a, b) => a.timestamp - b.timestamp)
-      // 强制最近一对问答建立 parent/children 关系
+      // Force a parent/children relationship for the most recent question/answer pair
       if (ordered.length >= 2) {
         const last = ordered[ordered.length - 1]
         const prev = ordered[ordered.length - 2]
@@ -957,7 +957,7 @@ export default {
             await this.notifyChatCompleted(provider, headers, assistantChat)
           }
           setLoading(false)
-          // 等待 socket completion 再隐藏停止按钮
+          // Wait for socket completion before hiding the stop button
           this.awaitingSocketDone = true
           getInputFocus()
         }
@@ -1197,7 +1197,7 @@ export default {
           credentials: 'include'
         })
         if (!res.ok) {
-          // 不阻塞后续请求，但记录错误
+          // Don't block subsequent requests, but log the error
           console.warn('fetch models failed', res.status)
         } else {
           const data = await res.json()
@@ -1568,7 +1568,7 @@ export default {
           modelId,
           assistantChat
         )
-        // 确保至少包含一问一答
+        // Ensure at least one question/answer pair is included
         if (!messages.find((m) => m.role === 'assistant') && assistantChat?.message) {
           const assistId = assistantChat.message.id || this.genId()
           const parentUser = messages.findLast

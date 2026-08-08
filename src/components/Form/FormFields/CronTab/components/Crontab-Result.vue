@@ -38,7 +38,7 @@ export default {
     ex: 'expressionChange222'
   },
   mounted: function () {
-    // 初始化 获取一次结果
+    // initialize: fetch the result once
     this.expressionChange222()
   },
   methods: {

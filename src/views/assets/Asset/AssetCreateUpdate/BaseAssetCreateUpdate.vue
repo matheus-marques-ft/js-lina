@@ -61,7 +61,7 @@ export default {
       initing: false,
       initPromise: null,
       pendingInit: false,
-      // 在 meta 中，可能改变 platform id
+      // The platform id may be changed inside meta
       platformID: this.$context.get('platform'),
       meta: {},
       iConfig: {},
@@ -114,8 +114,10 @@ export default {
             return request
           }
 
-          // 平台切换时后端会补齐新平台协议；待平台更新完成后再同步用户最终选择。
-          // 返回完整 Promise 链，确保抽屉关闭和列表刷新发生在第二次请求之后。
+          // When the platform changes, the backend fills in the new platform's protocols;
+          // sync the user's final selection only after the platform update completes.
+          // Return the full Promise chain to ensure the drawer close and list refresh
+          // happen after the second request.
           return request.then(() =>
             this.$axios.patch(url, {
               protocols: values.protocols
@@ -130,7 +132,7 @@ export default {
   },
   methods: {
     async init() {
-      // 更改平台时，就不重新 loading 了
+      // Don't reload when changing platform
       this.$log.debug('Initing asset base upcate create', this.initing)
       if (this.initing) {
         this.pendingInit = true
@@ -162,7 +164,7 @@ export default {
       if (!id) {
         url = setUrlParam(url, 'platform', this.platformID)
       }
-      // 过滤类型为：null, undefined 的元素
+      // Filter out elements of type: null, undefined
       defaultConfig.fields = defaultConfig.fields.filter(Boolean)
       const config = _.merge(defaultConfig, { url })
       for (const [groupName, adds, pos] of addFields) {
@@ -218,7 +220,7 @@ export default {
         if (i.name === 'http') {
           i.display_name = 'http(s)'
         }
-        // 这个不删除会导致时，把 platform id 提交成 asset 的
+        // Not deleting this would cause the platform id to be submitted as the asset's id
         delete i['id']
         return i
       })

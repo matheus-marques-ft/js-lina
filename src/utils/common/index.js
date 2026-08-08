@@ -26,7 +26,7 @@ export function getApiPath(that, objectId) {
     // ticket ...
     pagePath = pagePathArray.slice(1, pagePathArray.length).join('/')
   } else {
-    // console,audit,workbench
+    // console, audit, workbench
     pagePath = pagePathArray.slice(2, pagePathArray.length).join('/')
   }
   return `/api/v1/${pagePath}/`
@@ -86,7 +86,7 @@ export function replaceAllUUID(string, replacement = '*') {
   return string
 }
 
-// 写个函数， id 设置到路径中，而不是 query 中, 确保已 / 结尾, 如果已 / 结尾，则不添加
+// Set the id into the path instead of the query, ensuring it ends with /, and not adding it again if it already does
 export function setUrlId(url, id) {
   const urlArray = url.split('?')
   const baseUrl = _.trimEnd(urlArray[0], '/')
@@ -183,7 +183,7 @@ export function getErrorResponseMsg(error) {
     const msg = Object.values(data)
       .map((item) => getErrorResponseMsg(item))
       .filter((i) => i)
-    // 错误信息不要重复提示
+    // Don't show duplicate error messages
     return [...new Set(msg)].join('; ')
   } else {
     msg = error.toString()
@@ -191,7 +191,7 @@ export function getErrorResponseMsg(error) {
   return toPlainTextMessage(msg)
 }
 
-// 将一组错误信息拼接为单条字符串，过滤掉空值并去重。
+// Join a list of error messages into a single string, filtering out empty values and de-duplicating.
 export function joinErrorMessages(messages, separator = ' ') {
   const list = Array.isArray(messages) ? messages : [messages]
   const normalized = list
@@ -414,14 +414,14 @@ export function toLowerCaseExcludeAbbr(s) {
   return s
     .split(' ')
     .map((word) => {
-      // 如果单词包含超过 2 个大写字母，则不转换
+      // If the word contains more than 2 uppercase letters, don't convert it
       const uppercaseCount = word.split('').filter((char) => {
         return char === char.toUpperCase() && char !== char.toLowerCase()
       }).length
       if (uppercaseCount > 2) {
         return word
       }
-      // 否则将单词转换为小写
+      // Otherwise convert the word to lowercase
       return word.toLowerCase()
     })
     .join(' ')
@@ -439,7 +439,7 @@ export function openNewWindow(url) {
   let left = 100 + count * 100
   top = 50 + count * 50
   if (left + screen.width / 3 > screen.width) {
-    // 支持两排足以
+    // Supporting two rows is enough
     top = screen.height / 3
     count = 1
     left = 100
@@ -479,7 +479,7 @@ export function randomString(length, includeSymbols = false) {
   const numbers = '0123456789'
   const symbols = '!@#$%^&*()-_=+[]{}|;:,.<>?'
 
-  // 根据是否包含特殊字符来决定字符集
+  // Decide the character set based on whether symbols are included
   let allCharacters = upperCase + lowerCase + numbers
   if (includeSymbols) {
     allCharacters += symbols
@@ -487,7 +487,7 @@ export function randomString(length, includeSymbols = false) {
 
   let result = ''
 
-  // 如果包含特殊字符，确保至少包含一个大写字母、一个小写字母、一个数字、一个符号
+  // If symbols are included, ensure at least one uppercase letter, one lowercase letter, one number, and one symbol are present
   if (includeSymbols) {
     result += upperCase.charAt(Math.floor(Math.random() * upperCase.length))
     result += lowerCase.charAt(Math.floor(Math.random() * lowerCase.length))
@@ -497,12 +497,12 @@ export function randomString(length, includeSymbols = false) {
 
   const allCharactersLength = allCharacters.length
 
-  // 填充剩余的字符
+  // Fill in the remaining characters
   for (let i = result.length; i < length; i++) {
     result += allCharacters.charAt(Math.floor(Math.random() * allCharactersLength))
   }
 
-  // 随机打乱结果
+  // Randomly shuffle the result
   return result
     .split('')
     .sort(() => 0.5 - Math.random())

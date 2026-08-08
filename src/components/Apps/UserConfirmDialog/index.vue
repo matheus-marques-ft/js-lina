@@ -325,9 +325,9 @@ export default {
     onSuccess() {
       this.closeReason = 'success'
       this.secretValue = ''
-      // 先捕获 callback 引用：this.visible = false 会触发 Dialog @close →
-      // handleDialogClose，那里会把 this.callback 置 null,若在 nextTick 里再取
-      // this.callback 就会是 null，导致 "this.callback is not a function"。
+      // Capture the callback reference first: this.visible = false triggers Dialog @close →
+      // handleDialogClose, which sets this.callback to null. If we read this.callback again
+      // inside nextTick, it would already be null, causing "this.callback is not a function".
       const callback = this.callback
       this.visible = false
       this.$nextTick(() => {
@@ -403,9 +403,11 @@ export default {
   border: 0;
 }
 
-// 验证码行:输入框自适应宽度 + 「发送验证码」按钮固定宽度,始终同一行(修复按钮掉到下一行)。
-// 用 .user-confirm-dialog 作用域提升优先级:既确保 .code-row 的 flex 生效(不被 .el-col 覆盖回 block),
-// 又覆盖 __input 的全局 width:100%,让输入框在 flex 行内自适应剩余空间。
+// Verification code row: input auto-fits the width + "Send code" button has a fixed width,
+// always on the same line (fixes the button dropping to the next line).
+// Scoping via .user-confirm-dialog raises specificity: it both ensures .code-row's flex takes
+// effect (not overridden back to block by .el-col), and overrides __input's global width:100%,
+// letting the input auto-fit the remaining space within the flex row.
 .user-confirm-dialog .user-confirm-dialog__code-row {
   display: flex;
   align-items: center;
