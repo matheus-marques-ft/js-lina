@@ -1,4 +1,4 @@
-FROM ghcr.io/matheus-marques-ft/lina-base:20260810_173307 AS stage-build
+FROM ghcr.io/matheus-marques-ft/lina-base:20260810_184528 AS stage-build
 
 ARG VERSION
 ENV VERSION=$VERSION
