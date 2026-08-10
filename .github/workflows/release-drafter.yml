@@ -31,14 +31,14 @@ jobs:
           config-name: release-config.yml
           version: ${{ steps.get_version.outputs.TAG }}
           tag: ${{ steps.get_version.outputs.TAG }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: 'yarn'
       - name: Enable yarn
         run: |
           corepack enable
           corepack prepare yarn@4.13.0 --activate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'yarn'
       - name: Install dependencies
         run: yarn install --immutable
       - name: Build web
