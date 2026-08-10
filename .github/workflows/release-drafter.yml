@@ -47,6 +47,7 @@ jobs:
           yarn build
       - name: Create Upload Assets
         run: |
+          mkdir -p build
           rm -rf build/*
           mv lina lina-${{ steps.get_version.outputs.TAG }}
           tar -czf lina-${{ steps.get_version.outputs.TAG }}.tar.gz lina-${{ steps.get_version.outputs.TAG }}
