@@ -1,5 +1,5 @@
 export default {
-  '--color-primary': '#1ab394',
+  '--color-primary': '#00aeef',
   '--color-success': '#2793d7',
   '--color-info': '#1c84c6',
   '--color-warning': '#f8ac59',
@@ -17,6 +17,6 @@ export default {
   '--submenu-bg': '#ffffff',
   '--menu-bg': '#ffffff',
   '--menu-text': '#292827',
-  '--menu-text-active': '#1ab394',
+  '--menu-text-active': '#00aeef',
   '--menu-hover': '#ffffff'
 }
