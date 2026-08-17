@@ -13,7 +13,7 @@ export default {
   '--color-disabled-background': '#f5f7fa',
   '--color-disabled': '#bbb',
   '--color-help-text': '#8f959e',
-  '--banner-bg': '#148f76',
+  '--banner-bg': '#008bbf',
   '--submenu-bg': '#ffffff',
   '--menu-bg': '#ffffff',
   '--menu-text': '#292827',
