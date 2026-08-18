@@ -1,5 +1,5 @@
 export default {
-  '--color-primary': '#1ab394',
+  '--color-primary': '#00aeef',
   '--color-success': '#2793d7',
   '--color-info': '#1c84c6',
   '--color-warning': '#f8ac59',
@@ -13,10 +13,10 @@ export default {
   '--color-disabled-background': '#f5f7fa',
   '--color-disabled': '#bbb',
   '--color-help-text': '#8f959e',
-  '--banner-bg': '#148f76',
+  '--banner-bg': '#008bbf',
   '--submenu-bg': '#ffffff',
   '--menu-bg': '#ffffff',
   '--menu-text': '#292827',
-  '--menu-text-active': '#1ab394',
+  '--menu-text-active': '#00aeef',
   '--menu-hover': '#ffffff'
 }

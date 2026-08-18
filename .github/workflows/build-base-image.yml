@@ -53,7 +53,7 @@ jobs:
         id: repo
         run: echo "REPO=$(basename ${{ github.repository }} | sed 's/^js-//')" >> $GITHUB_ENV
 
-      - name: Extract owner name
+      - name: Extract repository owner (lowercase)
         id: owner
         run: echo "OWNER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
