@@ -93,7 +93,9 @@ export default {
     }
 
     & .sidebar-logo-text {
+      max-width: 100%;
       height: calc(#{$headerHeight} - 10px);
+      width: auto;
     }
 
     & .sidebar-title {

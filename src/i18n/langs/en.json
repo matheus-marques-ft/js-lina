@@ -135,5 +135,11 @@
   "LabelNamePlaceholder": "Enter a name",
   "LabelColor": "Color",
   "CreateAndSelect": "Create and select",
-  "LabelCreateSuccess": "Label created and selected"
+  "LabelCreateSuccess": "Label created and selected",
+  "UPPER_CASE_REQUIRED": "Must contain an uppercase letter",
+  "LOWER_CASE_REQUIRED": "Must contain a lowercase letter",
+  "NUMBER_REQUIRED": "Must contain a number",
+  "SPECIAL_CHAR_REQUIRED": "Must contain a special character",
+  "MIN_LENGTH_ERROR": "Must be at least {0} characters",
+  "PasswordRequirementsTitle": "Password requirements"
 }

@@ -133,5 +133,11 @@
   "LabelNamePlaceholder": "请输入名称",
   "LabelColor": "颜色",
   "CreateAndSelect": "创建并选择",
-  "LabelCreateSuccess": "标签已创建并选择"
+  "LabelCreateSuccess": "标签已创建并选择",
+  "UPPER_CASE_REQUIRED": "必须包含大写字母",
+  "LOWER_CASE_REQUIRED": "必须包含小写字母",
+  "NUMBER_REQUIRED": "必须包含数字",
+  "SPECIAL_CHAR_REQUIRED": "必须包含特殊字符",
+  "MIN_LENGTH_ERROR": "至少需要 {0} 个字符",
+  "PasswordRequirementsTitle": "密码要求"
 }
