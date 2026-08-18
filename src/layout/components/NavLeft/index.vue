@@ -8,23 +8,10 @@
         <Organization v-if="showOrgs" class="organization" />
       </div>
       <div class="nav-title">
-        <span :class="switchViewOtherClasses" class="switch-view active-switch-view">
-          <el-popover
-            :show-after="200"
-            placement="right-start"
-            popper-class="view-switcher-popper"
-            trigger="hover"
-          >
-            <template #reference>
-              <span style="width: 100%; padding: 0 15px; display: flex; align-items: center">
-                <span class="text-overflow">{{ isRouteMeta.title || '' }}</span>
-                <span class="icon-zone">
-                  <svg-icon class="icon" icon-class="switch" />
-                </span>
-              </span>
-            </template>
-            <ViewSwitcher mode="vertical" @view-change="handleViewChange" />
-          </el-popover>
+        <span class="switch-view active-switch-view">
+          <span style="width: 100%; padding: 0 15px; display: flex; align-items: center">
+            <span class="text-overflow">{{ $t('Console') }}</span>
+          </span>
         </span>
       </div>
     </div>
@@ -42,13 +29,19 @@
         class="left-menu"
         mode="vertical"
       >
-        <sidebar-item
-          v-for="route in currentViewRoute.children"
-          :key="route.path"
-          :base-path="route.path"
-          :collapse="isCollapse"
-          :item="route"
-        />
+        <template v-for="group in groupedSidebarItems" :key="group.category">
+          <div v-if="group.title" class="group-title category-title" style="font-size: 12px">
+            <el-divider v-if="isCollapse" />
+            <span v-else>{{ group.title }}</span>
+          </div>
+          <sidebar-item
+            v-for="route in group.items"
+            :key="route.path"
+            :base-path="route.path"
+            :collapse="isCollapse"
+            :item="route"
+          />
+        </template>
       </el-menu>
     </div>
     <div class="nav-footer">
@@ -60,9 +53,6 @@
         />
       </div>
     </div>
-    <div :class="{ 'is-show': viewShown }" class="mobile-menu" @click="viewShown = false">
-      <ViewSwitcher :mode="'vertical'" />
-    </div>
   </div>
 </template>
 
@@ -70,20 +60,18 @@
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 import Hamburger from '@/components/Widgets/Hamburger'
-import ViewSwitcher from '../NavHeader/ViewSwitcher'
 import Organization from '../NavHeader/Organization'
+
+const CATEGORY_ORDER = ['console', 'pam', 'audit', 'workbench']
 
 export default {
   components: {
     SidebarItem,
     Hamburger,
-    ViewSwitcher,
     Organization
   },
   data() {
     return {
-      viewShown: false,
-      switchViewOtherClasses: '',
       defaultMenu: []
     }
   },
@@ -91,6 +79,31 @@ export default {
     ...mapGetters(['currentViewRoute', 'sidebar']),
     defaultOpensMenu() {
       return []
+    },
+    groupedSidebarItems() {
+      const children = this.currentViewRoute.children || []
+      const isMergedView = children.some((route) => route.meta?.category)
+      if (!isMergedView) {
+        // Not a merged screen (Settings/Tickets/Profile/...): render as one flat group,
+        // no section header - identical to the pre-merge behavior.
+        return [{ category: '__ungrouped__', title: '', items: children }]
+      }
+      const byCategory = {}
+      for (const route of children) {
+        const cat = route.meta?.category
+        // Children without a category are plumbing (e.g. a bare "/pam" -> "/pam/dashboard"
+        // redirect kept alive for deep-linking/getPropView), not real menu entries - they
+        // don't render on their own anyway (`hidden: true`), just skip them here too.
+        if (!cat) continue
+        byCategory[cat] ||= []
+        byCategory[cat].push(route)
+      }
+      const titles = this.currentViewRoute.meta?.categoryTitles || {}
+      return CATEGORY_ORDER.filter((cat) => byCategory[cat]?.length).map((cat) => ({
+        category: cat,
+        title: titles[cat] || '',
+        items: byCategory[cat]
+      }))
     },
     activeMenu() {
       const route = this.$route
@@ -125,37 +138,12 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened
-    },
-    isRouteMeta() {
-      return this.currentViewRoute.meta || {}
     }
   },
   mounted() {},
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
-    },
-    toggleSwitch() {
-      this.viewShown = true
-    },
-    handleViewChange() {
-      // The reason nextTick isn't used here may be that switching tags in the child component
-      // needs to trigger an asynchronous dispatch
-      setTimeout(() => {
-        // this.setLeastMenuOpen()
-      }, 500)
-    },
-    setLeastMenuOpen() {
-      const hasOpened = document.querySelector(
-        '.el-submenu-sidebar.submenu-item.el-sub-menu.is-opened'
-      )
-      if (hasOpened) {
-        return
-      }
-      const el = document.querySelector('.el-sub-menu__title')
-      if (el) {
-        el.click()
-      }
     }
   }
 }
@@ -204,16 +192,6 @@ $origin-color: #ffffff;
       & :deep(.title-label) {
         color: $origin-color !important;
       }
-
-      .mobile-view-switch {
-        :deep(.el-menu-item.is-active) {
-          color: var(--menu-text-active) !important;
-
-          .svg-icon {
-            color: var(--menu-text-active) !important;
-          }
-        }
-      }
     }
 
     .nav-title {
@@ -225,7 +203,6 @@ $origin-color: #ffffff;
       font-weight: 500;
       overflow: hidden;
       white-space: nowrap;
-      cursor: pointer;
       transition: all 0.3s;
       color: var(--menu-text);
       background-color: var(--menu-bg);
@@ -239,37 +216,6 @@ $origin-color: #ffffff;
         .text-overflow {
           width: calc(100% - 15px);
           display: inline-block;
-        }
-
-        :deep(.el-popover__reference) {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 0 10px 0 15px;
-
-          .view-title {
-            width: calc(100% - 10px);
-            display: inline-block;
-          }
-
-          .icon-zone {
-            display: flex;
-            align-items: center;
-            padding: 6px;
-            box-sizing: border-box;
-
-            .icon {
-              width: 1.05em;
-              height: 1.05em;
-              margin-right: 0 !important;
-            }
-
-            &:hover {
-              color: var(--menu-text-active);
-              background-color: var(--nav-header-hover, var(--menu-hover));
-              border-radius: 4px;
-            }
-          }
         }
       }
     }
@@ -311,38 +257,9 @@ $origin-color: #ffffff;
     }
   }
 
-  .is-show {
-    display: block !important;
-  }
-
-  .mobile-menu {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding-top: 10px;
-    background: #fff;
-    z-index: 100;
-  }
-
   &.collapsed .nav-title .switch-view {
     .text-overflow {
       display: none;
-    }
-
-    :deep(.el-popover__reference) {
-      justify-content: center;
-      padding: 0 !important;
-
-      .icon-zone {
-        margin-right: 0;
-      }
-
-      .switch-view .icon {
-        margin-left: 0;
-      }
     }
   }
 }
@@ -352,26 +269,24 @@ $origin-color: #ffffff;
     display: block !important;
   }
 }
-</style>
 
-<style lang="scss">
-.el-popper.is-light.el-tooltip.el-popover.view-switcher-popper {
-  --el-popper-bg-color-light: var(--menu-bg);
-  --el-border-color-light: var(--menu-border, var(--color-border));
-  --el-popover-bg-color: var(--menu-bg);
-  --el-popover-border-color: var(--menu-border, var(--color-border));
-  --el-popover-padding: 0;
+// Section header for a merged-in view (Console/PAM/Audit/Workbench), one tier above the
+// existing .group-title "app" headers (Users/Assets/...) nested under it - same base look,
+// slightly heavier so the two tiers stay visually distinguishable.
+.category-title {
+  margin-top: 8px;
+  border-top: 1px solid var(--menu-border, var(--color-border));
 
-  min-width: 0 !important;
-  width: max-content !important;
-  padding: 6px !important;
-  color: var(--menu-text);
-  background: var(--menu-bg);
-  border: 1px solid var(--menu-border, var(--color-border));
+  & > span {
+    padding-top: 14px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+  }
 
-  > .el-popper__arrow::before {
-    background: var(--menu-bg);
-    border-color: var(--menu-border, var(--color-border));
+  &:first-child {
+    margin-top: 0;
+    border-top: 0;
   }
 }
 </style>

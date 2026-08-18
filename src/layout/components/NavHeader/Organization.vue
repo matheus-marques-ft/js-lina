@@ -60,13 +60,35 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['currentOrg', 'usingOrgs', 'currentViewRoute']),
+    ...mapGetters([
+      'currentOrg',
+      'usingOrgs',
+      'consoleOrgs',
+      'pamOrgs',
+      'auditOrgs',
+      'workbenchOrgs'
+    ]),
+    // Console/PAM/Audit/Workbench are merged into one screen (src/router/main.js), so
+    // there's no longer a route-driven "current view" reset to keep `usingOrgs` in sync
+    // when the user clicks between categories without a full reload. Compute the right org
+    // list straight from the current route's category instead - reactive by construction,
+    // no dispatch needed. Settings/Profile/Tickets aren't merged and keep using `usingOrgs`
+    // (still kept fresh by the existing `changeToView` mechanism for those screens).
+    activeOrgs() {
+      const map = {
+        console: this.consoleOrgs,
+        pam: this.pamOrgs,
+        audit: this.auditOrgs,
+        workbench: this.workbenchOrgs
+      }
+      return map[this.$route.meta?.category] || this.usingOrgs
+    },
     currentOrgDisplayName() {
       const currentOrgId = this.currentOrg?.id
       if (!currentOrgId) {
         return this.$tc('Select')
       }
-      const matchedOrg = this.usingOrgs.find((item) => item.id === currentOrgId)
+      const matchedOrg = this.activeOrgs.find((item) => item.id === currentOrgId)
       if (matchedOrg?.name) {
         return matchedOrg.name
       }
@@ -91,22 +113,22 @@ export default {
         ]
       }
       const hasPerms = this.$hasPerm('orgs.view_organization | orgs.add_organization')
-      const isConsole = ['console'].includes(this.currentViewRoute.name)
+      const isConsole = this.$route.meta?.category === 'console'
       return hasPerms && isConsole ? orgActions : {}
     },
     orgChoicesGroup() {
       return {
         label: this.$t('ChangeOrganization'),
-        options: this.usingOrgs
+        options: this.activeOrgs
       }
     },
     orgGroups() {
       return [this.orgActionsGroup, this.orgChoicesGroup]
     },
     currentOrgId() {
-      const usingOrgIds = this.usingOrgs.map((o) => o.id)
+      const activeOrgIds = this.activeOrgs.map((o) => o.id)
       let currentOrgId = this.currentOrg?.id
-      const find = usingOrgIds.indexOf(currentOrgId) > -1
+      const find = activeOrgIds.indexOf(currentOrgId) > -1
       if (!find) {
         currentOrgId = null
       }
@@ -162,7 +184,7 @@ export default {
       })
     },
     changeOrg(orgId) {
-      const org = this.usingOrgs.find((item) => item.id === orgId)
+      const org = this.activeOrgs.find((item) => item.id === orgId)
 
       switch (orgId) {
         case 'create':

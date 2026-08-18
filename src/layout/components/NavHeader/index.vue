@@ -204,7 +204,7 @@ export default {
 
       // No matching selector found for this
       & :deep(.el-sub-menu__title) {
-        font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: 'Instrument Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         padding: 0 8px;
         line-height: $headerHeight;
         height: $headerHeight;
