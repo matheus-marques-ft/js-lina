@@ -23,7 +23,7 @@
         mode="vertical"
       >
         <template v-for="group in groupedSidebarItems" :key="group.category">
-          <div v-if="group.title" class="group-title category-title" style="font-size: 12px">
+          <div v-if="group.title" class="group-title category-title">
             <el-divider v-if="isCollapse" />
             <span v-else>{{ group.title }}</span>
           </div>
@@ -56,12 +56,12 @@ import Hamburger from '@/components/Widgets/Hamburger'
 import Organization from '../NavHeader/Organization'
 
 const CATEGORY_ORDER = ['workbench', 'console', 'pam', 'audit']
-// 'console'/'workbench' use the desired Portuguese text as the key itself (this app has no
-// local pt-br locale file; every translation comes from the backend catalog, which has no
-// entry for these renamed labels - vue-i18n's missing-key fallback returns the key
-// unchanged, so this guarantees the right text without touching that backend). 'pam'/
-// 'audit' are untouched - their existing keys already resolve correctly.
-const CATEGORY_I18N_KEYS = { console: 'Gerenciamento', pam: 'PAM', audit: 'Audits', workbench: 'Ativos' }
+// 'console'/'workbench'/'audit' use the desired Portuguese text as the key itself (this app
+// has no local pt-br locale file; every translation comes from the backend catalog, which
+// has no entry for these renamed labels - vue-i18n's missing-key fallback returns the key
+// unchanged, so this guarantees the right text without touching that backend). 'audit' was
+// previously left as 'Audits', which the backend catalog mistranslates to "Auditório".
+const CATEGORY_I18N_KEYS = { console: 'Gerenciamento', pam: 'PAM', audit: 'Auditoria', workbench: 'Ativos' }
 
 export default {
   components: {
@@ -153,6 +153,15 @@ $mobileHeight: 40px;
 $origin-color: #ffffff;
 
 .left-side-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .menu-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
   .nav-header {
     display: flex;
     flex-wrap: wrap;
@@ -194,6 +203,7 @@ $origin-color: #ffffff;
   }
 
   .nav-footer {
+    flex: 0 0 auto;
     display: flex;
     justify-content: flex-start;
     color: var(--menu-text);
@@ -254,6 +264,10 @@ $origin-color: #ffffff;
   &:first-child {
     margin-top: 0;
     border-top: 0;
+
+    & > span {
+      padding-top: 0 !important;
+    }
   }
 }
 </style>

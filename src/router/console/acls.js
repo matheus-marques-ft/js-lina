@@ -26,10 +26,14 @@ export const CmdAclsRoute = {
       name: 'CommandFilterACLList',
       component: () => import('@/views/acls/CommandFilterACL/index'),
       hidden: true,
+      // permissions is explicit because this node is level 3: cleanRoute() only inherits
+      // the parent's resource for level 4+ nodes, so without this it recalculates from
+      // its own (empty) path and produces an unmatchable permission, hiding the item.
       meta: {
         title: i18n.tc('CommandFilterACL', 2),
         menuTitle: i18n.t('CommandFilter'),
-        activeMenu: ''
+        activeMenu: '',
+        permissions: ['acls.view_commandfilteracl']
       }
     },
     {

@@ -21,7 +21,7 @@ export default [
         name: 'AssetAccountList',
         component: () => import('@/views/accounts/Account/index.vue'),
         meta: {
-          title: i18n.t('AssetAccount'),
+          title: i18n.t('Contas de ativos'),
           showInSearch: true,
           app: 'accounts',
           permissions: ['accounts.view_account']
@@ -31,7 +31,10 @@ export default [
         path: ':id',
         component: () => import('@/views/accounts/Account/AccountDetail/index.vue'),
         name: 'AccountDetail',
-        meta: { title: i18n.t('AccountDetail') },
+        // permissions is explicit because promoting the Accounts wrapper away moves this
+        // node to level 3, where cleanRoute() recalculates permissions from its own
+        // (non-resource) path instead of inheriting from the parent.
+        meta: { title: i18n.t('AccountDetail'), permissions: ['accounts.view_account'] },
         hidden: true
       }
     ]
@@ -54,7 +57,8 @@ export default [
         meta: {
           title: i18n.t('VirtualAccountUpdate'),
           activeMenu: '/console/accounts/accounts',
-          action: 'update'
+          action: 'update',
+          permissions: ['accounts.change_virtualaccount']
         },
         hidden: true
       },
@@ -64,13 +68,15 @@ export default [
         name: 'VirtualAccountDetail',
         meta: {
           title: i18n.t('VirtualAccountDetail'),
-          activeMenu: '/console/accounts/accounts'
+          activeMenu: '/console/accounts/accounts',
+          permissions: ['accounts.view_virtualaccount']
         }
       }
     ]
   },
   {
     path: 'account-template',
+    name: 'AccountTemplate',
     component: empty,
     redirect: {
       name: 'AccountTemplateList'
@@ -87,7 +93,7 @@ export default [
         name: 'AccountTemplateList',
         component: () => import('@/views/accounts/AccountTemplate/AccountTemplateList'),
         meta: {
-          menuTitle: i18n.t('MenuAccountTemplates'),
+          menuTitle: i18n.t('Modelos de conta de ativos'),
           title: i18n.t('AccountTemplateList'),
           permissions: ['accounts.view_accounttemplate']
         }
@@ -98,7 +104,8 @@ export default [
         name: 'AccountTemplateCreate',
         meta: {
           title: i18n.t('CreateAccountTemplate'),
-          action: 'create'
+          action: 'create',
+          permissions: ['accounts.add_accounttemplate']
         },
         hidden: true
       },
@@ -108,7 +115,8 @@ export default [
         name: 'AccountTemplateUpdate',
         meta: {
           title: i18n.t('UpdateAccountTemplate'),
-          action: 'update'
+          action: 'update',
+          permissions: ['accounts.change_accounttemplate']
         },
         hidden: true
       },
@@ -116,7 +124,7 @@ export default [
         path: ':id',
         component: () => import('@/views/accounts/AccountTemplate/Detail/index.vue'),
         name: 'AccountTemplateDetail',
-        meta: { title: i18n.t('AccountTemplate') },
+        meta: { title: i18n.t('AccountTemplate'), permissions: ['accounts.view_accounttemplate'] },
         hidden: true
       }
     ]

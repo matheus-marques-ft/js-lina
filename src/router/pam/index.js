@@ -48,28 +48,12 @@ export default {
         permissions: ['accounts.view_account']
       }
     },
-    {
-      path: '/pam/automations',
-      name: 'AccountAutomation',
-      component: empty,
-      meta: {
-        title: i18n.tc('Automation'),
-        icon: 'accounts',
-        permissions: []
-      },
-      children: automations
-    },
-    {
-      path: '/pam/security',
-      name: 'AccountSecurity',
-      component: empty,
-      meta: {
-        title: i18n.t('Security'),
-        icon: 'accounts',
-        permissions: []
-      },
-      children: security
-    },
+    // "AUTOMATIZAÇÃO" and "CONFIGURAÇÕES DE SEGURANÇA" wrappers removed - each held
+    // multiple visible children, so they always rendered as a group-title header. Their
+    // children are hoisted directly here (fullPath preserved via absolute path override,
+    // same pattern as the Domínios/Tags promotions in console/index.js).
+    ...automations.map((route) => ({ ...route, path: `/pam/automations/${route.path}` })),
+    ...security.map((route) => ({ ...route, path: `/pam/security/${route.path}` })),
     {
       path: '/pam/integrations',
       name: 'Integrations',

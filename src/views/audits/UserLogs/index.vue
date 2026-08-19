@@ -45,7 +45,7 @@ export default {
             name: 'PasswordChangeLogList'
           },
           {
-            title: this.$t('Ações'),
+            title: this.$t('Eventos'),
             name: 'OperateLogList'
           }
         ]

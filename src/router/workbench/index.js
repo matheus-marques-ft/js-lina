@@ -33,50 +33,39 @@ export default {
         permissions: []
       }
     },
+    // "MEUS ATIVOS" wrapper removed - it held 3 visible children, so it always rendered as
+    // a group-title header. Its children are hoisted directly here as flat top-level
+    // entries (fullPath preserved: ConnectAssets keeps the wrapper's old absolute path).
     {
       path: '/workbench/assets',
-      name: 'MyAssets',
-      component: empty,
-      redirect: {
-        name: 'ConnectAssets'
-      },
+      name: 'ConnectAssets',
+      component: () => import('@/views/workbench/myassets'),
       meta: {
-        title: i18n.t('MyAssets'),
+        icon: 'assets',
+        title: i18n.t('ConnectAssets'),
         permissions: ['perms.view_myassets']
-      },
-      children: [
-        {
-          path: '',
-          name: 'ConnectAssets',
-          component: () => import('@/views/workbench/myassets'),
-          meta: {
-            icon: 'assets',
-            title: i18n.t('ConnectAssets'),
-            permissions: ['perms.view_myassets']
-          }
-        },
-        {
-          path: 'file-transfer',
-          name: 'FileTransfer',
-          component: () => import('@/views/ops/File/index'),
-          meta: {
-            title: i18n.t('FileTransfer'),
-            icon: 'file-transfer',
-            permissions: ['rbac.view_filemanager']
-          }
-        },
-        {
-          path: `${BASE_URL}/koko/elfinder/sftp/`,
-          name: '',
-          meta: {
-            title: i18n.t('FileExplorer'),
-            activeMenu: '/assets',
-            icon: 'fa-external-link',
-            external: true,
-            permissions: ['rbac.view_filemanager']
-          }
-        }
-      ]
+      }
+    },
+    {
+      path: '/workbench/assets/file-transfer',
+      name: 'FileTransfer',
+      component: () => import('@/views/ops/File/index'),
+      meta: {
+        title: i18n.t('FileTransfer'),
+        icon: 'file-transfer',
+        permissions: ['rbac.view_filemanager']
+      }
+    },
+    {
+      path: `${BASE_URL}/koko/elfinder/sftp/`,
+      name: '',
+      meta: {
+        title: i18n.t('FileExplorer'),
+        activeMenu: '/assets',
+        icon: 'fa-external-link',
+        external: true,
+        permissions: ['rbac.view_filemanager']
+      }
     },
     {
       path: '/workbench/ops',

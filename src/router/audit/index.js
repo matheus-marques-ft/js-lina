@@ -70,18 +70,11 @@ export default {
       },
       children: LogRoutes
     },
-    {
-      path: '/audit/jobs',
-      component: empty,
-      redirect: '',
-      name: 'AuditsJobs',
-      meta: {
-        title: i18n.t('JobsAudit'),
-        icon: 'job',
-        permissions: ['audits.view_joblog']
-      },
-      children: JobRoutes
-    },
+    // "AUDITORIA DE TAREFAS" wrapper removed - it held 2 visible children, so it always
+    // rendered as a group-title header. Its children are hoisted directly here (fullPath
+    // preserved via absolute path override) - each already carries its own permission
+    // gate (audits.view_joblog), so removing the wrapper doesn't loosen access.
+    ...JobRoutes.map((route) => ({ ...route, path: `/audit/jobs/${route.path}` })),
     {
       path: '/audit/tickets',
       component: empty,

@@ -5,6 +5,7 @@ import ACLsMenus from './acls'
 export default [
   {
     path: 'asset-permissions',
+    name: 'AssetPermissions',
     component: empty,
     redirect: {
       name: 'AssetPermissionList'
@@ -19,7 +20,10 @@ export default [
         path: '',
         name: 'AssetPermissionList',
         component: () => import('@/views/perms/AssetPermission/AssetPermissionList'),
-        meta: { title: i18n.t('AssetPermission'), permissions: ['perms.view_assetpermission'] }
+        meta: {
+          title: i18n.t('Permissões de acesso'),
+          permissions: ['perms.view_assetpermission']
+        }
       },
       {
         path: 'create',

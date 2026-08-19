@@ -37,16 +37,10 @@ export default {
         permissions: []
       }
     },
-    {
-      path: '/console/users',
-      component: empty,
-      name: 'Users',
-      meta: {
-        title: i18n.t('MenuUsers'),
-        icon: 'users'
-      },
-      children: UsersMenu
-    },
+    // "GESTÃO DE USUÁRIOS" wrapper removed - it held 2 visible children (Users/Groups),
+    // so it always rendered as a group-title header. Its children are hoisted directly
+    // here (fullPath preserved via absolute path override).
+    ...UsersMenu.map((route) => ({ ...route, path: `/console/users/${route.path}` })),
     {
       path: '/console/assets',
       component: empty,
@@ -61,29 +55,18 @@ export default {
       ...ZonesRoute,
       path: '/console/zones'
     },
-    {
-      path: '/console/accounts',
-      component: empty,
-      name: 'Accounts',
-      meta: {
-        title: i18n.t('MenuAccounts'),
-        icon: 'key'
-      },
-      children: AccountMenus
-    },
-    {
-      path: '/console/perms',
-      component: empty,
-      name: 'Perms',
-      meta: {
-        // Renamed from the old "ativos de autorização" wording.
-        title: i18n.t('Permissões'),
-        icon: 'permission',
-        resource: 'assetpermission',
-        permissions: []
-      },
-      children: PermsMenu
-    },
+    // "GERENCIAMENTO DE CONTA" wrapper removed - it held 2 visible children (Account/
+    // account-template; virtual-accounts stays hidden), so it always rendered as a
+    // group-title header. Its children are hoisted directly here (fullPath preserved via
+    // absolute path override - critical: accounts.js's virtual-accounts redirect/
+    // activeMenu hard-code '/console/accounts/accounts').
+    ...AccountMenus.map((route) => ({ ...route, path: `/console/accounts/${route.path}` })),
+    // "PERMISSÕES" wrapper removed - it held 2 visible children ("Permissões de acesso"
+    // and "Controle de acesso"/ACLs), so it always rendered as a group-title header. Its
+    // children are hoisted directly here (fullPath preserved via absolute path override -
+    // critical for both: PermUser.vue matches on '/console/perms/asset-permissions/', and
+    // startup.js's org-switch guard matches on '/console/perms/acls/...').
+    ...PermsMenu.map((route) => ({ ...route, path: `/console/perms/${route.path}` })),
     {
       ...CmdAclsRoute,
       path: '/console/cmd-acls'
