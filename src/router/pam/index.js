@@ -37,6 +37,10 @@ export default {
     {
       path: '/pam/accounts',
       name: 'PamAccounts',
+      // Redundant with Console's "Contas de ativos" (same underlying accounts resource) -
+      // hidden from the menu, but the route stays registered since it's still reached by
+      // name from views/reports/pam/Dashboard/DataSummary.vue.
+      hidden: true,
       component: () => import('@/views/accounts/PAM/index.vue'),
       meta: {
         title: i18n.t('AccountList'),
@@ -80,6 +84,11 @@ export default {
     {
       path: '/pam/activity',
       name: 'AccountActivityMenu',
+      // Both children (AccountSession/AccountActivity) are hidden below - hiding only the
+      // children wouldn't hide this wrapper too (allChildrenHidden() checks nesting, not
+      // each child's own `hidden` flag), so it needs its own explicit hidden:true or it'd
+      // show up as an empty header.
+      hidden: true,
       component: empty,
       meta: {
         title: i18n.t('Activity'),

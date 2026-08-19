@@ -5,6 +5,7 @@ export default [
   {
     path: 'sessions',
     name: 'AccountSession',
+    hidden: true,
     component: empty,
     meta: {
       app: 'terminal',
@@ -28,6 +29,7 @@ export default [
   {
     path: 'activity',
     name: 'AccountActivity',
+    hidden: true,
     component: empty,
     meta: {
       app: 'accounts',

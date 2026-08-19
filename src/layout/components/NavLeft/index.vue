@@ -7,13 +7,6 @@
       <div class="active-mobile">
         <Organization v-if="showOrgs" class="organization" />
       </div>
-      <div class="nav-title">
-        <span class="switch-view active-switch-view">
-          <span style="width: 100%; padding: 0 15px; display: flex; align-items: center">
-            <span class="text-overflow">{{ $t('Console') }}</span>
-          </span>
-        </span>
-      </div>
     </div>
     <div class="menu-wrap el-scrollbar">
       <el-menu
@@ -62,7 +55,13 @@ import SidebarItem from './SidebarItem'
 import Hamburger from '@/components/Widgets/Hamburger'
 import Organization from '../NavHeader/Organization'
 
-const CATEGORY_ORDER = ['console', 'pam', 'audit', 'workbench']
+const CATEGORY_ORDER = ['workbench', 'console', 'pam', 'audit']
+// 'console'/'workbench' use the desired Portuguese text as the key itself (this app has no
+// local pt-br locale file; every translation comes from the backend catalog, which has no
+// entry for these renamed labels - vue-i18n's missing-key fallback returns the key
+// unchanged, so this guarantees the right text without touching that backend). 'pam'/
+// 'audit' are untouched - their existing keys already resolve correctly.
+const CATEGORY_I18N_KEYS = { console: 'Gerenciamento', pam: 'PAM', audit: 'Audits', workbench: 'Ativos' }
 
 export default {
   components: {
@@ -98,10 +97,9 @@ export default {
         byCategory[cat] ||= []
         byCategory[cat].push(route)
       }
-      const titles = this.currentViewRoute.meta?.categoryTitles || {}
       return CATEGORY_ORDER.filter((cat) => byCategory[cat]?.length).map((cat) => ({
         category: cat,
-        title: titles[cat] || '',
+        title: this.$t(CATEGORY_I18N_KEYS[cat]),
         items: byCategory[cat]
       }))
     },
@@ -193,32 +191,6 @@ $origin-color: #ffffff;
         color: $origin-color !important;
       }
     }
-
-    .nav-title {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      height: 50px;
-      font-size: 16px;
-      font-weight: 500;
-      overflow: hidden;
-      white-space: nowrap;
-      transition: all 0.3s;
-      color: var(--menu-text);
-      background-color: var(--menu-bg);
-      border-bottom: 1px solid var(--menu-border, var(--color-border));
-      border-top: 1px solid var(--menu-border, var(--color-border));
-
-      .switch-view {
-        width: 100%;
-        padding: 5px;
-
-        .text-overflow {
-          width: calc(100% - 15px);
-          display: inline-block;
-        }
-      }
-    }
   }
 
   .nav-footer {
@@ -257,11 +229,6 @@ $origin-color: #ffffff;
     }
   }
 
-  &.collapsed .nav-title .switch-view {
-    .text-overflow {
-      display: none;
-    }
-  }
 }
 
 @media screen and (max-width: 992px) {

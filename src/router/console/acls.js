@@ -3,12 +3,71 @@ import empty from '@/layout/empty'
 
 const globalSubmenu = () => import('@/layout/globalOrg.vue')
 
+// Promoted to its own top-level "Filtragem de comandos" entry in console/index.js instead
+// of living nested inside the ACLs bucket alongside 5 unrelated ACL types - exported
+// separately so it can be spread in there.
+export const CmdAclsRoute = {
+  path: 'cmd-acls',
+  component: empty,
+  redirect: {
+    name: 'CommandFilterACLList'
+  },
+  name: 'CmdACL',
+  meta: {
+    title: i18n.t('CommandFilterACLs'),
+    menuTitle: i18n.t('CommandFilter'),
+    app: 'acls',
+    resource: 'commandfilteracl'
+  },
+  children: [
+    // Command Filter ACL
+    {
+      path: '',
+      name: 'CommandFilterACLList',
+      component: () => import('@/views/acls/CommandFilterACL/index'),
+      hidden: true,
+      meta: {
+        title: i18n.tc('CommandFilterACL', 2),
+        menuTitle: i18n.t('CommandFilter'),
+        activeMenu: ''
+      }
+    },
+    {
+      path: 'create',
+      name: 'CommandFilterACLCreate',
+      component: () =>
+        import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclCreateUpdate'),
+      hidden: true,
+      meta: { title: i18n.t('CommandFilterACLCreate'), activeMenu: '' }
+    },
+    {
+      path: ':id',
+      name: 'CommandFilterACLDetail',
+      component: () =>
+        import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclDetail/index'),
+      hidden: true,
+      meta: {
+        title: i18n.t('CommandFilterACLDetail'),
+        activeMenu: ''
+      }
+    },
+    {
+      path: ':id/update',
+      name: 'CommandFilterACLUpdate',
+      component: () =>
+        import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclCreateUpdate'),
+      hidden: true,
+      meta: { title: i18n.t('CommandFilterACLUpdate'), activeMenu: '' }
+    }
+  ]
+}
+
 export default [
   {
     path: 'acls',
     name: 'ACLList',
     component: empty,
-    redirect: 'cmd-acls',
+    redirect: 'login-acls',
     meta: {
       title: i18n.t('ACLs'),
       icon: 'acl',
@@ -67,61 +126,6 @@ export default [
             component: () => import('@/views/acls/UserLoginACL/UserLoginACLCreateUpdate.vue'),
             hidden: true,
             meta: { title: i18n.t('UserLoginACLUpdate'), activeMenu: '' }
-          }
-        ]
-      },
-      {
-        path: 'cmd-acls',
-        component: empty,
-        redirect: {
-          name: 'CommandFilterACLList'
-        },
-        name: 'CmdACL',
-        meta: {
-          title: i18n.t('CommandFilterACLs'),
-          menuTitle: i18n.t('CommandFilter'),
-          app: 'acls',
-          resource: 'commandfilteracl'
-        },
-        children: [
-          // Command Filter ACL
-          {
-            path: '',
-            name: 'CommandFilterACLList',
-            component: () => import('@/views/acls/CommandFilterACL/index'),
-            hidden: true,
-            meta: {
-              title: i18n.tc('CommandFilterACL', 2),
-              menuTitle: i18n.t('CommandFilter'),
-              activeMenu: ''
-            }
-          },
-          {
-            path: 'create',
-            name: 'CommandFilterACLCreate',
-            component: () =>
-              import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclCreateUpdate'),
-            hidden: true,
-            meta: { title: i18n.t('CommandFilterACLCreate'), activeMenu: '' }
-          },
-          {
-            path: ':id',
-            name: 'CommandFilterACLDetail',
-            component: () =>
-              import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclDetail/index'),
-            hidden: true,
-            meta: {
-              title: i18n.t('CommandFilterACLDetail'),
-              activeMenu: ''
-            }
-          },
-          {
-            path: ':id/update',
-            name: 'CommandFilterACLUpdate',
-            component: () =>
-              import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclCreateUpdate'),
-            hidden: true,
-            meta: { title: i18n.t('CommandFilterACLUpdate'), activeMenu: '' }
           }
         ]
       },
@@ -310,7 +314,7 @@ export default [
             hidden: true,
             meta: {
               title: i18n.t('CommandGroupDetail'),
-              activeMenu: '/console/perms/acls/cmd-acls'
+              activeMenu: '/console/cmd-acls'
             }
           },
           {

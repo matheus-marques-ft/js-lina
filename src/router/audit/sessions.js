@@ -1,68 +1,52 @@
 import i18n from '@/i18n/i18n'
 import empty from '@/layout/empty'
 
-export default [
-  {
-    path: 'sessions',
-    redirect: {
-      name: 'SessionList'
-    },
-    component: empty,
-    meta: {
-      title: i18n.t('Sessions'),
-      app: 'terminal',
-      resource: 'session',
-      expanded: true,
-      icon: 'session',
-      permissions: ['terminal.view_session']
-    },
-    children: [
-      {
-        path: '',
-        name: 'SessionList',
-        component: () => import('@/views/sessions/SessionList'),
-        meta: {
-          title: i18n.t('SessionList'),
-          permissions: ['terminal.view_session']
-        }
-      },
-      {
-        path: ':id',
-        name: 'SessionDetail',
-        component: () => import('@/views/sessions/SessionDetail'),
-        hidden: true,
-        meta: { title: i18n.t('SessionDetail') }
+// Promoted to a direct top-level entry in audit/index.js (the old "/audit/sessions"
+// wrapper that only existed to hold this + Commands + FtpLog + OnlineSession is gone -
+// Commands is now a tab inside SessionList itself, and OnlineSession moved into the new
+// "Logs de usuários" composite page).
+export const SessionsRoute = {
+  path: 'sessions',
+  redirect: {
+    name: 'SessionList'
+  },
+  component: empty,
+  meta: {
+    // Renamed from "Registro de sessão"/"Sessions".
+    title: i18n.t('Logs de sessão'),
+    app: 'terminal',
+    resource: 'session',
+    expanded: true,
+    icon: 'session',
+    permissions: ['terminal.view_session']
+  },
+  children: [
+    {
+      path: '',
+      name: 'SessionList',
+      component: () => import('@/views/sessions/SessionList'),
+      meta: {
+        title: i18n.t('Logs de sessão'),
+        permissions: ['terminal.view_session']
       }
-    ]
-  },
-  {
-    path: 'command',
-    name: 'CommandList',
-    component: () => import('@/views/sessions/CommandList/index'),
-    meta: {
-      title: i18n.t('SessionCommands'),
-      icon: 'command',
-      permissions: ['terminal.view_command']
+    },
+    {
+      path: ':id',
+      name: 'SessionDetail',
+      component: () => import('@/views/sessions/SessionDetail'),
+      hidden: true,
+      meta: { title: i18n.t('SessionDetail') }
     }
-  },
-  {
-    path: 'ftp',
-    name: 'FtpLog',
-    component: () => import('@/views/sessions/FTPLogList'),
-    meta: {
-      title: i18n.t('FileTransfer'),
-      icon: 'file-transfer',
-      permissions: ['audits.view_ftplog']
-    }
-  },
-  {
-    path: '/audit/online-user-session',
-    component: () => import('@/views/sessions/OnlineSession/OnlineSessionList'),
-    name: 'OnlineSession',
-    meta: {
-      icon: 'device',
-      title: i18n.t('OnlineSession'),
-      permissions: ['audits.view_usersession']
-    }
+  ]
+}
+
+export const FtpLogRoute = {
+  path: 'ftp',
+  name: 'FtpLog',
+  component: () => import('@/views/sessions/FTPLogList'),
+  meta: {
+    title: i18n.t('FileTransfer'),
+    icon: 'file-transfer',
+    permissions: ['audits.view_ftplog']
   }
-]
+}

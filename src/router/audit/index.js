@@ -1,7 +1,7 @@
 import Layout from '@/layout'
 import i18n from '@/i18n/i18n'
 
-import SessionRoutes from './sessions'
+import { SessionsRoute, FtpLogRoute } from './sessions'
 import LogRoutes from './audits'
 import JobRoutes from './jobs'
 import ReportsRoutes from './reports'
@@ -35,22 +35,34 @@ export default {
       }
     },
     {
-      path: '/audit/sessions',
-      component: empty,
-      name: 'AuditSessions',
-      redirect: '/audit/sessions/sessions',
-      meta: {
-        title: i18n.t('SessionsAudit'),
-        icon: 'session',
-        permissions: []
-      },
-      children: SessionRoutes
+      ...SessionsRoute,
+      path: '/audit/sessions'
     },
     {
+      ...FtpLogRoute,
+      path: '/audit/ftp'
+    },
+    {
+      path: '/audit/user-logs',
+      component: () => import('@/views/audits/UserLogs/index.vue'),
+      name: 'AuditUserLogs',
+      meta: {
+        title: i18n.t('Logs de usuários'),
+        icon: 'user-o',
+        permissions: [
+          'audits.view_usersession | audits.view_userloginlog | ' +
+            'audits.view_passwordchangelog | audits.view_operatelog'
+        ]
+      }
+    },
+    {
+      // No longer a visible menu entry (its 3 resources are now tabs inside the "Logs de
+      // usuários" page above) - kept registered and hidden as a zero-cost safety net.
       path: '/audit/audits',
       component: empty,
       redirect: '',
       name: 'Audits',
+      hidden: true,
       meta: {
         title: i18n.t('LogsAudit'),
         icon: 'log',

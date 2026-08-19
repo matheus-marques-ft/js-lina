@@ -19,7 +19,9 @@ export default [
         path: '',
         component: () => import('@/views/labels/LabelList.vue'),
         name: 'LabelList',
-        meta: { title: i18n.t('TagList') }
+        // menuTitle wins for the sidebar label once this collapses to a single flat link
+        // (its only visible child), now that it's a direct top-level entry.
+        meta: { title: i18n.t('TagList'), menuTitle: i18n.t('Tags') }
       },
       {
         path: 'create',

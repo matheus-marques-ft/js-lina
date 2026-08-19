@@ -2,6 +2,50 @@ import i18n from '@/i18n/i18n'
 import empty from '@/layout/empty'
 import XPackRoutes from './xpack'
 
+// Promoted to its own top-level "Domínios" entry in console/index.js instead of living
+// nested inside the Assets group - exported separately so it can be spread in there.
+export const ZonesRoute = {
+  path: 'zones',
+  component: empty,
+  redirect: '',
+  meta: {
+    resource: 'zone',
+    icon: 'zone',
+    permissions: ['assets.view_zone']
+  },
+  children: [
+    {
+      path: '',
+      name: 'ZoneList',
+      component: () => import('@/views/assets/Zone/ZoneList.vue'),
+      // menuTitle wins for the sidebar label once this collapses to a single flat link
+      // (its only visible child) - keeps the page's own title ("ZoneList") intact.
+      meta: { title: i18n.t('ZoneList'), menuTitle: i18n.t('Domínios') }
+    },
+    {
+      path: 'create',
+      name: 'ZoneCreate',
+      component: () => import('@/views/assets/Zone/ZoneCreateUpdate.vue'),
+      hidden: true,
+      meta: { title: i18n.t('ZoneCreate') }
+    },
+    {
+      path: ':id/update',
+      name: 'ZoneUpdate',
+      component: () => import('@/views/assets/Zone/ZoneCreateUpdate.vue'),
+      hidden: true,
+      meta: { title: i18n.t('ZoneUpdate') }
+    },
+    {
+      path: ':id',
+      name: 'ZoneDetail',
+      component: () => import('@/views/assets/Zone/ZoneDetail'),
+      hidden: true,
+      meta: { title: i18n.t('Zone') }
+    }
+  ]
+}
+
 export default [
   {
     path: 'assets',
@@ -220,45 +264,6 @@ export default [
         component: () => import('@/views/assets/Asset/AssetCreateUpdate/CustomCreateUpdate.vue'),
         hidden: true,
         meta: { title: i18n.t('CustomUpdate'), activeMenu: '/console/assets/assets' }
-      }
-    ]
-  },
-  {
-    path: 'zones',
-    component: empty,
-    redirect: '',
-    meta: {
-      resource: 'zone',
-      icon: 'zone',
-      permissions: ['assets.view_zone']
-    },
-    children: [
-      {
-        path: '',
-        name: 'ZoneList',
-        component: () => import('@/views/assets/Zone/ZoneList.vue'),
-        meta: { title: i18n.t('ZoneList') }
-      },
-      {
-        path: 'create',
-        name: 'ZoneCreate',
-        component: () => import('@/views/assets/Zone/ZoneCreateUpdate.vue'),
-        hidden: true,
-        meta: { title: i18n.t('ZoneCreate') }
-      },
-      {
-        path: ':id/update',
-        name: 'ZoneUpdate',
-        component: () => import('@/views/assets/Zone/ZoneCreateUpdate.vue'),
-        hidden: true,
-        meta: { title: i18n.t('ZoneUpdate') }
-      },
-      {
-        path: ':id',
-        name: 'ZoneDetail',
-        component: () => import('@/views/assets/Zone/ZoneDetail'),
-        hidden: true,
-        meta: { title: i18n.t('Zone') }
       }
     ]
   },

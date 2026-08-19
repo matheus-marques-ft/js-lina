@@ -4,8 +4,9 @@ import empty from '@/layout/empty'
 import store from '@/store'
 
 import UsersMenu from './users'
-import AssetsMenu from './assets'
+import AssetsMenu, { ZonesRoute } from './assets'
 import PermsMenu from './perms'
+import { CmdAclsRoute } from './acls'
 import AccountMenus from './accounts'
 import LabelMenus from './labels'
 
@@ -57,6 +58,10 @@ export default {
       children: AssetsMenu
     },
     {
+      ...ZonesRoute,
+      path: '/console/zones'
+    },
+    {
       path: '/console/accounts',
       component: empty,
       name: 'Accounts',
@@ -71,7 +76,8 @@ export default {
       component: empty,
       name: 'Perms',
       meta: {
-        title: i18n.t('MenuPermissions'),
+        // Renamed from the old "ativos de autorização" wording.
+        title: i18n.t('Permissões'),
         icon: 'permission',
         resource: 'assetpermission',
         permissions: []
@@ -79,14 +85,12 @@ export default {
       children: PermsMenu
     },
     {
-      path: '/console/more',
-      component: empty,
-      name: 'ConsoleMore',
-      meta: {
-        title: i18n.t('MenuMore'),
-        icon: 'more'
-      },
-      children: LabelMenus
-    }
+      ...CmdAclsRoute,
+      path: '/console/cmd-acls'
+    },
+    // Was nested one level inside a generic "/console/more" (ConsoleMore) wrapper that
+    // existed solely to hold this one child - hoisted to a direct top-level entry, wrapper
+    // removed.
+    ...LabelMenus
   ]
 }

@@ -39,16 +39,7 @@ export default {
     icon: 'console',
     view: ['console', 'pam', 'audit', 'workbench'],
     type: 'view',
-    permissions: [],
-    // Each merged-in view's own title, so the sidebar can render a section header per
-    // category without needing new i18n keys - these are the exact same already-translated
-    // strings each view's own root used to show in the old per-view switcher.
-    categoryTitles: {
-      console: consoleView.meta.title,
-      pam: pamView.meta.title,
-      audit: auditView.meta.title,
-      workbench: workbenchView.meta.title
-    }
+    permissions: []
   },
   children: [
     ...prepareCategoryChildren(consoleView, 'console'),
