@@ -16,6 +16,7 @@ export default [
     meta: {
       title: i18n.t('TicketList'),
       menuTitle: i18n.t('Ordens de tarefas'),
+      icon: 'ticket-list',
       permissions: ['audits.view_joblog']
     }
   }

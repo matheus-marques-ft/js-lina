@@ -16,6 +16,7 @@ export const CmdAclsRoute = {
   meta: {
     title: i18n.t('CommandFilterACLs'),
     menuTitle: i18n.t('CommandFilter'),
+    icon: 'command',
     app: 'acls',
     resource: 'commandfilteracl'
   },
@@ -25,7 +26,12 @@ export const CmdAclsRoute = {
       path: '',
       name: 'CommandFilterACLList',
       component: () => import('@/views/acls/CommandFilterACL/index'),
-      hidden: true,
+      // Must stay visible: with every child of CmdAclsRoute hidden, SidebarItem's
+      // hasOneShowingChild() falls into its zero-visible-children branch, which
+      // synthesizes onlyOneChild as a copy of the PARENT wrapper (level 2, with its own
+      // `children` truthy) - that combination trips getItemTitle()'s uppercase rule
+      // (meant for un-collapsed level-2 group headers), rendering "FILTRAGEM DE COMANDO"
+      // in caps with no icon instead of collapsing to this leaf's own title/icon.
       // permissions is explicit because this node is level 3: cleanRoute() only inherits
       // the parent's resource for level 4+ nodes, so without this it recalculates from
       // its own (empty) path and produces an unmatchable permission, hiding the item.
@@ -71,7 +77,14 @@ export default [
     path: 'acls',
     name: 'ACLList',
     component: empty,
-    redirect: 'login-acls',
+    // Was a bare relative string ('login-acls') - that resolved fine while this node's own
+    // path was still relative (nested under Perms), but broke once the Fase 3.5 promotion
+    // made this node's path absolute (a direct console child): Vue Router resolves a
+    // non-'/' redirect string against the PARENT route's path, not this route's own, so it
+    // was landing on '/console/login-acls' instead of '/console/perms/acls/login-acls'.
+    // Name-based redirect sidesteps path nesting entirely - same pattern already used by
+    // every sibling wrapper in this codebase (Account, ConsoleLabels, AccountTemplate...).
+    redirect: { name: 'UserLoginACLList' },
     meta: {
       title: i18n.t('ACLs'),
       icon: 'acl',
