@@ -28,6 +28,13 @@ export default {
       path: '/audit/dashboard',
       component: () => import('@/views/dashboard/Audit/index'),
       name: 'AuditDashboard',
+      // permissions: [] never restricts (see checkPermission), so this always survived
+      // filterPermedRoutes regardless of role - a user with zero real Audit access still
+      // got an "AUDITORIA" category header with only this item inside. Hidden instead
+      // whenever the user has no org where they hold rbac.view_audit (same signal already
+      // used for showNavSwitcher above) - when this is the only surviving item, the whole
+      // category disappears too via groupedSidebarItems' existing empty-category filter.
+      hidden: () => store.getters.auditOrgs.length === 0,
       meta: {
         icon: 'dashboard',
         title: i18n.t('Dashboard'),
@@ -96,7 +103,7 @@ export default {
         title: i18n.t('Report'),
         icon: 'report',
         permissions: [],
-        licenseRequired: true
+        licenseRequired: false
       },
       children: ReportsRoutes
     }

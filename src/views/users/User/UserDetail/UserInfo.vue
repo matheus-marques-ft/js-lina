@@ -256,6 +256,11 @@ export default {
       relationConfig: {
         icon: 'fa-user',
         title: this.$t('UserGroups'),
+        // Without this, RelationCard's `iDisabled` falls back to gating on
+        // currentOrgIsRoot only (no RBAC check at all) - every other action button on
+        // this same page (Activate, Reset Password, etc.) already gates on
+        // users.change_user; this one was missing it.
+        disabled: !vm.$hasPerm('users.change_user'),
         objectsAjax: {
           url: '/api/v1/users/groups/?fields_size=mini&order=name'
         },

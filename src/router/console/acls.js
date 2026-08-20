@@ -77,6 +77,12 @@ export default [
     path: 'acls',
     name: 'ACLList',
     component: empty,
+    // Hidden per user request: all 5 of its visible children (login-acls,
+    // login-asset-acls, data-masking-rules, clipboard-acls, connect-method-acls) require
+    // `licenseRequired: true`, which this deployment doesn't have - it currently has
+    // nothing to show. Re-enable when those enterprise ACL types (or the license) are
+    // available.
+    hidden: false,
     // Was a bare relative string ('login-acls') - that resolved fine while this node's own
     // path was still relative (nested under Perms), but broke once the Fase 3.5 promotion
     // made this node's path absolute (a direct console child): Vue Router resolves a
@@ -102,7 +108,7 @@ export default [
           app: 'acls',
           resource: 'loginacl',
           disableOrgsChange: true,
-          licenseRequired: true
+          licenseRequired: false
         },
         children: [
           {
@@ -155,7 +161,7 @@ export default [
         name: 'LoginAssetACLs',
         meta: {
           title: i18n.t('BaseAssetACLs'),
-          licenseRequired: true,
+          licenseRequired: false,
           app: 'acls',
           resource: 'loginassetacl'
         },
@@ -202,7 +208,7 @@ export default [
         name: 'DataMaskingRules',
         meta: {
           title: i18n.t('DataMasking'),
-          licenseRequired: true,
+          licenseRequired: false,
           app: 'acls',
           resource: 'datamaskingrule'
         },
@@ -249,7 +255,7 @@ export default [
         name: 'ClipboardACLs',
         meta: {
           title: i18n.t('ClipboardACLs'),
-          licenseRequired: true,
+          licenseRequired: false,
           app: 'acls',
           resource: 'clipboardacl'
         },
@@ -356,7 +362,7 @@ export default [
         name: 'ConnectMethodACL',
         meta: {
           title: i18n.t('ConnectMethodList'),
-          licenseRequired: true,
+          licenseRequired: false,
           app: 'acls',
           disableOrgsChange: true,
           resource: 'connectmethodacl'

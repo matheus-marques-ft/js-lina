@@ -31,6 +31,14 @@ export default {
       path: '/console/dashboard',
       component: () => import('@/views/dashboard/Console/index.vue'),
       name: 'AdminDashboard',
+      // permissions: [] never restricts (see checkPermission), so this always survived
+      // filterPermedRoutes regardless of role - a user with zero real Console access still
+      // got a "GERENCIAMENTO" category header with only this item inside. Hidden instead
+      // whenever the user has no org where they hold rbac.view_console (same signal
+      // already used for showNavSwitcher above) - when this is the only surviving item,
+      // the category disappears too via groupedSidebarItems' existing empty-category
+      // filter, no extra logic needed there.
+      hidden: () => store.getters.consoleOrgs.length === 0,
       meta: {
         icon: 'dashboard',
         title: i18n.t('Dashboard'),

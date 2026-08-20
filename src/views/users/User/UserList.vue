@@ -287,6 +287,11 @@ export default {
           actions: {
             formatterArgs: {
               hasDelete: hasDelete,
+              // Defaults to always-on in ActionsFormatter and was never overridden here;
+              // duplicating a user account isn't a supported operation (its default
+              // clone target even routes to Group creation, not User creation) - disabled
+              // outright rather than half-fixing a feature nobody uses correctly.
+              hasClone: false,
               canUpdate: ({ row }) => {
                 return (
                   this.$hasPerm('users.change_user') &&

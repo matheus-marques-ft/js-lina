@@ -28,6 +28,13 @@ export default {
       path: '/pam/dashboard',
       component: () => import('@/views/dashboard/Pam/index'),
       name: 'PamDashboard',
+      // permissions: [] never restricts (see checkPermission), so this always survived
+      // filterPermedRoutes regardless of role - a user with zero real PAM access still got
+      // a "PAM" category header with only this item inside. Hidden instead whenever the
+      // user has no org where they hold rbac.view_pam (same signal already used for
+      // showNavSwitcher above) - when this is the only surviving item, the whole category
+      // disappears too via groupedSidebarItems' existing empty-category filter.
+      hidden: () => store.getters.pamOrgs.length === 0,
       meta: {
         icon: 'dashboard',
         title: i18n.t('Dashboard'),

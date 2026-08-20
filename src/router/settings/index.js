@@ -61,7 +61,7 @@ export default {
         app: 'orgs',
         resource: 'organization',
         permissions: ['orgs.view_organization'],
-        licenseRequired: true
+        licenseRequired: false
       },
       children: [
         {
@@ -118,7 +118,7 @@ export default {
         permissions: ['rbac.view_orgrole | rbac.view_systemrole'],
         app: 'rbac',
         disableOrgsChange: true,
-        licenseRequired: true,
+        licenseRequired: false,
         icon: 'role'
       },
       children: [
@@ -533,7 +533,7 @@ export default {
       meta: {
         title: i18n.t('InterfaceSettings'),
         icon: 'face',
-        licenseRequired: true,
+        licenseRequired: false,
         permissions: ['settings.change_interface']
       }
     },
