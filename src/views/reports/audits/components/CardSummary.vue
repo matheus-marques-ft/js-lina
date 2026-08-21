@@ -48,7 +48,11 @@ export default {
         {
           title: this.$t('LoginNum'),
           body: {
-            route: { name: `LoginLogList` },
+            // Was `{ name: 'LoginLogList' }` - a leftover pointing at the old standalone
+            // route (now hidden, /audit/audits/login-logs). The 3 resources live as tabs
+            // inside "Logs de usuários" (AuditUserLogs) now; retarget there with the tab
+            // name UserLogs/index.vue expects via params.activeMenu.
+            route: { name: `AuditUserLogs`, params: { activeMenu: 'LoginLogList' } },
             count: this.data.total_count_user_login_logs,
             disabled: !this.$hasPerm('audits.view_userloginlog')
           }
@@ -56,7 +60,7 @@ export default {
         {
           title: this.$t('OperationLogNum'),
           body: {
-            route: { name: `OperateLogList` },
+            route: { name: `AuditUserLogs`, params: { activeMenu: 'OperateLogList' } },
             count: this.data.total_count_operate_logs,
             disabled: !this.$hasPerm('audits.view_operatelog')
           }
@@ -64,7 +68,9 @@ export default {
         {
           title: this.$t('DeclassificationLogNum'),
           body: {
-            route: { name: `PasswordChangeLog` },
+            // Was `{ name: 'PasswordChangeLog' }` - wrong name too (the tab is
+            // 'PasswordChangeLogList', see UserLogs/index.vue's submenu).
+            route: { name: `AuditUserLogs`, params: { activeMenu: 'PasswordChangeLogList' } },
             count: this.data.total_count_change_password_logs,
             disabled: !this.$hasPerm('audits.view_passwordchangelog')
           }

@@ -133,12 +133,13 @@ $single-menu-height: 38px;
 
   .group-title {
     color: var(--menu-text);
-    // Group title styling
+    // Group title styling - matches .category-title's font-size/weight (NavLeft/index.vue)
+    // for visual consistency between the two section-header tiers.
     & > span {
       display: block;
       padding: 10px 0 2px 20px;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
       line-height: 25px;
       letter-spacing: 0.07em;
     }

@@ -36,14 +36,18 @@ export default [
         name: 'LabelCreate',
         component: () => import('@/views/labels/LabelCreateUpdate.vue'),
         hidden: true,
-        meta: { title: i18n.t('TagCreate') }
+        // Explicit because this is level 3 without it: cleanRoute()'s auto-computed default
+        // derives the resource from this node's own path ('create'/':id'+'update'), producing
+        // unmatchable permissions like 'labels.add_create'/'labels.change_update' - silently
+        // dropping the route from the tree (404 on "Criar tag"/"Editar tag").
+        meta: { title: i18n.t('TagCreate'), permissions: ['labels.add_label'] }
       },
       {
         path: ':id/update',
         name: 'LabelUpdate',
         component: () => import('@/views/labels/LabelCreateUpdate.vue'),
         hidden: true,
-        meta: { title: i18n.t('TagUpdate') }
+        meta: { title: i18n.t('TagUpdate'), permissions: ['labels.change_label'] }
       }
     ]
   }

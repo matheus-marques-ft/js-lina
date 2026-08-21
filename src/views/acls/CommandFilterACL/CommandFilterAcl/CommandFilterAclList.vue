@@ -1,6 +1,11 @@
 <template>
   <div>
-    <ListTable ref="listTable" :header-actions="headerActions" :table-config="tableConfig" />
+    <ListTable
+      ref="listTable"
+      :create-drawer="createDrawer"
+      :header-actions="headerActions"
+      :table-config="tableConfig"
+    />
   </div>
 </template>
 
@@ -16,6 +21,13 @@ export default {
   },
   data() {
     return {
+      // Without this, DrawerListTable's default onCreate falls back to guessing the create
+      // component from the current route name (replacing "List" with "Create") - but this
+      // page's actual matched route is "CmdACL" (the tab-page wrapper, not a "...List" named
+      // route), so that guess never matches and silently opens an empty drawer instead of
+      // this create form. CommandGroupList.vue (the working sibling tab) already does this.
+      createDrawer: () =>
+        import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclCreateUpdate.vue'),
       helpMsg: this.$t('CommandFilterACLHelpMsg'),
       tableConfig: {
         url: '/api/v1/acls/command-filter-acls/',

@@ -43,9 +43,6 @@
       <li class="header-item active-menu">
         <Help />
       </li>
-      <li v-if="!isMobile" class="header-item language">
-        <Language />
-      </li>
       <li class="header-item header-profile">
         <AccountDropdown />
       </li>
@@ -64,7 +61,6 @@ import Tickets from './Tickets'
 import Organization from './Organization'
 import SystemSetting from './SystemSetting'
 import Logo from '../NavLeft/Logo'
-import Language from './Language'
 import Search from './Search'
 
 export default {
@@ -78,7 +74,6 @@ export default {
     SiteMessages,
     SystemSetting,
     Logo,
-    Language,
     Search
   },
   data() {

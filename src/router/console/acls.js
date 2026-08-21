@@ -3,6 +3,67 @@ import empty from '@/layout/empty'
 
 const globalSubmenu = () => import('@/layout/globalOrg.vue')
 
+// Moved in from perms.js: user asked for "Permissões de acesso" to live inside "Controle
+// de acesso" instead of as its own sibling entry. Path stays absolute/unchanged -
+// PermUser.vue:217 hard-codes a match on '/console/perms/asset-permissions/' regardless of
+// where this sits in the menu tree.
+export const AssetPermissionsRoute = {
+  path: '/console/perms/asset-permissions',
+  name: 'AssetPermissions',
+  component: empty,
+  redirect: {
+    name: 'AssetPermissionList'
+  },
+  meta: {
+    title: i18n.t('BaseAssetPermission'),
+    resource: 'assetpermission',
+    icon: 'permission'
+  },
+  children: [
+    {
+      path: '',
+      name: 'AssetPermissionList',
+      component: () => import('@/views/perms/AssetPermission/AssetPermissionList'),
+      meta: {
+        title: i18n.t('Permissões de acesso'),
+        permissions: ['perms.view_assetpermission']
+      }
+    },
+    {
+      path: 'create',
+      component: () => import('@/views/perms/AssetPermission/AssetPermissionCreateUpdate'),
+      name: 'AssetPermissionCreate',
+      hidden: true,
+      meta: {
+        title: i18n.t('AssetPermissionCreate'),
+        action: 'create',
+        permissions: ['perms.add_assetpermission']
+      }
+    },
+    {
+      path: ':id/update',
+      component: () => import('@/views/perms/AssetPermission/AssetPermissionCreateUpdate.vue'),
+      name: 'AssetPermissionUpdate',
+      hidden: true,
+      meta: {
+        title: i18n.t('AssetPermissionUpdate'),
+        action: 'update',
+        permissions: ['perms.change_assetpermission']
+      }
+    },
+    {
+      path: ':id',
+      component: () => import('@/views/perms/AssetPermission/AssetPermissionDetail/index.vue'),
+      name: 'AssetPermissionDetail',
+      hidden: true,
+      meta: {
+        title: i18n.t('AssetPermissionDetail'),
+        permissions: ['perms.view_assetpermission']
+      }
+    }
+  ]
+}
+
 // Promoted to its own top-level "Filtragem de comandos" entry in console/index.js instead
 // of living nested inside the ACLs bucket alongside 5 unrelated ACL types - exported
 // separately so it can be spread in there.
@@ -97,6 +158,7 @@ export default [
       permissions: []
     },
     children: [
+      AssetPermissionsRoute,
       {
         path: 'login-acls',
         component: globalSubmenu,
@@ -105,6 +167,7 @@ export default [
         },
         meta: {
           title: i18n.t('UserLoginACLs'),
+          icon: 'login',
           app: 'acls',
           resource: 'loginacl',
           disableOrgsChange: true,
@@ -161,6 +224,7 @@ export default [
         name: 'LoginAssetACLs',
         meta: {
           title: i18n.t('BaseAssetACLs'),
+          icon: 'connect',
           licenseRequired: false,
           app: 'acls',
           resource: 'loginassetacl'
@@ -208,6 +272,7 @@ export default [
         name: 'DataMaskingRules',
         meta: {
           title: i18n.t('DataMasking'),
+          icon: 'eye',
           licenseRequired: false,
           app: 'acls',
           resource: 'datamaskingrule'
@@ -255,6 +320,7 @@ export default [
         name: 'ClipboardACLs',
         meta: {
           title: i18n.t('ClipboardACLs'),
+          icon: 'copy',
           licenseRequired: false,
           app: 'acls',
           resource: 'clipboardacl'
@@ -362,6 +428,7 @@ export default [
         name: 'ConnectMethodACL',
         meta: {
           title: i18n.t('ConnectMethodList'),
+          icon: 'link',
           licenseRequired: false,
           app: 'acls',
           disableOrgsChange: true,
