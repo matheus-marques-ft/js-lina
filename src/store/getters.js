@@ -31,7 +31,13 @@ const getters = {
   protocolMap: (state) => state.table.protocolMap,
   currentUserIsSuperAdmin: (state) => state.users.isSuperAdmin,
   currentUserIsAdmin: (state) => state.users.isAdmin,
-  hasValidLicense: (state) => state.settings.hasValidLicense,
+  // Fork policy: no real XPack license tier here, and every Enterprise/license gate gets
+  // removed (frontend and backend alike, see usePermission.js's hasLicense). This getter
+  // used to mirror state.settings.hasValidLicense, which only ever flips true if the
+  // backend's XPACK_ENABLED public setting is truthy (permanently false in this fork) -
+  // that silently kept an "Upgrade Enterprise Edition" blur mask on AccountChangeSecret/
+  // RiskDetect (via TabPage's `disabled` prop) even with every RBAC permission granted.
+  hasValidLicense: () => true,
   isSystemAdmin: (state) =>
     state.users.profile.system_roles.some((i) => i?.id === '00000000-0000-0000-0000-000000000001'),
   sqlQueryCounter: (state) => state.common.sqlQueryCounter,

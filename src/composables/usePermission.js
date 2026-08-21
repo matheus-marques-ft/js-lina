@@ -20,8 +20,12 @@ export function hasCurrentResAction(route, action) {
   return hasPermission(permsRequired)
 }
 
-export function hasLicense(store) {
-  return store.getters.hasValidLicense
+// Always true in this fork: there's no real XPack license tier, and the fork policy is to
+// remove every Enterprise/license gate (frontend and backend alike) rather than let this
+// mirror the backend's always-false XPACK_LICENSE_IS_VALID and silently hide UI (org
+// switcher, LDAP HA sync, SFTP object storage, cloud sync details, etc).
+export function hasLicense() {
+  return true
 }
 
 export function isRootOrg(store) {

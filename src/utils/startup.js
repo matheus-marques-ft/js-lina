@@ -270,6 +270,17 @@ export async function startup({ to, from, next }) {
     await store.dispatch('assets/getAssetCategories')
   } catch (e) {
     console.error('Startup error: ', e)
+    // checkLogin's rejection (unauthenticated - profile fetch 401'd) means everything after
+    // it in the try block never ran, including generatePageRoutes() - so no view routes
+    // (e.g. /workbench/home) are registered yet. Falling through to `return true` below would
+    // tell the caller navigation is fine, letting downstream guards (e.g. this route's own
+    // beforeEnter computing a preferred view) try to redirect into one of those unregistered
+    // routes - producing a "No match found for location" loop instead of ever reaching the
+    // login page. Cancel navigation instead; the axios response interceptor's ifUnauthorized
+    // already scheduled a hard redirect to LOGIN_PATH for this exact 401, independently.
+    if (String(e).includes('No profile get')) {
+      return false
+    }
   }
   return true
 }

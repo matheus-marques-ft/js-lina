@@ -43,7 +43,11 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/console',
+    // Always land on the workbench overview after login, per explicit user request - was
+    // '/console' before. Note this static redirect is resolved before vue-router ever
+    // descends into the child route below, so that child's own beforeEnter/getPropView
+    // fallback (kept for '' being directly deep-linked) never actually runs for bare '/'.
+    redirect: '/workbench/home',
     meta: {
       type: 'view',
       view: 'home',

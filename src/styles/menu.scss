@@ -134,11 +134,25 @@ $single-menu-height: 38px;
   .group-title {
     color: var(--menu-text);
     // Group title styling - matches .category-title's font-size/weight (NavLeft/index.vue)
-    // for visual consistency between the two section-header tiers.
+    // for visual consistency between the two section-header tiers. Bumped 12px->13px
+    // alongside .category-title as part of the app-wide +size pass, kept in lockstep so
+    // the two header tiers don't drift apart again.
+    // Divider line to match .category-title (NavLeft/index.vue) - this tier never had one,
+    // which is why headers like "Controle de acesso"/"Relatório" (both render via this same
+    // class, not el-sub-menu, since they're direct 'app'-type children with >1 visible child)
+    // looked inconsistent with the rest of the menu.
+    margin-top: 8px;
+    border-top: 1px solid var(--menu-border, var(--color-border));
+
+    &:first-child {
+      margin-top: 0;
+      border-top: 0;
+    }
+
     & > span {
       display: block;
       padding: 10px 0 2px 20px;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       line-height: 25px;
       letter-spacing: 0.07em;

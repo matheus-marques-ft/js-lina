@@ -58,7 +58,10 @@ export default {
     }
   },
   mounted() {
-    const requested = this.$route.params.activeMenu
+    // Route has no dynamic segment for this, so a `params.activeMenu` value never survives
+    // navigation (doesn't land in the path, doesn't land in the URL at all) - query is what
+    // actually arrives, and gives dashboard links a bookmarkable ?tab=... URL as a bonus.
+    const requested = this.$route.query.tab
     if (this.config.submenu.some((item) => item.name === requested)) {
       this.config.activeMenu = requested
     }

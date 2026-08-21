@@ -52,8 +52,10 @@ export default {
     }
   },
   mounted() {
-    const params = this.$route.params
-    switch (params.activeMenu) {
+    // This route's own path has no dynamic segment, so params.activeMenu never actually
+    // arrives here - query.tab is what CardSummary.vue's dashboard links really send.
+    const params = this.$route.query
+    switch (params.tab) {
       case 'OnlineList':
         this.config.activeMenu = 'OnlineList'
         break

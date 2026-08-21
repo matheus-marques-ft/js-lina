@@ -153,7 +153,15 @@ $mobileHeight: 40px;
 $origin-color: #ffffff;
 
 .left-side-wrapper {
-  height: 100%;
+  // No explicit height here - this element IS .sidebar-container (layout/index.vue passes
+  // that class in, and NavLeft has a single root node, so Vue merges both classes onto the
+  // same div). sidebar.scss's .sidebar-container is `position: fixed; top: $headerHeight;
+  // bottom: 0` - top+bottom alone already size this box correctly against the viewport. A
+  // `height: 100%` here resolves against the viewport too (fixed positioning), making the
+  // box exactly one viewport tall STARTING FROM top - i.e. it overflows $headerHeight worth
+  // of pixels past the actual bottom of the screen, pushing .nav-footer/the hamburger button
+  // below the fold. flex still works fine without it: flexbox distributes free space within
+  // whatever height the box ends up with, however that height was determined.
   display: flex;
   flex-direction: column;
 
@@ -256,7 +264,7 @@ $origin-color: #ffffff;
 
   & > span {
     padding-top: 14px !important;
-    font-size: 12px !important;
+    font-size: 13px !important;
     font-weight: 700 !important;
     text-transform: uppercase;
   }

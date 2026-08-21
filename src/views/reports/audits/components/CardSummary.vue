@@ -48,11 +48,12 @@ export default {
         {
           title: this.$t('LoginNum'),
           body: {
-            // Was `{ name: 'LoginLogList' }` - a leftover pointing at the old standalone
-            // route (now hidden, /audit/audits/login-logs). The 3 resources live as tabs
-            // inside "Logs de usuários" (AuditUserLogs) now; retarget there with the tab
-            // name UserLogs/index.vue expects via params.activeMenu.
-            route: { name: `AuditUserLogs`, params: { activeMenu: 'LoginLogList' } },
+            // AuditUserLogs's own path ('/audit/user-logs') has no dynamic segment, so a
+            // `params` value here never lands anywhere - not in the path, not as a query
+            // string, and $route.params.activeMenu comes back empty on navigation. Query is
+            // the pattern that actually works (mirrors BaseList.vue's iNew.query.tab read);
+            // also gives the bookmarkable ?tab=... URL shape that was asked for.
+            route: { name: `AuditUserLogs`, query: { tab: 'LoginLogList' } },
             count: this.data.total_count_user_login_logs,
             disabled: !this.$hasPerm('audits.view_userloginlog')
           }
@@ -60,7 +61,7 @@ export default {
         {
           title: this.$t('OperationLogNum'),
           body: {
-            route: { name: `AuditUserLogs`, params: { activeMenu: 'OperateLogList' } },
+            route: { name: `AuditUserLogs`, query: { tab: 'OperateLogList' } },
             count: this.data.total_count_operate_logs,
             disabled: !this.$hasPerm('audits.view_operatelog')
           }
@@ -68,9 +69,7 @@ export default {
         {
           title: this.$t('DeclassificationLogNum'),
           body: {
-            // Was `{ name: 'PasswordChangeLog' }` - wrong name too (the tab is
-            // 'PasswordChangeLogList', see UserLogs/index.vue's submenu).
-            route: { name: `AuditUserLogs`, params: { activeMenu: 'PasswordChangeLogList' } },
+            route: { name: `AuditUserLogs`, query: { tab: 'PasswordChangeLogList' } },
             count: this.data.total_count_change_password_logs,
             disabled: !this.$hasPerm('audits.view_passwordchangelog')
           }
@@ -82,7 +81,7 @@ export default {
         {
           title: this.$t('OnlineSessions'),
           body: {
-            route: { name: `SessionList`, params: { activeMenu: 'OnlineList' } },
+            route: { name: `SessionList`, query: { tab: 'OnlineList' } },
             count: this.data.total_count_online_sessions,
             disabled: !this.$hasPerm('terminal.view_session')
           }
@@ -90,11 +89,10 @@ export default {
         {
           title: this.$t('HistoricalSessionNum'),
           body: {
-            route: {
-              name: `SessionList`,
-              params: { activeMenu: 'OfflineList' },
-              query: { tab: 'OfflineList' }
-            },
+            // Was also sending `params: { activeMenu: 'OfflineList' }` - dead weight, since
+            // this route's path has no dynamic segment for it; query.tab is what SessionList
+            // actually reads.
+            route: { name: `SessionList`, query: { tab: 'OfflineList' } },
             count: this.data.total_count_history_sessions,
             disabled: !this.$hasPerm('terminal.view_session')
           }
