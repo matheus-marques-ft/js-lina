@@ -39,12 +39,14 @@ export default {
   created() {},
   methods: {
     handleClick() {
-      const currentPath = this.$route.path
-      const matchingRoute = this.viewRoutes.find((route) => currentPath.startsWith(route.path))
+      // Always go to the main (merged Console/PAM/Audit/Workbench) screen, regardless of
+      // where we currently are - this is the app's "go home" action. Settings/Profile/
+      // Tickets have no other way back to the main screen now that ViewSwitcher is gone.
+      const mainRoute = this.viewRoutes.find((route) => route.name === 'MainMenu')
 
-      if (matchingRoute) {
-        const redirect = matchingRoute.redirect
-        const rootPath = matchingRoute.meta?.fullPath || matchingRoute.path
+      if (mainRoute) {
+        const redirect = mainRoute.redirect
+        const rootPath = mainRoute.meta?.fullPath || mainRoute.path
         const targetPath =
           (typeof redirect === 'string' && redirect) ||
           (redirect && typeof redirect === 'object' ? redirect : '') ||
@@ -94,7 +96,7 @@ export default {
 
     & .sidebar-logo-text {
       max-width: 100%;
-      height: calc(#{$headerHeight} - 10px);
+      height: 20px;
       width: auto;
     }
 

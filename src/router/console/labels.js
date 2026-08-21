@@ -19,21 +19,35 @@ export default [
         path: '',
         component: () => import('@/views/labels/LabelList.vue'),
         name: 'LabelList',
-        meta: { title: i18n.t('TagList') }
+        // menuTitle wins for the sidebar label once this collapses to a single flat link
+        // (its only visible child), now that it's a direct top-level entry.
+        // permissions is explicit because this node is level 3: cleanRoute() only
+        // inherits the parent's resource for level 4+ nodes, so without this it
+        // recalculates from its own (empty) path and produces an unmatchable
+        // permission, hiding the item.
+        meta: {
+          title: i18n.t('TagList'),
+          menuTitle: i18n.t('Tags'),
+          permissions: ['labels.view_label']
+        }
       },
       {
         path: 'create',
         name: 'LabelCreate',
         component: () => import('@/views/labels/LabelCreateUpdate.vue'),
         hidden: true,
-        meta: { title: i18n.t('TagCreate') }
+        // Explicit because this is level 3 without it: cleanRoute()'s auto-computed default
+        // derives the resource from this node's own path ('create'/':id'+'update'), producing
+        // unmatchable permissions like 'labels.add_create'/'labels.change_update' - silently
+        // dropping the route from the tree (404 on "Criar tag"/"Editar tag").
+        meta: { title: i18n.t('TagCreate'), permissions: ['labels.add_label'] }
       },
       {
         path: ':id/update',
         name: 'LabelUpdate',
         component: () => import('@/views/labels/LabelCreateUpdate.vue'),
         hidden: true,
-        meta: { title: i18n.t('TagUpdate') }
+        meta: { title: i18n.t('TagUpdate'), permissions: ['labels.change_label'] }
       }
     ]
   }

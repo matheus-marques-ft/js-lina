@@ -4,6 +4,7 @@ import empty from '@/layout/empty'
 export default [
   {
     path: 'users',
+    name: 'Users',
     component: empty, // Parent router-view
     redirect: '',
     meta: {
@@ -16,8 +17,12 @@ export default [
         path: '',
         component: () => import('@/views/users/User/UserList.vue'), // Parent router-view
         name: 'UserList',
+        // permissions is explicit because promoting this wrapper to a direct console
+        // child moves this node to level 3, where cleanRoute() recalculates permissions
+        // from its own (empty) path instead of inheriting from the parent.
         meta: {
-          title: i18n.t('UserList')
+          title: i18n.t('UserList'),
+          permissions: ['users.view_user']
         }
       },
       {
@@ -27,7 +32,8 @@ export default [
         hidden: true,
         meta: {
           title: i18n.t('UserCreate'),
-          action: 'create'
+          action: 'create',
+          permissions: ['users.add_user']
         }
       },
       {
@@ -37,7 +43,8 @@ export default [
         hidden: true,
         meta: {
           title: i18n.t('UserUpdate'),
-          action: 'update'
+          action: 'update',
+          permissions: ['users.change_user']
         }
       },
       {
@@ -45,12 +52,13 @@ export default [
         component: () => import('@/views/users/User/UserDetail'), // Parent router-view
         name: 'UserDetail',
         hidden: true,
-        meta: { title: i18n.t('UserDetail') }
+        meta: { title: i18n.t('UserDetail'), permissions: ['users.view_user'] }
       }
     ]
   },
   {
     path: 'groups',
+    name: 'UserGroups',
     component: empty,
     redirect: '',
     meta: {
@@ -71,7 +79,8 @@ export default [
         name: 'UserGroupCreate',
         hidden: true,
         meta: {
-          title: i18n.t('UserGroupCreate')
+          title: i18n.t('UserGroupCreate'),
+          permissions: ['users.add_usergroup']
         }
       },
       {
@@ -79,14 +88,14 @@ export default [
         component: () => import('@/views/users/Group/UserGroupCreateUpdate.vue'), // Parent router-view
         name: 'UserGroupUpdate',
         hidden: true,
-        meta: { title: i18n.t('UserGroupUpdate') }
+        meta: { title: i18n.t('UserGroupUpdate'), permissions: ['users.change_usergroup'] }
       },
       {
         path: ':id',
         component: () => import('@/views/users/Group/UserGroupDetail'), // Parent router-view
         name: 'UserGroupDetail',
         hidden: true,
-        meta: { title: i18n.t('UserGroupDetail') }
+        meta: { title: i18n.t('UserGroupDetail'), permissions: ['users.view_usergroup'] }
       }
     ]
   }

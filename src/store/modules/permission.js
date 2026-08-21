@@ -156,6 +156,13 @@ function cleanRoute(tmp, parent) {
   return tmp
 }
 
+// A merged top-level route (e.g. the Console/PAM/Audit/Workbench union) tags itself with
+// an array of view names instead of a single string - match either shape.
+function routeMatchesView(route, viewName) {
+  const v = route.meta?.view
+  return Array.isArray(v) ? v.includes(viewName) : v === viewName
+}
+
 export function filterPermedRoutes(routes, parent) {
   const res = []
 
@@ -209,7 +216,7 @@ const actions = {
       console.log('View name: ', viewName)
       let viewRoute = {}
       for (const route of state.routes) {
-        if (route.meta?.view === viewName) {
+        if (routeMatchesView(route, viewName)) {
           viewRoute = route
           break
         }

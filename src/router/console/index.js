@@ -4,8 +4,9 @@ import empty from '@/layout/empty'
 import store from '@/store'
 
 import UsersMenu from './users'
-import AssetsMenu from './assets'
+import AssetsMenu, { ZonesRoute } from './assets'
 import PermsMenu from './perms'
+import { CmdAclsRoute } from './acls'
 import AccountMenus from './accounts'
 import LabelMenus from './labels'
 
@@ -30,22 +31,24 @@ export default {
       path: '/console/dashboard',
       component: () => import('@/views/dashboard/Console/index.vue'),
       name: 'AdminDashboard',
+      // permissions: [] never restricts (see checkPermission), so this always survived
+      // filterPermedRoutes regardless of role - a user with zero real Console access still
+      // got a "GERENCIAMENTO" category header with only this item inside. Hidden instead
+      // whenever the user has no org where they hold rbac.view_console (same signal
+      // already used for showNavSwitcher above) - when this is the only surviving item,
+      // the category disappears too via groupedSidebarItems' existing empty-category
+      // filter, no extra logic needed there.
+      hidden: () => store.getters.consoleOrgs.length === 0,
       meta: {
         icon: 'dashboard',
         title: i18n.t('Dashboard'),
         permissions: []
       }
     },
-    {
-      path: '/console/users',
-      component: empty,
-      name: 'Users',
-      meta: {
-        title: i18n.t('MenuUsers'),
-        icon: 'users'
-      },
-      children: UsersMenu
-    },
+    // "GESTÃO DE USUÁRIOS" wrapper removed - it held 2 visible children (Users/Groups),
+    // so it always rendered as a group-title header. Its children are hoisted directly
+    // here (fullPath preserved via absolute path override).
+    ...UsersMenu.map((route) => ({ ...route, path: `/console/users/${route.path}` })),
     {
       path: '/console/assets',
       component: empty,
@@ -57,36 +60,34 @@ export default {
       children: AssetsMenu
     },
     {
-      path: '/console/accounts',
-      component: empty,
-      name: 'Accounts',
-      meta: {
-        title: i18n.t('MenuAccounts'),
-        icon: 'key'
-      },
-      children: AccountMenus
+      ...ZonesRoute,
+      path: '/console/zones'
     },
+    // "GERENCIAMENTO DE CONTA" wrapper removed - it held 2 visible children (Account/
+    // account-template; virtual-accounts stays hidden), so it always rendered as a
+    // group-title header. Its children are hoisted directly here (fullPath preserved via
+    // absolute path override - critical: accounts.js's virtual-accounts redirect/
+    // activeMenu hard-code '/console/accounts/accounts').
+    ...AccountMenus.map((route) => ({ ...route, path: `/console/accounts/${route.path}` })),
+    // "PERMISSÕES" wrapper removed - it held 2 visible children ("Permissões de acesso"
+    // and "Controle de acesso"/ACLs), so it always rendered as a group-title header. Its
+    // children are hoisted directly here (fullPath preserved via absolute path override -
+    // critical for both: PermUser.vue matches on '/console/perms/asset-permissions/', and
+    // startup.js's org-switch guard matches on '/console/perms/acls/...').
+    ...PermsMenu.map((route) => ({ ...route, path: `/console/perms/${route.path}` })),
     {
-      path: '/console/perms',
-      component: empty,
-      name: 'Perms',
-      meta: {
-        title: i18n.t('MenuPermissions'),
-        icon: 'permission',
-        resource: 'assetpermission',
-        permissions: []
-      },
-      children: PermsMenu
+      ...CmdAclsRoute,
+      path: '/console/cmd-acls'
     },
-    {
-      path: '/console/more',
-      component: empty,
-      name: 'ConsoleMore',
-      meta: {
-        title: i18n.t('MenuMore'),
-        icon: 'more'
-      },
-      children: LabelMenus
-    }
+    // Was nested one level inside a generic "/console/more" (ConsoleMore) wrapper that
+    // existed solely to hold this one child - hoisted to a direct top-level entry, wrapper
+    // removed. Needs the same absolute-path override as every other promoted sibling above:
+    // left as the bare relative `path: 'labels'` from labels.js, SidebarItem's resolvePath()
+    // falls through to path-browserify's path.resolve(), which calls process.cwd() when no
+    // segment is absolute - process isn't defined in this browser bundle, so that throws and
+    // silently drops just this one sidebar entry from the render (no console crash, no trace
+    // in the DOM - every other sibling here already has an absolute path, so none of them
+    // hit this code path).
+    ...LabelMenus.map((route) => ({ ...route, path: `/console/${route.path}` }))
   ]
 }

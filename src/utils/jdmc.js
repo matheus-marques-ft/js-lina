@@ -17,7 +17,7 @@ export function openJDMC(path) {
         next: path
       })
       let url = `${BASE_URL}/jdmc/api/v1/auth/tokens?${params.toString()}`
-      if (process.env.NODE_ENV !== 'production') {
+      if (import.meta.env.DEV) {
         url = url.replace('9528', '9898')
       }
 

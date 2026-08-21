@@ -3,18 +3,162 @@ import empty from '@/layout/empty'
 
 const globalSubmenu = () => import('@/layout/globalOrg.vue')
 
+// Moved in from perms.js: user asked for "Permissões de acesso" to live inside "Controle
+// de acesso" instead of as its own sibling entry. Path stays absolute/unchanged -
+// PermUser.vue:217 hard-codes a match on '/console/perms/asset-permissions/' regardless of
+// where this sits in the menu tree.
+export const AssetPermissionsRoute = {
+  path: '/console/perms/asset-permissions',
+  name: 'AssetPermissions',
+  component: empty,
+  redirect: {
+    name: 'AssetPermissionList'
+  },
+  meta: {
+    title: i18n.t('BaseAssetPermission'),
+    resource: 'assetpermission',
+    icon: 'permission'
+  },
+  children: [
+    {
+      path: '',
+      name: 'AssetPermissionList',
+      component: () => import('@/views/perms/AssetPermission/AssetPermissionList'),
+      meta: {
+        title: i18n.t('Permissões de acesso'),
+        permissions: ['perms.view_assetpermission']
+      }
+    },
+    {
+      path: 'create',
+      component: () => import('@/views/perms/AssetPermission/AssetPermissionCreateUpdate'),
+      name: 'AssetPermissionCreate',
+      hidden: true,
+      meta: {
+        title: i18n.t('AssetPermissionCreate'),
+        action: 'create',
+        permissions: ['perms.add_assetpermission']
+      }
+    },
+    {
+      path: ':id/update',
+      component: () => import('@/views/perms/AssetPermission/AssetPermissionCreateUpdate.vue'),
+      name: 'AssetPermissionUpdate',
+      hidden: true,
+      meta: {
+        title: i18n.t('AssetPermissionUpdate'),
+        action: 'update',
+        permissions: ['perms.change_assetpermission']
+      }
+    },
+    {
+      path: ':id',
+      component: () => import('@/views/perms/AssetPermission/AssetPermissionDetail/index.vue'),
+      name: 'AssetPermissionDetail',
+      hidden: true,
+      meta: {
+        title: i18n.t('AssetPermissionDetail'),
+        permissions: ['perms.view_assetpermission']
+      }
+    }
+  ]
+}
+
+// Promoted to its own top-level "Filtragem de comandos" entry in console/index.js instead
+// of living nested inside the ACLs bucket alongside 5 unrelated ACL types - exported
+// separately so it can be spread in there.
+export const CmdAclsRoute = {
+  path: 'cmd-acls',
+  component: empty,
+  redirect: {
+    name: 'CommandFilterACLList'
+  },
+  name: 'CmdACL',
+  meta: {
+    title: i18n.t('CommandFilterACLs'),
+    menuTitle: i18n.t('CommandFilter'),
+    icon: 'command',
+    app: 'acls',
+    resource: 'commandfilteracl'
+  },
+  children: [
+    // Command Filter ACL
+    {
+      path: '',
+      name: 'CommandFilterACLList',
+      component: () => import('@/views/acls/CommandFilterACL/index'),
+      // Must stay visible: with every child of CmdAclsRoute hidden, SidebarItem's
+      // hasOneShowingChild() falls into its zero-visible-children branch, which
+      // synthesizes onlyOneChild as a copy of the PARENT wrapper (level 2, with its own
+      // `children` truthy) - that combination trips getItemTitle()'s uppercase rule
+      // (meant for un-collapsed level-2 group headers), rendering "FILTRAGEM DE COMANDO"
+      // in caps with no icon instead of collapsing to this leaf's own title/icon.
+      // permissions is explicit because this node is level 3: cleanRoute() only inherits
+      // the parent's resource for level 4+ nodes, so without this it recalculates from
+      // its own (empty) path and produces an unmatchable permission, hiding the item.
+      meta: {
+        title: i18n.tc('CommandFilterACL', 2),
+        menuTitle: i18n.t('CommandFilter'),
+        activeMenu: '',
+        permissions: ['acls.view_commandfilteracl']
+      }
+    },
+    {
+      path: 'create',
+      name: 'CommandFilterACLCreate',
+      component: () =>
+        import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclCreateUpdate'),
+      hidden: true,
+      meta: { title: i18n.t('CommandFilterACLCreate'), activeMenu: '' }
+    },
+    {
+      path: ':id',
+      name: 'CommandFilterACLDetail',
+      component: () =>
+        import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclDetail/index'),
+      hidden: true,
+      meta: {
+        title: i18n.t('CommandFilterACLDetail'),
+        activeMenu: ''
+      }
+    },
+    {
+      path: ':id/update',
+      name: 'CommandFilterACLUpdate',
+      component: () =>
+        import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclCreateUpdate'),
+      hidden: true,
+      meta: { title: i18n.t('CommandFilterACLUpdate'), activeMenu: '' }
+    }
+  ]
+}
+
 export default [
   {
     path: 'acls',
     name: 'ACLList',
     component: empty,
-    redirect: 'cmd-acls',
+    // Hidden per user request: all 5 of its visible children (login-acls,
+    // login-asset-acls, data-masking-rules, clipboard-acls, connect-method-acls) require
+    // `licenseRequired: true`, which this deployment doesn't have - it currently has
+    // nothing to show. Re-enable when those enterprise ACL types (or the license) are
+    // available.
+    hidden: false,
+    // Was a bare relative string ('login-acls') - that resolved fine while this node's own
+    // path was still relative (nested under Perms), but broke once the Fase 3.5 promotion
+    // made this node's path absolute (a direct console child): Vue Router resolves a
+    // non-'/' redirect string against the PARENT route's path, not this route's own, so it
+    // was landing on '/console/login-acls' instead of '/console/perms/acls/login-acls'.
+    // Name-based redirect sidesteps path nesting entirely - same pattern already used by
+    // every sibling wrapper in this codebase (Account, ConsoleLabels, AccountTemplate...).
+    redirect: { name: 'UserLoginACLList' },
     meta: {
       title: i18n.t('ACLs'),
       icon: 'acl',
       permissions: []
     },
     children: [
+      AssetPermissionsRoute,
       {
         path: 'login-acls',
         component: globalSubmenu,
@@ -23,10 +167,11 @@ export default [
         },
         meta: {
           title: i18n.t('UserLoginACLs'),
+          icon: 'login',
           app: 'acls',
           resource: 'loginacl',
           disableOrgsChange: true,
-          licenseRequired: true
+          licenseRequired: false
         },
         children: [
           {
@@ -71,61 +216,6 @@ export default [
         ]
       },
       {
-        path: 'cmd-acls',
-        component: empty,
-        redirect: {
-          name: 'CommandFilterACLList'
-        },
-        name: 'CmdACL',
-        meta: {
-          title: i18n.t('CommandFilterACLs'),
-          menuTitle: i18n.t('CommandFilter'),
-          app: 'acls',
-          resource: 'commandfilteracl'
-        },
-        children: [
-          // Command Filter ACL
-          {
-            path: '',
-            name: 'CommandFilterACLList',
-            component: () => import('@/views/acls/CommandFilterACL/index'),
-            hidden: true,
-            meta: {
-              title: i18n.tc('CommandFilterACL', 2),
-              menuTitle: i18n.t('CommandFilter'),
-              activeMenu: ''
-            }
-          },
-          {
-            path: 'create',
-            name: 'CommandFilterACLCreate',
-            component: () =>
-              import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclCreateUpdate'),
-            hidden: true,
-            meta: { title: i18n.t('CommandFilterACLCreate'), activeMenu: '' }
-          },
-          {
-            path: ':id',
-            name: 'CommandFilterACLDetail',
-            component: () =>
-              import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclDetail/index'),
-            hidden: true,
-            meta: {
-              title: i18n.t('CommandFilterACLDetail'),
-              activeMenu: ''
-            }
-          },
-          {
-            path: ':id/update',
-            name: 'CommandFilterACLUpdate',
-            component: () =>
-              import('@/views/acls/CommandFilterACL/CommandFilterAcl/CommandFilterAclCreateUpdate'),
-            hidden: true,
-            meta: { title: i18n.t('CommandFilterACLUpdate'), activeMenu: '' }
-          }
-        ]
-      },
-      {
         path: 'login-asset-acls',
         component: empty,
         redirect: {
@@ -134,7 +224,8 @@ export default [
         name: 'LoginAssetACLs',
         meta: {
           title: i18n.t('BaseAssetACLs'),
-          licenseRequired: true,
+          icon: 'connect',
+          licenseRequired: false,
           app: 'acls',
           resource: 'loginassetacl'
         },
@@ -181,7 +272,8 @@ export default [
         name: 'DataMaskingRules',
         meta: {
           title: i18n.t('DataMasking'),
-          licenseRequired: true,
+          icon: 'eye',
+          licenseRequired: false,
           app: 'acls',
           resource: 'datamaskingrule'
         },
@@ -228,7 +320,8 @@ export default [
         name: 'ClipboardACLs',
         meta: {
           title: i18n.t('ClipboardACLs'),
-          licenseRequired: true,
+          icon: 'copy',
+          licenseRequired: false,
           app: 'acls',
           resource: 'clipboardacl'
         },
@@ -310,7 +403,7 @@ export default [
             hidden: true,
             meta: {
               title: i18n.t('CommandGroupDetail'),
-              activeMenu: '/console/perms/acls/cmd-acls'
+              activeMenu: '/console/cmd-acls'
             }
           },
           {
@@ -335,7 +428,8 @@ export default [
         name: 'ConnectMethodACL',
         meta: {
           title: i18n.t('ConnectMethodList'),
-          licenseRequired: true,
+          icon: 'link',
+          licenseRequired: false,
           app: 'acls',
           disableOrgsChange: true,
           resource: 'connectmethodacl'

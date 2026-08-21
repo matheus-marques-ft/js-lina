@@ -15,7 +15,7 @@ export default {
     type: 'view',
     showNavSwitcher: false,
     resource: 'ticket',
-    licenseRequired: true,
+    licenseRequired: false,
     permissions: ['tickets.view_ticket']
   },
   children: [

@@ -15,7 +15,12 @@
     transition: width 0.28s;
     width: $sideBarWidth !important;
     background-color: $menuBg;
-    height: 100%;
+    // `height: 100%` here fights `top`/`bottom` below: for a `position: fixed` box, an
+    // explicit height wins over top+bottom, making this exactly one viewport-height tall
+    // starting at `top: $headerHeight` - overflowing past the bottom of the screen by
+    // $headerHeight worth of pixels (invisible, unscrollable, since it's the fixed box
+    // itself extending past the viewport, not overflowing content). `top`+`bottom` alone
+    // already size this correctly with no explicit height needed.
     position: fixed;
     font-size: 0;
     top: $headerHeight;

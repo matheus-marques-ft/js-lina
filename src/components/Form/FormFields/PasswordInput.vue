@@ -13,7 +13,7 @@
       @update:model-value="handleInput"
     />
     <template v-if="showStrengthMeter">
-      <div v-show="modelValue" class="password-input__meter-wrap">
+      <div class="password-input__meter-wrap">
         <PasswordStrengthMeter
           v-bind="meterAttrs"
           v-model="modelValue"
@@ -199,6 +199,9 @@ export default {
 }
 
 .password-input__meter-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   max-width: 100%;
 }

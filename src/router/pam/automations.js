@@ -202,10 +202,14 @@ export default [
         path: 'create',
         component: () => import('@/views/accounts/AccountBackup/AccountBackupCreateUpdate.vue'),
         name: 'AccountBackupCreate',
+        // permissions is explicit because promoting the AccountAutomation wrapper away
+        // moves this node to level 3, where cleanRoute() recalculates permissions from
+        // its own (non-empty but non-resource) path instead of inheriting from the parent.
         meta: {
           title: i18n.t('AccountBackupCreate'),
           // activeMenu: '/console/accounts/automations',
-          action: 'create'
+          action: 'create',
+          permissions: ['accounts.add_backupaccountautomation']
         },
         hidden: true
       },
@@ -216,7 +220,8 @@ export default [
         meta: {
           title: i18n.t('AccountBackupUpdate'),
           // activeMenu: '/console/accounts/automations',
-          action: 'update'
+          action: 'update',
+          permissions: ['accounts.change_backupaccountautomation']
         },
         hidden: true
       },
@@ -225,7 +230,8 @@ export default [
         component: () => import('@/views/accounts/AccountBackup/Detail/index.vue'),
         name: 'AccountBackupDetail',
         meta: {
-          title: i18n.t('AccountBackupDetail')
+          title: i18n.t('AccountBackupDetail'),
+          permissions: ['accounts.view_backupaccountautomation']
         },
         hidden: true
       },
@@ -234,7 +240,10 @@ export default [
         component: () =>
           import('@/views/accounts/AccountBackup/Executions/AccountBackupExecutionList.vue'),
         name: 'AccountBackupExecutionList',
-        meta: { title: i18n.t('ExecutionDetail') },
+        meta: {
+          title: i18n.t('ExecutionDetail'),
+          permissions: ['accounts.view_backupaccountexecution']
+        },
         hidden: true
       },
       {
@@ -242,7 +251,10 @@ export default [
         component: () =>
           import('@/views/accounts/AccountBackup/Executions/ExecutionDetail/index.vue'),
         name: 'AccountBackupExecutionDetail',
-        meta: { title: i18n.t('ExecutionDetail') },
+        meta: {
+          title: i18n.t('ExecutionDetail'),
+          permissions: ['accounts.view_backupaccountexecution']
+        },
         hidden: true
       }
     ]

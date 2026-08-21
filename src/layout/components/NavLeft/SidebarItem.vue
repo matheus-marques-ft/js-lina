@@ -22,7 +22,7 @@
     </template>
 
     <div v-else>
-      <div v-if="item.meta.level === 2" class="group-title" style="font-size: 12px">
+      <div v-if="item.meta.type === 'app'" class="group-title">
         <el-divider v-if="collapse" />
         <span v-else>{{ getItemTitle(item) }}</span>
         <sidebar-item

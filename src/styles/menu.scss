@@ -48,7 +48,7 @@ $single-menu-height: 38px;
 
   .submenu-item {
     .item-title {
-      font-size: 12px;
+      font-size: 14px;
       width: 150px;
       // Use the theme-aware --menu-text (dark themes like Deep black override it to a light color)
       // instead of the fixed --color-text-primary, otherwise a dark menu background + dark text
@@ -80,6 +80,7 @@ $single-menu-height: 38px;
     align-items: center;
     height: $single-menu-height;
     line-height: $single-menu-height;
+    font-size: 14px;
     color: var(--menu-text);
 
     &:focus {
@@ -104,8 +105,8 @@ $single-menu-height: 38px;
     height: $single-menu-height;
     color: var(--menu-text);
     letter-spacing: 0.02em;
-    font-size: 12px;
-    min-width: 200px;
+    font-size: 14px;
+    min-width: $sideBarWidth;
 
     &:focus:not(.is-active) {
       color: var(--menu-text);
@@ -132,15 +133,15 @@ $single-menu-height: 38px;
 
   .group-title {
     color: var(--menu-text);
-    // Group title styling
+    // Group title styling - matches .category-title's font-size/weight (NavLeft/index.vue)
+    // for visual consistency between the two section-header tiers.
     & > span {
       display: block;
       padding: 10px 0 2px 20px;
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
       line-height: 25px;
       letter-spacing: 0.07em;
-      opacity: 0.75;
     }
 
     .nest-menu {

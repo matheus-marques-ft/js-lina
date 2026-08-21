@@ -21,6 +21,7 @@ export default [
         component: () => import('@/views/audits/JobPeriodTaskList'),
         meta: {
           title: i18n.t('JobList'),
+          menuTitle: i18n.t('Lista de tarefas'),
           permissions: []
         }
       }
@@ -45,6 +46,7 @@ export default [
         component: () => import('@/views/audits/JobExecutionLogList'),
         meta: {
           title: i18n.t('JobExecutionLog'),
+          menuTitle: i18n.t('Registro de tarefas'),
           permissions: ['audits.view_joblog']
         }
       }

@@ -25,13 +25,10 @@ import commonRoutes from './common'
  * the routes that need to be dynamically loaded based on user roles
  */
 // Permission-gated routes
-import consoleViewRoutes from './console'
-import auditViewRoutes from './audit'
-import workbenchViewRoutes from './workbench'
+import mainViewRoutes from './main'
 import ticketsRoutes from './tickets'
 import settingsRoutes from './settings'
 import profileRoutes from './profile'
-import pamViewRoutes from './pam'
 import reportsViewRoutes from './reports'
 import { getPropView } from '@/utils/jms/index'
 import store from '@/store'
@@ -86,10 +83,7 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on admin roles
  */
 export const viewRoutes = [
-  consoleViewRoutes,
-  pamViewRoutes,
-  auditViewRoutes,
-  workbenchViewRoutes,
+  mainViewRoutes,
   ticketsRoutes,
   settingsRoutes,
   profileRoutes,
