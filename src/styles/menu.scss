@@ -141,13 +141,16 @@ $single-menu-height: 38px;
     // which is why headers like "Controle de acesso"/"Relatório" (both render via this same
     // class, not el-sub-menu, since they're direct 'app'-type children with >1 visible child)
     // looked inconsistent with the rest of the menu.
+    //
+    // No :first-child exception here (unlike .category-title, which has its own copy of this
+    // below): SidebarItem.vue renders this element through its own recursive wrapper divs, so
+    // it's always the lone child of an isolated wrapper - :first-child matched unconditionally
+    // regardless of true position in the visible menu, silently zeroing the divider for every
+    // single one of these groups (confirmed live via DevTools: "Controle de acesso"/"Relatório"
+    // sit 2 wrapper divs deep, unlike .category-title which is a flat <ul> child). .category-
+    // title doesn't need this rule at all - it has its own independent :first-child below.
     margin-top: 8px;
     border-top: 1px solid var(--menu-border, var(--color-border));
-
-    &:first-child {
-      margin-top: 0;
-      border-top: 0;
-    }
 
     & > span {
       display: block;
