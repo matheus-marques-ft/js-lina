@@ -9,7 +9,7 @@
     width="50%"
     @update:visible="$emit('update:visible', $event)"
   >
-    <p>{{ variablesHelpText }}</p>
+    <p>{{ $t(variablesHelpText) }}</p>
     <table border="1" class="help-table">
       <tr>
         <th>{{ $tc('Variable') }}</th>
@@ -56,9 +56,9 @@ export default {
     }
   },
   emits: ['update:visible'],
-  data() {
-    return {
-      title: 'BuiltinVariable'
+  computed: {
+    title() {
+      return this.$t('BuiltinVariable')
     }
   },
   methods: {

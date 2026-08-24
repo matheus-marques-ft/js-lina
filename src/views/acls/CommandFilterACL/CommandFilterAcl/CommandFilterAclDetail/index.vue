@@ -40,7 +40,7 @@ export default {
             name: 'Detail'
           },
           {
-            title: this.$t('MenuUsers'),
+            title: this.$t('Users'),
             name: 'UserJsonTab'
           },
           {

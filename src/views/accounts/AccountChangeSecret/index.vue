@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       config: {
-        activeMenu: 'AccountChangeSecretList',
+        activeMenu: 'AccountChangeDashboard',
         submenu: [
           {
             title: this.$t('Overview'),

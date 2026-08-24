@@ -160,32 +160,37 @@ $single-menu-height: 38px;
       line-height: 25px;
       letter-spacing: 0.07em;
     }
+  }
 
-    .nest-menu {
-      //display: flex;
-      cursor: pointer;
+  // Was nested inside .group-title (SCSS -> ".group-title .nest-menu") back when
+  // SidebarItem.vue rendered each group's children INSIDE the same div as its title.
+  // They're now flat siblings sharing the group's own wrapper div (see SidebarItem.vue
+  // and the .group-title comment above) - kept as a standalone rule at the same level
+  // so it still matches regardless of that DOM relationship.
+  .nest-menu {
+    //display: flex;
+    cursor: pointer;
 
-      // There is a third-level submenu
-      .level1-menu {
-        &.el-sub-menu.is-opened {
-          border-top: solid 1px var(--menu-border, var(--color-border));
-          background-color: var(--menu-is-open-bg, var(--menu-bg));
+    // There is a third-level submenu
+    .level1-menu {
+      &.el-sub-menu.is-opened {
+        border-top: solid 1px var(--menu-border, var(--color-border));
+        background-color: var(--menu-is-open-bg, var(--menu-bg));
+      }
+
+      &.el-sub-menu.is-active {
+        .el-sub-menu__title {
+          @include only_active;
         }
+      }
 
-        &.el-sub-menu.is-active {
-          .el-sub-menu__title {
-            @include only_active;
-          }
-        }
-
-        .el-menu--inline .nest-menu .el-menu-item {
-          span {
-            &::before {
-              content: '•'; /* Use a bullet dot symbol */
-              font-size: 15px;
-              position: absolute; /* Absolutely position the pseudo-element */
-              left: 25px; /* Adjust the pseudo-element's position */
-            }
+      .el-menu--inline .nest-menu .el-menu-item {
+        span {
+          &::before {
+            content: '•'; /* Use a bullet dot symbol */
+            font-size: 15px;
+            position: absolute; /* Absolutely position the pseudo-element */
+            left: 25px; /* Adjust the pseudo-element's position */
           }
         }
       }

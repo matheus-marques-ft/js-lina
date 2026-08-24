@@ -14,5 +14,14 @@
   "MenuAssetAccountTemplates": "Modelos de conta de ativos",
   "MenuTicketOrders": "Ordens de tarefas",
   "MenuJobList": "Lista de tarefas",
-  "MenuJobExecutionLog": "Registro de tarefas"
+  "MenuJobExecutionLog": "Registro de tarefas",
+  "MenuAssets": "Ativos",
+  "MenuChangeSecret": "Alteração de senha",
+  "MenuMore": "Mais",
+  "TableDetails": "Detalhes da tabela",
+  "ChartReport": "Relatório em gráfico",
+  "Passkeys": "Chaves de acesso",
+  "BuiltinVariable": "Variável embutida",
+  "WatermarkVariableHelpText": "Variáveis disponíveis para uso na marca d'água:",
+  "TemplateVariablesHelpText": "Variáveis disponíveis para uso neste modelo:"
 }

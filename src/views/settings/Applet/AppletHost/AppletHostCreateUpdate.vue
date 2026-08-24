@@ -62,7 +62,20 @@ export default {
             }
           },
           platform: {
-            hidden: () => true
+            // Was fully hidden (Windows-only RemoteAppHost preset, locked via the ?platform=
+            // query below). Now that a Linux preset (RemoteAppHostLinux) exists too, the user
+            // needs a real choice here - name__startswith mirrors GatewayCreateUpdate.vue's
+            // exact pattern for the same kind of "one of a family of presets" selector, and
+            // naturally includes any future RemoteAppHost* preset with no further changes.
+            el: {
+              multiple: false,
+              ajax: {
+                url: '/api/v1/assets/platforms/?name__startswith=RemoteAppHost',
+                transformOption: (item) => {
+                  return { label: item.name, value: item.id }
+                }
+              }
+            }
           },
           zone: {
             hidden: () => {

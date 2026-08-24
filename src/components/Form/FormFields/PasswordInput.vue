@@ -157,10 +157,20 @@ export default {
       // vue-password-strength-meter (strengthMeterOnly mode) only updates its own internal
       // `password` state via a `watch: { modelValue }` handler on ITS OWN prop - which never
       // fires for the initial mount value and, on every keystroke, lags one Vue reactive
-      // flush behind our own state update. Calling its exposed emitValue() directly here
-      // keeps the meter's score perfectly in sync with what was just typed, with no lag on
-      // the first character (or any character).
-      this.$refs.meter?.emitValue?.('update:modelValue', value)
+      // flush behind our own state update. Setting its internal `password` ref directly here
+      // (same field its own emitValue() writes to) keeps the meter's score perfectly in sync
+      // with what was just typed, with no lag on the first character (or any character).
+      //
+      // NOT calling its emitValue() for this: emitValue() also does `this.$emit(...)`, and
+      // since the <PasswordStrengthMeter> tag below is bound with v-model="modelValue", that
+      // emit is caught by Vue's auto-generated v-model listener, which calls the modelValue
+      // *setter* - i.e. this very handleInput() - again, synchronously, with the same value,
+      // forever. That reentrant loop (a stack overflow) was the actual bug: it very plausibly
+      // broke the reactive update entirely before anything could render, which looked exactly
+      // like "the message never appears" - not a one-keystroke lag as originally guessed.
+      if (this.$refs.meter) {
+        this.$refs.meter.password = value
+      }
       this.$emit('input', value)
       this.$emit('update:modelValue', value)
     },

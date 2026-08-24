@@ -22,9 +22,11 @@
     </template>
 
     <div v-else>
-      <div v-if="item.meta.type === 'app'" class="group-title">
-        <el-divider v-if="collapse" />
-        <span v-else>{{ getItemTitle(item) }}</span>
+      <template v-if="item.meta.type === 'app'">
+        <div class="group-title">
+          <el-divider v-if="collapse" />
+          <span v-else>{{ getItemTitle(item) }}</span>
+        </div>
         <sidebar-item
           v-for="child in item.children"
           :key="child.path"
@@ -33,7 +35,7 @@
           :item="child"
           class="nest-menu"
         />
-      </div>
+      </template>
       <el-sub-menu
         v-else
         ref="subMenu"

@@ -157,5 +157,14 @@
   "MenuAssetAccountTemplates": "Asset account templates",
   "MenuTicketOrders": "Ticket orders",
   "MenuJobList": "Job list",
-  "MenuJobExecutionLog": "Job execution log"
+  "MenuJobExecutionLog": "Job execution log",
+  "MenuAssets": "Assets",
+  "MenuChangeSecret": "Change secret",
+  "MenuMore": "More",
+  "TableDetails": "Table details",
+  "ChartReport": "Chart report",
+  "Passkeys": "Passkeys",
+  "BuiltinVariable": "Built-in variable",
+  "WatermarkVariableHelpText": "Variables available for use in the watermark:",
+  "TemplateVariablesHelpText": "Variables available for use in this template:"
 }
