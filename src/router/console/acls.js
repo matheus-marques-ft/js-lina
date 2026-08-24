@@ -25,7 +25,7 @@ export const AssetPermissionsRoute = {
       name: 'AssetPermissionList',
       component: () => import('@/views/perms/AssetPermission/AssetPermissionList'),
       meta: {
-        title: i18n.t('Permissões de acesso'),
+        title: i18n.t('MenuAccessPermissions'),
         permissions: ['perms.view_assetpermission']
       }
     },

@@ -141,5 +141,21 @@
   "NUMBER_REQUIRED": "Must contain a number",
   "SPECIAL_CHAR_REQUIRED": "Must contain a special character",
   "MIN_LENGTH_ERROR": "Must be at least {0} characters",
-  "PasswordRequirementsTitle": "Password requirements"
+  "PasswordRequirementsTitle": "Password requirements",
+  "SidebarCategoryManagement": "Management",
+  "SidebarCategoryAudit": "Audit",
+  "SidebarCategoryWorkbench": "Assets",
+  "MenuAccessPermissions": "Access permissions",
+  "MenuSessionLogs": "Session logs",
+  "MenuUserLogs": "User logs",
+  "MenuDomains": "Domains",
+  "TabOnlineUsers": "Online users",
+  "TabLoginRecords": "Login records",
+  "TabPasswordChange": "Password change",
+  "TabEvents": "Events",
+  "MenuAssetAccounts": "Asset accounts",
+  "MenuAssetAccountTemplates": "Asset account templates",
+  "MenuTicketOrders": "Ticket orders",
+  "MenuJobList": "Job list",
+  "MenuJobExecutionLog": "Job execution log"
 }

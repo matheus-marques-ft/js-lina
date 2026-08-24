@@ -33,19 +33,19 @@ export default {
         activeMenu: 'OnlineSessionList',
         submenu: [
           {
-            title: this.$t('Usuários Online'),
+            title: this.$t('TabOnlineUsers'),
             name: 'OnlineSessionList'
           },
           {
-            title: this.$t('Registros de Login'),
+            title: this.$t('TabLoginRecords'),
             name: 'LoginLogList'
           },
           {
-            title: this.$t('Alteração de Senha'),
+            title: this.$t('TabPasswordChange'),
             name: 'PasswordChangeLogList'
           },
           {
-            title: this.$t('Eventos'),
+            title: this.$t('TabEvents'),
             name: 'OperateLogList'
           }
         ]
@@ -54,7 +54,7 @@ export default {
   },
   computed: {
     Title() {
-      return this.$t('Logs de usuários')
+      return this.$t('MenuUserLogs')
     }
   },
   mounted() {

@@ -13,7 +13,7 @@ export const SessionsRoute = {
   component: empty,
   meta: {
     // Renamed from "Registro de sessão"/"Sessions".
-    title: i18n.t('Logs de sessão'),
+    title: i18n.t('MenuSessionLogs'),
     app: 'terminal',
     resource: 'session',
     expanded: true,
@@ -26,7 +26,7 @@ export const SessionsRoute = {
       name: 'SessionList',
       component: () => import('@/views/sessions/SessionList'),
       meta: {
-        title: i18n.t('Logs de sessão'),
+        title: i18n.t('MenuSessionLogs'),
         permissions: ['terminal.view_session']
       }
     },

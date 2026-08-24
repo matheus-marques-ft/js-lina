@@ -1,0 +1,18 @@
+{
+  "SidebarCategoryManagement": "Gerenciamento",
+  "SidebarCategoryAudit": "Auditoria",
+  "SidebarCategoryWorkbench": "Ativos",
+  "MenuAccessPermissions": "Permissões de acesso",
+  "MenuSessionLogs": "Logs de sessão",
+  "MenuUserLogs": "Logs de usuários",
+  "MenuDomains": "Domínios",
+  "TabOnlineUsers": "Usuários Online",
+  "TabLoginRecords": "Registros de Login",
+  "TabPasswordChange": "Alteração de Senha",
+  "TabEvents": "Eventos",
+  "MenuAssetAccounts": "Contas de ativos",
+  "MenuAssetAccountTemplates": "Modelos de conta de ativos",
+  "MenuTicketOrders": "Ordens de tarefas",
+  "MenuJobList": "Lista de tarefas",
+  "MenuJobExecutionLog": "Registro de tarefas"
+}

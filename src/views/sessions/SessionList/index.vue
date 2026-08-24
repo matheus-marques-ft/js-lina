@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     Title() {
-      return this.$t('Logs de sessão')
+      return this.$t('MenuSessionLogs')
     }
   },
   mounted() {

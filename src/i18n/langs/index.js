@@ -1,5 +1,6 @@
 import en from './en.json'
 import ja from './ja.json'
+import pt_br from './pt_br.json'
 import zh from './zh.json'
 import zh_hant from './zh_hant.json'
 import elementEn from 'element-plus/es/locale/lang/en'
@@ -28,7 +29,8 @@ const appLocaleMessages = {
   zh,
   zh_hant,
   en,
-  ja
+  ja,
+  pt_br
 }
 
 const messages = Object.keys(elementLocaleByAppLocale).reduce((acc, appLocale) => {

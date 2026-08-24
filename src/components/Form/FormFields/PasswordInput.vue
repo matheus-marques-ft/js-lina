@@ -15,6 +15,7 @@
     <template v-if="showStrengthMeter">
       <div class="password-input__meter-wrap">
         <PasswordStrengthMeter
+          ref="meter"
           v-bind="meterAttrs"
           v-model="modelValue"
           :strength-meter-only="true"
@@ -153,6 +154,13 @@ export default {
     },
     handleInput(value) {
       this.lastEmittedValue = value
+      // vue-password-strength-meter (strengthMeterOnly mode) only updates its own internal
+      // `password` state via a `watch: { modelValue }` handler on ITS OWN prop - which never
+      // fires for the initial mount value and, on every keystroke, lags one Vue reactive
+      // flush behind our own state update. Calling its exposed emitValue() directly here
+      // keeps the meter's score perfectly in sync with what was just typed, with no lag on
+      // the first character (or any character).
+      this.$refs.meter?.emitValue?.('update:modelValue', value)
       this.$emit('input', value)
       this.$emit('update:modelValue', value)
     },

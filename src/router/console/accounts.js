@@ -21,7 +21,7 @@ export default [
         name: 'AssetAccountList',
         component: () => import('@/views/accounts/Account/index.vue'),
         meta: {
-          title: i18n.t('Contas de ativos'),
+          title: i18n.t('MenuAssetAccounts'),
           showInSearch: true,
           app: 'accounts',
           permissions: ['accounts.view_account']
@@ -93,7 +93,7 @@ export default [
         name: 'AccountTemplateList',
         component: () => import('@/views/accounts/AccountTemplate/AccountTemplateList'),
         meta: {
-          menuTitle: i18n.t('Modelos de conta de ativos'),
+          menuTitle: i18n.t('MenuAssetAccountTemplates'),
           title: i18n.t('AccountTemplateList'),
           permissions: ['accounts.view_accounttemplate']
         }

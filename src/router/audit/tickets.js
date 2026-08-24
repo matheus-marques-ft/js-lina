@@ -15,7 +15,7 @@ export default [
     component: () => import('@/views/audits/TicketList'),
     meta: {
       title: i18n.t('TicketList'),
-      menuTitle: i18n.t('Ordens de tarefas'),
+      menuTitle: i18n.t('MenuTicketOrders'),
       icon: 'ticket-list',
       permissions: ['audits.view_joblog']
     }

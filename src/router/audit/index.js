@@ -54,7 +54,7 @@ export default {
       component: () => import('@/views/audits/UserLogs/index.vue'),
       name: 'AuditUserLogs',
       meta: {
-        title: i18n.t('Logs de usuários'),
+        title: i18n.t('MenuUserLogs'),
         icon: 'user-o',
         permissions: [
           'audits.view_usersession | audits.view_userloginlog | ' +

@@ -25,7 +25,7 @@ export const ZonesRoute = {
       // its own (empty) path and produces an unmatchable permission, hiding the item.
       meta: {
         title: i18n.t('ZoneList'),
-        menuTitle: i18n.t('Domínios'),
+        menuTitle: i18n.t('MenuDomains'),
         permissions: ['assets.view_zone']
       }
     },

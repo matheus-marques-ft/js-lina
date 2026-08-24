@@ -56,12 +56,16 @@ import Hamburger from '@/components/Widgets/Hamburger'
 import Organization from '../NavHeader/Organization'
 
 const CATEGORY_ORDER = ['workbench', 'console', 'pam', 'audit']
-// 'console'/'workbench'/'audit' use the desired Portuguese text as the key itself (this app
-// has no local pt-br locale file; every translation comes from the backend catalog, which
-// has no entry for these renamed labels - vue-i18n's missing-key fallback returns the key
-// unchanged, so this guarantees the right text without touching that backend). 'audit' was
-// previously left as 'Audits', which the backend catalog mistranslates to "Auditório".
-const CATEGORY_I18N_KEYS = { console: 'Gerenciamento', pam: 'PAM', audit: 'Auditoria', workbench: 'Ativos' }
+// 'console'/'workbench'/'audit' now use real i18n keys (SidebarCategory*, src/i18n/langs/)
+// with both an en and a pt_br entry - previously these used the desired Portuguese text as
+// the key itself, which only ever looked right in Portuguese (any other language showed the
+// same Portuguese label, since nothing else had a matching key).
+const CATEGORY_I18N_KEYS = {
+  console: 'SidebarCategoryManagement',
+  pam: 'PAM',
+  audit: 'SidebarCategoryAudit',
+  workbench: 'SidebarCategoryWorkbench'
+}
 
 export default {
   components: {

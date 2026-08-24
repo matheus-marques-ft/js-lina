@@ -47,10 +47,21 @@ export default {
       if (mainRoute) {
         const redirect = mainRoute.redirect
         const rootPath = mainRoute.meta?.fullPath || mainRoute.path
+        const redirectPath = typeof redirect === 'string' ? redirect : ''
+        // mainRoute.children is already permission/hidden-filtered (filterHiddenRoutes), but
+        // `redirect` itself is copied verbatim from the raw route config and never re-checked
+        // against what actually survived filtering - so for a user without console access
+        // (AdminDashboard is hidden when consoleOrgs is empty), pushing straight to `redirect`
+        // silently resolves to no route at all. Verify it's still a real child first.
+        const redirectStillAccessible = redirectPath
+          ? (mainRoute.children || []).some(
+              (child) => (child.meta?.fullPath || child.path) === redirectPath
+            )
+          : false
         const targetPath =
-          (typeof redirect === 'string' && redirect) ||
-          (redirect && typeof redirect === 'object' ? redirect : '') ||
+          (redirectStillAccessible && redirectPath) ||
           getFirstAccessibleChildPath(rootPath) ||
+          (redirect && typeof redirect === 'object' ? redirect : '') ||
           rootPath
         this.$router.push(targetPath)
       } else {
