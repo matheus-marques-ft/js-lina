@@ -103,7 +103,12 @@ export default {
         title: i18n.t('Report'),
         icon: 'report',
         permissions: [],
-        licenseRequired: false
+        licenseRequired: false,
+        // Promotes this from a group nested inside "Audit" to its own top-level sidebar
+        // category, sibling to Management/CONTROLE DE ACESSO/PAM/Audit - see NavLeft/
+        // index.vue's CATEGORY_ORDER/CATEGORY_I18N_KEYS ('reports' reuses this same
+        // 'Report' i18n key).
+        menuGroup: 'reports'
       },
       // ReportsRoutes is reports/index.js's default-exported route object (path/redirect/
       // component/meta/children), not an array of routes - every sibling wrapper here

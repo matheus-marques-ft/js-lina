@@ -39,9 +39,14 @@ export default {
   methods: {
     handleClick() {
       // Always go to the workbench home, regardless of where we currently are - this is the
-      // app's "go home" action, matching the post-login landing spot (constantRoutes[0] in
-      // router/index.js redirects '/' -> '/workbench/home' unconditionally, for every user).
-      this.$router.push('/')
+      // app's "go home" action. Pushing '/' and relying on its static `redirect:
+      // '/workbench/home'` (constantRoutes[0] in router/index.js) still landed on
+      // '/console/dashboard' in practice - some guard in the merged Console/PAM/Audit/
+      // Workbench screen (src/router/main.js) intercepts that intermediate '/' navigation
+      // before the redirect resolves. Pushing the real target path directly sidesteps that
+      // entirely - it's the exact path every "Visión general"/workbench sidebar link already
+      // uses successfully.
+      this.$router.push('/workbench/home')
     }
   }
 }

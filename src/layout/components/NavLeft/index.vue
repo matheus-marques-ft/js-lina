@@ -66,18 +66,31 @@ import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 import Hamburger from '@/components/Widgets/Hamburger'
 import Organization from '../NavHeader/Organization'
-import { flattenSidebarRows } from '@/utils/vue/sidebarMenu'
+import {
+  flattenSidebarRows,
+  getVisibleChildren,
+  isGroupRoute,
+  resolveChildPath
+} from '@/utils/vue/sidebarMenu'
 
-const CATEGORY_ORDER = ['workbench', 'console', 'pam', 'audit']
+const CATEGORY_ORDER = ['workbench', 'console', 'perms', 'pam', 'audit', 'reports']
 // 'console'/'workbench'/'audit' now use real i18n keys (SidebarCategory*, src/i18n/langs/)
 // with both an en and a pt_br entry - previously these used the desired Portuguese text as
 // the key itself, which only ever looked right in Portuguese (any other language showed the
 // same Portuguese label, since nothing else had a matching key).
+// 'perms' reuses the existing 'ACLs' key (same one ACLList's own title already used as a
+// nested group-title) rather than adding a new i18n entry - it's the same label, just
+// promoted one tier up to a category header alongside Management/PAM/Audit.
+// 'reports' reuses the 'Report' key AuditsReports' own title already used - user confirmed
+// (screenshot from an older build) "Relatório" used to be its own top-level category, sibling
+// to Audit, with its report pages flat underneath - not a group nested inside Audit.
 const CATEGORY_I18N_KEYS = {
   console: 'SidebarCategoryManagement',
+  perms: 'ACLs',
   pam: 'PAM',
   audit: 'SidebarCategoryAudit',
-  workbench: 'SidebarCategoryWorkbench'
+  workbench: 'SidebarCategoryWorkbench',
+  reports: 'Report'
 }
 
 export default {
@@ -106,13 +119,39 @@ export default {
       }
       const byCategory = {}
       for (const route of children) {
-        const cat = route.meta?.category
+        // menuGroup lets a route be pulled out of its originating view's sidebar bucket
+        // (e.g. ACLs/cmd-acls/labels out of 'console') into its own category, WITHOUT
+        // touching meta.category itself - Organization.vue keys its org-switcher list and
+        // "is this the console view" check off meta.category, so routes that are still
+        // org-scoped like Console's are must keep reporting category: 'console' there.
+        const cat = route.meta?.menuGroup || route.meta?.category
         // Children without a category are plumbing (e.g. a bare "/pam" -> "/pam/dashboard"
         // redirect kept alive for deep-linking/getPropView), not real menu entries - they
         // don't render on their own anyway (`hidden: true`), just skip them here too.
         if (!cat) continue
         byCategory[cat] ||= []
-        byCategory[cat].push(route)
+        // A menuGroup route that would render its own group-title (e.g. ACLList, holding
+        // asset-permissions/login-acls/.../connect-method-acls) is the thing BEING promoted
+        // into a category - the category header above already carries that same title
+        // (see CATEGORY_I18N_KEYS), so push its children in its place instead of the route
+        // itself, or flattenSidebarRows would print that title a second time as a redundant
+        // group-title row right under the category header. A menuGroup route that collapses
+        // to a single child (CmdAclsRoute, ConsoleLabels) isn't affected either way - it
+        // never renders a group-title - so it's pushed as-is like any other sidebar entry.
+        if (route.meta?.menuGroup && isGroupRoute(route)) {
+          // These children carried relative paths ('login-acls', ...) meant to resolve
+          // against ACLList's own base path - reproduce that resolution here (the same
+          // math flattenSidebarRows would have done via its recursive parentPath) since
+          // they're being spliced in one level up, at this bucket's own parentPath ('').
+          const basePath = resolveChildPath('', route.path)
+          const promotedChildren = getVisibleChildren(route).map((child) => ({
+            ...child,
+            path: resolveChildPath(basePath, child.path)
+          }))
+          byCategory[cat].push(...promotedChildren)
+        } else {
+          byCategory[cat].push(route)
+        }
       }
       return CATEGORY_ORDER.filter((cat) => byCategory[cat]?.length).map((cat) => ({
         category: cat,

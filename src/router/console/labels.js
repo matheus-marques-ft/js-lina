@@ -12,7 +12,10 @@ export default [
     meta: {
       title: i18n.t('Tags'),
       icon: 'tag',
-      app: 'labels'
+      app: 'labels',
+      // Moved into the "Controle de acesso" sidebar category (see acls.js's ACLList),
+      // instead of sitting as a bare Management entry.
+      menuGroup: 'perms'
     },
     children: [
       {
