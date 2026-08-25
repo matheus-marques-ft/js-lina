@@ -13,7 +13,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getFirstAccessibleChildPath } from '@/utils/vue'
 
 export default {
   name: 'SidebarLogo',
@@ -27,7 +26,7 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['viewRoutes', 'publicSettings']),
+    ...mapGetters(['publicSettings']),
     // eslint-disable-next-line vue/return-in-computed-property
     logoTextSrc() {
       return this.publicSettings['INTERFACE']['logo_index']
@@ -39,34 +38,10 @@ export default {
   created() {},
   methods: {
     handleClick() {
-      // Always go to the main (merged Console/PAM/Audit/Workbench) screen, regardless of
-      // where we currently are - this is the app's "go home" action. Settings/Profile/
-      // Tickets have no other way back to the main screen now that ViewSwitcher is gone.
-      const mainRoute = this.viewRoutes.find((route) => route.name === 'MainMenu')
-
-      if (mainRoute) {
-        const redirect = mainRoute.redirect
-        const rootPath = mainRoute.meta?.fullPath || mainRoute.path
-        const redirectPath = typeof redirect === 'string' ? redirect : ''
-        // mainRoute.children is already permission/hidden-filtered (filterHiddenRoutes), but
-        // `redirect` itself is copied verbatim from the raw route config and never re-checked
-        // against what actually survived filtering - so for a user without console access
-        // (AdminDashboard is hidden when consoleOrgs is empty), pushing straight to `redirect`
-        // silently resolves to no route at all. Verify it's still a real child first.
-        const redirectStillAccessible = redirectPath
-          ? (mainRoute.children || []).some(
-              (child) => (child.meta?.fullPath || child.path) === redirectPath
-            )
-          : false
-        const targetPath =
-          (redirectStillAccessible && redirectPath) ||
-          getFirstAccessibleChildPath(rootPath) ||
-          (redirect && typeof redirect === 'object' ? redirect : '') ||
-          rootPath
-        this.$router.push(targetPath)
-      } else {
-        this.$router.push('/')
-      }
+      // Always go to the workbench home, regardless of where we currently are - this is the
+      // app's "go home" action, matching the post-login landing spot (constantRoutes[0] in
+      // router/index.js redirects '/' -> '/workbench/home' unconditionally, for every user).
+      this.$router.push('/')
     }
   }
 }

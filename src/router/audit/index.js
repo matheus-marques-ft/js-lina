@@ -105,7 +105,12 @@ export default {
         permissions: [],
         licenseRequired: false
       },
-      children: ReportsRoutes
+      // ReportsRoutes is reports/index.js's default-exported route object (path/redirect/
+      // component/meta/children), not an array of routes - every sibling wrapper here
+      // (LogRoutes, TicketRoutes) assigns an actual array to `children`. Passing the whole
+      // object made AuditsReports.children non-iterable for filterPermedRoutes/
+      // filterHiddenRoutes, both of which `for...of`/`.map` over a node's children.
+      children: ReportsRoutes.children
     }
   ]
 }

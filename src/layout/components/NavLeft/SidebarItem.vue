@@ -21,7 +21,7 @@
       </app-link>
     </template>
 
-    <template v-else-if="item.meta.type === 'app'">
+    <template v-else>
       <div class="group-title">
         <el-divider v-if="collapse" />
         <span v-else>{{ getItemTitle(item) }}</span>
@@ -35,26 +35,6 @@
         class="nest-menu"
       />
     </template>
-
-    <el-sub-menu
-      v-else
-      ref="subMenu"
-      :index="resolvePath(item.path)"
-      class="el-submenu-sidebar submenu-item level1-menu"
-      popper-append-to-body
-    >
-      <template #title>
-        <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="getItemTitle(item)" />
-      </template>
-      <sidebar-item
-        v-for="child in item.children"
-        :key="child.path"
-        :base-path="resolvePath(child.path)"
-        :is-nest="true"
-        :item="child"
-        class="nest-menu"
-      />
-    </el-sub-menu>
   </div>
 </template>
 
@@ -63,9 +43,7 @@ import path from 'path-browserify'
 import { isExternal } from '@/utils/secure'
 import Item from './Item'
 import AppLink from './Link'
-import { useFixIOSBug } from '@/utils/vue/useFixIOSBug'
 import { toSentenceCase } from '@/utils/common/index'
-import { ref } from 'vue'
 
 export default {
   name: 'SidebarItem',
@@ -87,13 +65,6 @@ export default {
     collapse: {
       type: Boolean,
       default: false
-    }
-  },
-  setup() {
-    const subMenu = ref(null)
-    useFixIOSBug(subMenu)
-    return {
-      subMenu
     }
   },
   data() {
