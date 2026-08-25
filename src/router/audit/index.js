@@ -110,12 +110,14 @@ export default {
         // 'Report' i18n key).
         menuGroup: 'reports'
       },
-      // ReportsRoutes is reports/index.js's default-exported route object (path/redirect/
-      // component/meta/children), not an array of routes - every sibling wrapper here
-      // (LogRoutes, TicketRoutes) assigns an actual array to `children`. Passing the whole
-      // object made AuditsReports.children non-iterable for filterPermedRoutes/
-      // filterHiddenRoutes, both of which `for...of`/`.map` over a node's children.
-      children: ReportsRoutes.children
+      // ReportsRoutes is this directory's own ./reports.js (audit/reports.js), an array of
+      // 3 route wrappers (users/assets/accounts) - NOT src/router/reports/index.js (an
+      // unrelated, unused module one level up with a completely different Dashboard/Users/
+      // Assets/Accounts shape). A previous fix here appended `.children`, assuming the
+      // wrong module's shape; since this ReportsRoutes is already the array to use, that
+      // read `.children` off a plain array (always undefined), silently dropping every
+      // report page - this is why "Relatório" always collapsed to a single dead link.
+      children: ReportsRoutes
     }
   ]
 }
