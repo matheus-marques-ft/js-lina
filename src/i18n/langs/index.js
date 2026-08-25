@@ -13,12 +13,21 @@ import elementVi from 'element-plus/es/locale/lang/vi'
 import elementZhCn from 'element-plus/es/locale/lang/zh-cn'
 import elementZhTw from 'element-plus/es/locale/lang/zh-tw'
 
+// Keyed by the ACTUAL runtime locale codes (Django's Language.choices values - see
+// js-jumpserver apps/common/const/choices.py), not the underscore-style names of the JSON
+// files - vue-i18n's active `locale` is set directly from the raw `django_language` cookie
+// (src/i18n/utils.js getLangCode(), no normalization), which is 'pt-br'/'zh-hans'/'zh-hant'
+// (hyphenated). A 'pt_br'/'zh_hant' key here would never match that active locale, silently
+// falling back to `fallbackLocale: 'en'` for every key not separately patched at runtime by
+// fetchTranslationsFromAPI() (which merges under the same raw hyphenated code it queried
+// with - see i18n.js). The import names / JSON filenames stay underscore-style; only the
+// object keys below need to match Django's codes.
 const elementLocaleByAppLocale = {
-  zh: elementZhCn,
-  zh_hant: elementZhTw,
+  'zh-hans': elementZhCn,
+  'zh-hant': elementZhTw,
   en: elementEn,
   ja: elementJa,
-  pt_br: elementPtBr,
+  'pt-br': elementPtBr,
   es: elementEs,
   ru: elementRu,
   ko: elementKo,
@@ -26,11 +35,11 @@ const elementLocaleByAppLocale = {
 }
 
 const appLocaleMessages = {
-  zh,
-  zh_hant,
+  'zh-hans': zh,
+  'zh-hant': zh_hant,
   en,
   ja,
-  pt_br
+  'pt-br': pt_br
 }
 
 const messages = Object.keys(elementLocaleByAppLocale).reduce((acc, appLocale) => {

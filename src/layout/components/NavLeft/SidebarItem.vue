@@ -21,41 +21,40 @@
       </app-link>
     </template>
 
-    <div v-else>
-      <template v-if="item.meta.type === 'app'">
-        <div class="group-title">
-          <el-divider v-if="collapse" />
-          <span v-else>{{ getItemTitle(item) }}</span>
-        </div>
-        <sidebar-item
-          v-for="child in item.children"
-          :key="child.path"
-          :base-path="resolvePath(child.path)"
-          :is-nest="true"
-          :item="child"
-          class="nest-menu"
-        />
+    <template v-else-if="item.meta.type === 'app'">
+      <div class="group-title">
+        <el-divider v-if="collapse" />
+        <span v-else>{{ getItemTitle(item) }}</span>
+      </div>
+      <sidebar-item
+        v-for="child in item.children"
+        :key="child.path"
+        :base-path="resolvePath(child.path)"
+        :is-nest="true"
+        :item="child"
+        class="nest-menu"
+      />
+    </template>
+
+    <el-sub-menu
+      v-else
+      ref="subMenu"
+      :index="resolvePath(item.path)"
+      class="el-submenu-sidebar submenu-item level1-menu"
+      popper-append-to-body
+    >
+      <template #title>
+        <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="getItemTitle(item)" />
       </template>
-      <el-sub-menu
-        v-else
-        ref="subMenu"
-        :index="resolvePath(item.path)"
-        class="el-submenu-sidebar submenu-item level1-menu"
-        popper-append-to-body
-      >
-        <template #title>
-          <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="getItemTitle(item)" />
-        </template>
-        <sidebar-item
-          v-for="child in item.children"
-          :key="child.path"
-          :base-path="resolvePath(child.path)"
-          :is-nest="true"
-          :item="child"
-          class="nest-menu"
-        />
-      </el-sub-menu>
-    </div>
+      <sidebar-item
+        v-for="child in item.children"
+        :key="child.path"
+        :base-path="resolvePath(child.path)"
+        :is-nest="true"
+        :item="child"
+        class="nest-menu"
+      />
+    </el-sub-menu>
   </div>
 </template>
 
