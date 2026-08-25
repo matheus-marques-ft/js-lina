@@ -29,6 +29,7 @@ import mainViewRoutes from './main'
 import ticketsRoutes from './tickets'
 import settingsRoutes from './settings'
 import profileRoutes from './profile'
+import reportsViewRoutes from './reports'
 import { getPropView } from '@/utils/jms/index'
 import store from '@/store'
 
@@ -85,17 +86,24 @@ export const constantRoutes = [
  * admin
  * the routes that need to be dynamically loaded based on admin roles
  */
-// 'reports' (src/router/reports) is NOT registered here as its own top-level view - its
-// routes ('/reports/dashboard', '/reports/users', '/reports/assets', '/reports/accounts')
-// are already reachable through audit/index.js's AuditsReports node, which reuses this same
-// module's `children` array by reference (children: ReportsRoutes.children). Registering it
-// here TOO meant `router.addRoute()` saw the exact same named routes (e.g. 'ReportsUsers')
-// twice, once nested under this merged view and once as this standalone view - Vue Router 4
-// silently removes the earlier-added route when a later addRoute() reuses its name, so
-// whichever of the two was processed last in this array won the route table and the other
-// vanished from actual navigation (this is very likely why "Relatório" stopped showing any
-// sub-items even though the underlying RBAC permissions were correct).
-export const viewRoutes = [mainViewRoutes, ticketsRoutes, settingsRoutes, profileRoutes]
+// Correction: 'reports' (src/router/reports) does NOT collide with audit/index.js's
+// AuditsReports - that node's `children: ReportsRoutes` (audit/index.js) resolves `./reports`
+// relative to the audit/ directory, i.e. audit/reports.js, a completely different, unrelated
+// file (3 plain report wrappers). This module (src/router/reports/index.js, one level up) is
+// its own standalone thing, registered ONLY here - its named routes ('ConsoleReport',
+// 'PamReport', 'AuditsReport', 'ChangeSecretReport', ...) are what
+// src/utils/vue/index.js's getRouteUrl() resolves by name from the Console/PAM/Audit
+// Dashboard pages to build their "view full report" links. Removing this registration (an
+// earlier, mistaken "dedup" in this session) deleted those names outright - router.resolve()
+// then throws on an unmatched name, which getRouteUrl() doesn't catch, crashing dashboard's
+// data() on every visit.
+export const viewRoutes = [
+  mainViewRoutes,
+  ticketsRoutes,
+  settingsRoutes,
+  profileRoutes,
+  reportsViewRoutes
+]
 
 const createRouterInstance = () =>
   createRouter({
