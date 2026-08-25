@@ -39,11 +39,13 @@
 </template>
 
 <script>
-import path from 'path-browserify'
-import { isExternal } from '@/utils/secure'
 import Item from './Item'
 import AppLink from './Link'
-import { toSentenceCase } from '@/utils/common/index'
+import {
+  getItemTitle as computeItemTitle,
+  isItemHidden,
+  resolveChildPath
+} from '@/utils/vue/sidebarMenu'
 
 export default {
   name: 'SidebarItem',
@@ -75,12 +77,7 @@ export default {
   },
   methods: {
     needHidden(item) {
-      let hidden = item.hidden
-
-      if (typeof item.hidden === 'function') {
-        hidden = item.hidden()
-      }
-      return hidden
+      return isItemHidden(item)
     },
     allChildrenHidden(item) {
       if (!item.children) {
@@ -94,13 +91,7 @@ export default {
       return true
     },
     getItemTitle(item) {
-      let title = item.meta.menuTitle || item.meta.title
-      if (item.meta.level === 2 && item.children) {
-        title = title.toUpperCase()
-      } else {
-        title = toSentenceCase(title)
-      }
-      return title
+      return computeItemTitle(item)
     },
     hasOneShowingChild(children = [], parent) {
       const showingChildren = children.filter((item) => {
@@ -127,13 +118,7 @@ export default {
       return false
     },
     resolvePath(routePath) {
-      if (isExternal(routePath)) {
-        return routePath
-      }
-      if (isExternal(this.basePath)) {
-        return this.basePath
-      }
-      return path.resolve(this.basePath, routePath)
+      return resolveChildPath(this.basePath, routePath)
     }
   }
 }

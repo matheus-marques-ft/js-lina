@@ -196,10 +196,20 @@ export async function checkUserFirstLogin({ to, from, next }) {
 }
 
 export async function changeCurrentViewIfNeed({ to, from }) {
+  // Bare '/' always redirects to '/workbench/home' (constantRoutes[0] in router/index.js,
+  // "per explicit user request"), unconditionally, for every user - restoring the
+  // last-used view here via getPropView()/localStorage 'preView' overrode that redirect
+  // before it even resolved, landing everyone back on console/dashboard on every fresh
+  // load/login/"back to home", regardless of the workbench redirect. '' is only ever the
+  // split result for '/' (every other view path has a non-empty first segment), so this
+  // view genuinely never needs the check below.
+  if (to.path === '/') {
+    return
+  }
   let viewName = to.path.split('/')[1]
   // These are the ones that need checking, to avoid 404s when switching view organizations. Don't add
   // settings here, because by default the management permission for the setting (System) organization isn't returned
-  if (['console', 'audit', 'pam', 'workbench', 'tickets', ''].indexOf(viewName) === -1) {
+  if (['console', 'audit', 'pam', 'workbench', 'tickets'].indexOf(viewName) === -1) {
     console.debug('Current view no need check', viewName)
     return
   }

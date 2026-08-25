@@ -27,13 +27,25 @@
             <el-divider v-if="isCollapse" />
             <span v-else>{{ group.title }}</span>
           </div>
-          <sidebar-item
-            v-for="route in group.items"
-            :key="route.path"
-            :base-path="route.path"
-            :collapse="isCollapse"
-            :item="route"
-          />
+          <template v-for="row in group.items" :key="row.key">
+            <!-- Any route with 2+ visible children (e.g. ACLs, or "Usuários" nested inside
+            Reports) is expanded here, at whatever depth it occurs, so its title+children sit
+            flat under this <ul> exactly like the category header above - never one extra
+            <div> deep inside SidebarItem's own wrapper (see sidebarMenu.js's isGroupRoute/
+            flattenSidebarRows for why this has to happen before SidebarItem ever sees it). -->
+            <div v-if="row.groupTitle" class="group-title">
+              <el-divider v-if="isCollapse" />
+              <span v-else>{{ row.groupTitle }}</span>
+            </div>
+            <sidebar-item
+              v-else
+              :base-path="row.basePath"
+              :class="{ 'nest-menu': row.isNest }"
+              :collapse="isCollapse"
+              :is-nest="row.isNest"
+              :item="row.route"
+            />
+          </template>
         </template>
       </el-menu>
     </div>
@@ -54,6 +66,7 @@ import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 import Hamburger from '@/components/Widgets/Hamburger'
 import Organization from '../NavHeader/Organization'
+import { flattenSidebarRows } from '@/utils/vue/sidebarMenu'
 
 const CATEGORY_ORDER = ['workbench', 'console', 'pam', 'audit']
 // 'console'/'workbench'/'audit' now use real i18n keys (SidebarCategory*, src/i18n/langs/)
@@ -89,7 +102,7 @@ export default {
       if (!isMergedView) {
         // Not a merged screen (Settings/Tickets/Profile/...): render as one flat group,
         // no section header - identical to the pre-merge behavior.
-        return [{ category: '__ungrouped__', title: '', items: children }]
+        return [{ category: '__ungrouped__', title: '', items: flattenSidebarRows(children) }]
       }
       const byCategory = {}
       for (const route of children) {
@@ -104,7 +117,7 @@ export default {
       return CATEGORY_ORDER.filter((cat) => byCategory[cat]?.length).map((cat) => ({
         category: cat,
         title: this.$t(CATEGORY_I18N_KEYS[cat]),
-        items: byCategory[cat]
+        items: flattenSidebarRows(byCategory[cat])
       }))
     },
     activeMenu() {
