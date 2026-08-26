@@ -43,7 +43,11 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/console',
+    // Always land on the workbench overview after login, per explicit user request - was
+    // '/console' before. Note this static redirect is resolved before vue-router ever
+    // descends into the child route below, so that child's own beforeEnter/getPropView
+    // fallback (kept for '' being directly deep-linked) never actually runs for bare '/'.
+    redirect: '/workbench/home',
     meta: {
       type: 'view',
       view: 'home',
@@ -82,6 +86,17 @@ export const constantRoutes = [
  * admin
  * the routes that need to be dynamically loaded based on admin roles
  */
+// Correction: 'reports' (src/router/reports) does NOT collide with audit/index.js's
+// AuditsReports - that node's `children: ReportsRoutes` (audit/index.js) resolves `./reports`
+// relative to the audit/ directory, i.e. audit/reports.js, a completely different, unrelated
+// file (3 plain report wrappers). This module (src/router/reports/index.js, one level up) is
+// its own standalone thing, registered ONLY here - its named routes ('ConsoleReport',
+// 'PamReport', 'AuditsReport', 'ChangeSecretReport', ...) are what
+// src/utils/vue/index.js's getRouteUrl() resolves by name from the Console/PAM/Audit
+// Dashboard pages to build their "view full report" links. Removing this registration (an
+// earlier, mistaken "dedup" in this session) deleted those names outright - router.resolve()
+// then throws on an unmatched name, which getRouteUrl() doesn't catch, crashing dashboard's
+// data() on every visit.
 export const viewRoutes = [
   mainViewRoutes,
   ticketsRoutes,

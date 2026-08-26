@@ -27,13 +27,25 @@
             <el-divider v-if="isCollapse" />
             <span v-else>{{ group.title }}</span>
           </div>
-          <sidebar-item
-            v-for="route in group.items"
-            :key="route.path"
-            :base-path="route.path"
-            :collapse="isCollapse"
-            :item="route"
-          />
+          <template v-for="row in group.items" :key="row.key">
+            <!-- Any route with 2+ visible children (e.g. ACLs, or "Usuários" nested inside
+            Reports) is expanded here, at whatever depth it occurs, so its title+children sit
+            flat under this <ul> exactly like the category header above - never one extra
+            <div> deep inside SidebarItem's own wrapper (see sidebarMenu.js's isGroupRoute/
+            flattenSidebarRows for why this has to happen before SidebarItem ever sees it). -->
+            <div v-if="row.groupTitle" class="group-title">
+              <el-divider v-if="isCollapse" />
+              <span v-else>{{ row.groupTitle }}</span>
+            </div>
+            <sidebar-item
+              v-else
+              :base-path="row.basePath"
+              :class="{ 'nest-menu': row.isNest }"
+              :collapse="isCollapse"
+              :is-nest="row.isNest"
+              :item="row.route"
+            />
+          </template>
         </template>
       </el-menu>
     </div>
@@ -54,14 +66,32 @@ import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 import Hamburger from '@/components/Widgets/Hamburger'
 import Organization from '../NavHeader/Organization'
+import {
+  flattenSidebarRows,
+  getVisibleChildren,
+  isGroupRoute,
+  resolveChildPath
+} from '@/utils/vue/sidebarMenu'
 
-const CATEGORY_ORDER = ['workbench', 'console', 'pam', 'audit']
-// 'console'/'workbench'/'audit' use the desired Portuguese text as the key itself (this app
-// has no local pt-br locale file; every translation comes from the backend catalog, which
-// has no entry for these renamed labels - vue-i18n's missing-key fallback returns the key
-// unchanged, so this guarantees the right text without touching that backend). 'audit' was
-// previously left as 'Audits', which the backend catalog mistranslates to "Auditório".
-const CATEGORY_I18N_KEYS = { console: 'Gerenciamento', pam: 'PAM', audit: 'Auditoria', workbench: 'Ativos' }
+const CATEGORY_ORDER = ['workbench', 'console', 'perms', 'pam', 'audit', 'reports']
+// 'console'/'workbench'/'audit' now use real i18n keys (SidebarCategory*, src/i18n/langs/)
+// with both an en and a pt_br entry - previously these used the desired Portuguese text as
+// the key itself, which only ever looked right in Portuguese (any other language showed the
+// same Portuguese label, since nothing else had a matching key).
+// 'perms' reuses the existing 'ACLs' key (same one ACLList's own title already used as a
+// nested group-title) rather than adding a new i18n entry - it's the same label, just
+// promoted one tier up to a category header alongside Management/PAM/Audit.
+// 'reports' reuses the 'Report' key AuditsReports' own title already used - user confirmed
+// (screenshot from an older build) "Relatório" used to be its own top-level category, sibling
+// to Audit, with its report pages flat underneath - not a group nested inside Audit.
+const CATEGORY_I18N_KEYS = {
+  console: 'SidebarCategoryManagement',
+  perms: 'ACLs',
+  pam: 'PAM',
+  audit: 'SidebarCategoryAudit',
+  workbench: 'SidebarCategoryWorkbench',
+  reports: 'Report'
+}
 
 export default {
   components: {
@@ -85,22 +115,48 @@ export default {
       if (!isMergedView) {
         // Not a merged screen (Settings/Tickets/Profile/...): render as one flat group,
         // no section header - identical to the pre-merge behavior.
-        return [{ category: '__ungrouped__', title: '', items: children }]
+        return [{ category: '__ungrouped__', title: '', items: flattenSidebarRows(children) }]
       }
       const byCategory = {}
       for (const route of children) {
-        const cat = route.meta?.category
+        // menuGroup lets a route be pulled out of its originating view's sidebar bucket
+        // (e.g. ACLs/cmd-acls/labels out of 'console') into its own category, WITHOUT
+        // touching meta.category itself - Organization.vue keys its org-switcher list and
+        // "is this the console view" check off meta.category, so routes that are still
+        // org-scoped like Console's are must keep reporting category: 'console' there.
+        const cat = route.meta?.menuGroup || route.meta?.category
         // Children without a category are plumbing (e.g. a bare "/pam" -> "/pam/dashboard"
         // redirect kept alive for deep-linking/getPropView), not real menu entries - they
         // don't render on their own anyway (`hidden: true`), just skip them here too.
         if (!cat) continue
         byCategory[cat] ||= []
-        byCategory[cat].push(route)
+        // A menuGroup route that would render its own group-title (e.g. ACLList, holding
+        // asset-permissions/login-acls/.../connect-method-acls) is the thing BEING promoted
+        // into a category - the category header above already carries that same title
+        // (see CATEGORY_I18N_KEYS), so push its children in its place instead of the route
+        // itself, or flattenSidebarRows would print that title a second time as a redundant
+        // group-title row right under the category header. A menuGroup route that collapses
+        // to a single child (CmdAclsRoute, ConsoleLabels) isn't affected either way - it
+        // never renders a group-title - so it's pushed as-is like any other sidebar entry.
+        if (route.meta?.menuGroup && isGroupRoute(route)) {
+          // These children carried relative paths ('login-acls', ...) meant to resolve
+          // against ACLList's own base path - reproduce that resolution here (the same
+          // math flattenSidebarRows would have done via its recursive parentPath) since
+          // they're being spliced in one level up, at this bucket's own parentPath ('').
+          const basePath = resolveChildPath('', route.path)
+          const promotedChildren = getVisibleChildren(route).map((child) => ({
+            ...child,
+            path: resolveChildPath(basePath, child.path)
+          }))
+          byCategory[cat].push(...promotedChildren)
+        } else {
+          byCategory[cat].push(route)
+        }
       }
       return CATEGORY_ORDER.filter((cat) => byCategory[cat]?.length).map((cat) => ({
         category: cat,
         title: this.$t(CATEGORY_I18N_KEYS[cat]),
-        items: byCategory[cat]
+        items: flattenSidebarRows(byCategory[cat])
       }))
     },
     activeMenu() {
@@ -153,7 +209,15 @@ $mobileHeight: 40px;
 $origin-color: #ffffff;
 
 .left-side-wrapper {
-  height: 100%;
+  // No explicit height here - this element IS .sidebar-container (layout/index.vue passes
+  // that class in, and NavLeft has a single root node, so Vue merges both classes onto the
+  // same div). sidebar.scss's .sidebar-container is `position: fixed; top: $headerHeight;
+  // bottom: 0` - top+bottom alone already size this box correctly against the viewport. A
+  // `height: 100%` here resolves against the viewport too (fixed positioning), making the
+  // box exactly one viewport tall STARTING FROM top - i.e. it overflows $headerHeight worth
+  // of pixels past the actual bottom of the screen, pushing .nav-footer/the hamburger button
+  // below the fold. flex still works fine without it: flexbox distributes free space within
+  // whatever height the box ends up with, however that height was determined.
   display: flex;
   flex-direction: column;
 
@@ -256,7 +320,7 @@ $origin-color: #ffffff;
 
   & > span {
     padding-top: 14px !important;
-    font-size: 12px !important;
+    font-size: 13px !important;
     font-weight: 700 !important;
     text-transform: uppercase;
   }

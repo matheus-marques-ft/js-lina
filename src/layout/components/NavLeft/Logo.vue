@@ -13,7 +13,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getFirstAccessibleChildPath } from '@/utils/vue'
 
 export default {
   name: 'SidebarLogo',
@@ -27,7 +26,7 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['viewRoutes', 'publicSettings']),
+    ...mapGetters(['publicSettings']),
     // eslint-disable-next-line vue/return-in-computed-property
     logoTextSrc() {
       return this.publicSettings['INTERFACE']['logo_index']
@@ -39,23 +38,15 @@ export default {
   created() {},
   methods: {
     handleClick() {
-      // Always go to the main (merged Console/PAM/Audit/Workbench) screen, regardless of
-      // where we currently are - this is the app's "go home" action. Settings/Profile/
-      // Tickets have no other way back to the main screen now that ViewSwitcher is gone.
-      const mainRoute = this.viewRoutes.find((route) => route.name === 'MainMenu')
-
-      if (mainRoute) {
-        const redirect = mainRoute.redirect
-        const rootPath = mainRoute.meta?.fullPath || mainRoute.path
-        const targetPath =
-          (typeof redirect === 'string' && redirect) ||
-          (redirect && typeof redirect === 'object' ? redirect : '') ||
-          getFirstAccessibleChildPath(rootPath) ||
-          rootPath
-        this.$router.push(targetPath)
-      } else {
-        this.$router.push('/')
-      }
+      // Always go to the workbench home, regardless of where we currently are - this is the
+      // app's "go home" action. Pushing '/' and relying on its static `redirect:
+      // '/workbench/home'` (constantRoutes[0] in router/index.js) still landed on
+      // '/console/dashboard' in practice - some guard in the merged Console/PAM/Audit/
+      // Workbench screen (src/router/main.js) intercepts that intermediate '/' navigation
+      // before the redirect resolves. Pushing the real target path directly sidesteps that
+      // entirely - it's the exact path every "Visión general"/workbench sidebar link already
+      // uses successfully.
+      this.$router.push('/workbench/home')
     }
   }
 }

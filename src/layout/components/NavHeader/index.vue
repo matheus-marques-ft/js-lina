@@ -35,6 +35,9 @@
           <Tickets />
         </el-tooltip>
       </li>
+      <li v-if="!isMobile" class="header-item language">
+        <Language />
+      </li>
       <li v-if="$hasPerm('settings.view_setting')" class="header-item header-icon">
         <el-tooltip :content="$tc('SystemSetting')" :show-after="500" effect="dark">
           <SystemSetting />
@@ -62,6 +65,7 @@ import Organization from './Organization'
 import SystemSetting from './SystemSetting'
 import Logo from '../NavLeft/Logo'
 import Search from './Search'
+import Language from './Language'
 
 export default {
   components: {
@@ -74,7 +78,8 @@ export default {
     SiteMessages,
     SystemSetting,
     Logo,
-    Search
+    Search,
+    Language
   },
   data() {
     return {

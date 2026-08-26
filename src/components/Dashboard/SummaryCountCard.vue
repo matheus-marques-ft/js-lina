@@ -53,6 +53,14 @@ export default {
     padding: 0 10px;
 
     .summary-card {
+      // Flex items default to min-width: auto, i.e. their content's min-content size - and
+      // SummaryCard's title uses white-space: nowrap (for its ellipsis truncation), so a
+      // long title's min-content size is its FULL unwrapped width. Without this override,
+      // the browser refuses to shrink the card below that width, blowing this one card up
+      // and breaking the row's responsiveness whenever a title is much longer than its
+      // siblings (e.g. "Quantidade de logs de modificação de senha").
+      flex: 1 1 0;
+      min-width: 0;
       padding-left: 16px;
       border-left: 1px solid #eff0f1;
 

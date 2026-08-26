@@ -54,7 +54,7 @@ export default {
       component: () => import('@/views/audits/UserLogs/index.vue'),
       name: 'AuditUserLogs',
       meta: {
-        title: i18n.t('Logs de usuários'),
+        title: i18n.t('MenuUserLogs'),
         icon: 'user-o',
         permissions: [
           'audits.view_usersession | audits.view_userloginlog | ' +
@@ -103,8 +103,20 @@ export default {
         title: i18n.t('Report'),
         icon: 'report',
         permissions: [],
-        licenseRequired: false
+        licenseRequired: false,
+        // Promotes this from a group nested inside "Audit" to its own top-level sidebar
+        // category, sibling to Management/CONTROLE DE ACESSO/PAM/Audit - see NavLeft/
+        // index.vue's CATEGORY_ORDER/CATEGORY_I18N_KEYS ('reports' reuses this same
+        // 'Report' i18n key).
+        menuGroup: 'reports'
       },
+      // ReportsRoutes is this directory's own ./reports.js (audit/reports.js), an array of
+      // 3 route wrappers (users/assets/accounts) - NOT src/router/reports/index.js (an
+      // unrelated, unused module one level up with a completely different Dashboard/Users/
+      // Assets/Accounts shape). A previous fix here appended `.children`, assuming the
+      // wrong module's shape; since this ReportsRoutes is already the array to use, that
+      // read `.children` off a plain array (always undefined), silently dropping every
+      // report page - this is why "Relatório" always collapsed to a single dead link.
       children: ReportsRoutes
     }
   ]

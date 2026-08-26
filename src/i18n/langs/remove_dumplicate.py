@@ -15,7 +15,7 @@ def remove_duplicate_key(filename):
 
 
 if __name__ == '__main__':
-    filename = 'zh.json'
+    filename = 'en.json'
     # filename = sys.argv[1]
     remove_duplicate_key(filename)
 

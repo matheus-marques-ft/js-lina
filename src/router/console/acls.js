@@ -25,7 +25,7 @@ export const AssetPermissionsRoute = {
       name: 'AssetPermissionList',
       component: () => import('@/views/perms/AssetPermission/AssetPermissionList'),
       meta: {
-        title: i18n.t('Permissões de acesso'),
+        title: i18n.t('MenuAccessPermissions'),
         permissions: ['perms.view_assetpermission']
       }
     },
@@ -79,7 +79,10 @@ export const CmdAclsRoute = {
     menuTitle: i18n.t('CommandFilter'),
     icon: 'command',
     app: 'acls',
-    resource: 'commandfilteracl'
+    resource: 'commandfilteracl',
+    // Moved into the "Controle de acesso" sidebar category alongside the other ACL types
+    // (see ACLList's own menuGroup below) instead of sitting as a bare Management entry.
+    menuGroup: 'perms'
   },
   children: [
     // Command Filter ACL
@@ -155,7 +158,11 @@ export default [
     meta: {
       title: i18n.t('ACLs'),
       icon: 'acl',
-      permissions: []
+      permissions: [],
+      // Promotes this from a nested group-title inside "Management" to its own top-level
+      // sidebar category, sibling to Management/PAM/Audit - see NavLeft/index.vue's
+      // CATEGORY_ORDER/CATEGORY_I18N_KEYS ('perms' reuses this same 'ACLs' i18n key).
+      menuGroup: 'perms'
     },
     children: [
       AssetPermissionsRoute,

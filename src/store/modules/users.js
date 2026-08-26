@@ -20,6 +20,7 @@ const getDefaultState = () => {
     username: '',
     auditOrgs: [],
     consoleOrgs: [],
+    pamOrgs: [],
     workbenchOrgs: [],
     noRootWorkbenchOrgs: [],
     usingOrgs: [],

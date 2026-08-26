@@ -23,7 +23,10 @@ export default {
       minute: 'numeric'
     }
   },
-  zh: {
+  // Keyed by the actual runtime locale codes (Django's hyphenated Language.choices values),
+  // matching the same fix in src/i18n/langs/index.js - vue-i18n's active locale is the raw
+  // 'zh-hans'/'zh-hant' cookie value, so an unhyphenated 'zh' key here was never reachable.
+  'zh-hans': {
     short: {
       year: 'numeric',
       month: 'short',
@@ -48,7 +51,7 @@ export default {
       hour12: true
     }
   },
-  zh_hant: {
+  'zh-hant': {
     short: {
       year: 'numeric',
       month: 'short',

@@ -69,7 +69,7 @@ export default {
       name: 'Passkey',
       component: () => import('@/views/profile/PassKey'),
       meta: {
-        title: 'Passkeys',
+        title: i18n.t('Passkeys'),
         icon: 'passkey',
         hidden: ({ settings }) => !settings['AUTH_PASSKEY'],
         permissions: ['authentication.view_passkey'],

@@ -21,50 +21,31 @@
       </app-link>
     </template>
 
-    <div v-else>
-      <div v-if="item.meta.type === 'app'" class="group-title">
+    <template v-else>
+      <div class="group-title">
         <el-divider v-if="collapse" />
         <span v-else>{{ getItemTitle(item) }}</span>
-        <sidebar-item
-          v-for="child in item.children"
-          :key="child.path"
-          :base-path="resolvePath(child.path)"
-          :is-nest="true"
-          :item="child"
-          class="nest-menu"
-        />
       </div>
-      <el-sub-menu
-        v-else
-        ref="subMenu"
-        :index="resolvePath(item.path)"
-        class="el-submenu-sidebar submenu-item level1-menu"
-        popper-append-to-body
-      >
-        <template #title>
-          <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="getItemTitle(item)" />
-        </template>
-        <sidebar-item
-          v-for="child in item.children"
-          :key="child.path"
-          :base-path="resolvePath(child.path)"
-          :is-nest="true"
-          :item="child"
-          class="nest-menu"
-        />
-      </el-sub-menu>
-    </div>
+      <sidebar-item
+        v-for="child in item.children"
+        :key="child.path"
+        :base-path="resolvePath(child.path)"
+        :is-nest="true"
+        :item="child"
+        class="nest-menu"
+      />
+    </template>
   </div>
 </template>
 
 <script>
-import path from 'path-browserify'
-import { isExternal } from '@/utils/secure'
 import Item from './Item'
 import AppLink from './Link'
-import { useFixIOSBug } from '@/utils/vue/useFixIOSBug'
-import { toSentenceCase } from '@/utils/common/index'
-import { ref } from 'vue'
+import {
+  getItemTitle as computeItemTitle,
+  isItemHidden,
+  resolveChildPath
+} from '@/utils/vue/sidebarMenu'
 
 export default {
   name: 'SidebarItem',
@@ -88,13 +69,6 @@ export default {
       default: false
     }
   },
-  setup() {
-    const subMenu = ref(null)
-    useFixIOSBug(subMenu)
-    return {
-      subMenu
-    }
-  },
   data() {
     // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
     // TODO: refactor with render function
@@ -103,12 +77,7 @@ export default {
   },
   methods: {
     needHidden(item) {
-      let hidden = item.hidden
-
-      if (typeof item.hidden === 'function') {
-        hidden = item.hidden()
-      }
-      return hidden
+      return isItemHidden(item)
     },
     allChildrenHidden(item) {
       if (!item.children) {
@@ -122,13 +91,7 @@ export default {
       return true
     },
     getItemTitle(item) {
-      let title = item.meta.menuTitle || item.meta.title
-      if (item.meta.level === 2 && item.children) {
-        title = title.toUpperCase()
-      } else {
-        title = toSentenceCase(title)
-      }
-      return title
+      return computeItemTitle(item)
     },
     hasOneShowingChild(children = [], parent) {
       const showingChildren = children.filter((item) => {
@@ -155,13 +118,7 @@ export default {
       return false
     },
     resolvePath(routePath) {
-      if (isExternal(routePath)) {
-        return routePath
-      }
-      if (isExternal(this.basePath)) {
-        return this.basePath
-      }
-      return path.resolve(this.basePath, routePath)
+      return resolveChildPath(this.basePath, routePath)
     }
   }
 }

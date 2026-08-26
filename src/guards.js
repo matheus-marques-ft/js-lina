@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { nextTick } from 'vue'
 import router from './router'
 import 'nprogress/nprogress.css' // progress bar style
 import { startup } from '@/utils/startup'
@@ -38,7 +39,7 @@ router.beforeEach(async (to, from) => {
   }
 })
 
-function generateViewRoutesIfChange({ to, from }) {
+async function generateViewRoutesIfChange({ to, from }) {
   const sameView = isSameView(to, from)
   console.log('sameView', sameView)
   // On first load, after startup's replace navigation, from/to may be same view.
@@ -46,6 +47,15 @@ function generateViewRoutesIfChange({ to, from }) {
   const hasCurrent = !!store.state?.permission?.currentViewRoute?.meta?.view
   if (!sameView || !hasCurrent) {
     console.log('generateViewRoutesIfChange', to, from)
+    // Crossing categories (e.g. PAM's dashboard -> Console's dashboard) commits a new
+    // currentViewRoute, which NavLeft's sidebar re-renders from - in the SAME tick as
+    // <router-view>'s own component swap (this afterEach fires while that swap's DOM patch
+    // is still pending, not after it). Racing both patches in one flush is what threw
+    // "Cannot read properties of null (reading 'parentNode')" - a keep-alive-cached page
+    // getting torn down/updated while the sidebar patch is also touching the DOM. Waiting a
+    // tick lets the route transition's own patch finish first, so the sidebar update lands
+    // in its own separate flush instead of interleaving with it.
+    await nextTick()
     return store.dispatch('permission/generateViewRoutes', { to: to, from: from })
   }
 }

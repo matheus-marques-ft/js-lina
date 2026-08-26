@@ -33,19 +33,19 @@ export default {
         activeMenu: 'OnlineSessionList',
         submenu: [
           {
-            title: this.$t('Usuários Online'),
+            title: this.$t('TabOnlineUsers'),
             name: 'OnlineSessionList'
           },
           {
-            title: this.$t('Registros de Login'),
+            title: this.$t('TabLoginRecords'),
             name: 'LoginLogList'
           },
           {
-            title: this.$t('Alteração de Senha'),
+            title: this.$t('TabPasswordChange'),
             name: 'PasswordChangeLogList'
           },
           {
-            title: this.$t('Eventos'),
+            title: this.$t('TabEvents'),
             name: 'OperateLogList'
           }
         ]
@@ -54,11 +54,14 @@ export default {
   },
   computed: {
     Title() {
-      return this.$t('Logs de usuários')
+      return this.$t('MenuUserLogs')
     }
   },
   mounted() {
-    const requested = this.$route.params.activeMenu
+    // Route has no dynamic segment for this, so a `params.activeMenu` value never survives
+    // navigation (doesn't land in the path, doesn't land in the URL at all) - query is what
+    // actually arrives, and gives dashboard links a bookmarkable ?tab=... URL as a bonus.
+    const requested = this.$route.query.tab
     if (this.config.submenu.some((item) => item.name === requested)) {
       this.config.activeMenu = requested
     }
