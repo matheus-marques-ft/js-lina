@@ -1,6 +1,14 @@
-import path from 'path-browserify'
 import { isExternal } from '@/utils/secure'
 import { toSentenceCase } from '@/utils/common/index'
+
+// Collapses repeated/trailing slashes, matching what path-browserify's resolve() would have
+// produced for the same absolute/relative shape.
+function normalizeRoutePath(raw) {
+  const isAbsolute = raw.startsWith('/')
+  const collapsed = raw.replace(/\/{2,}/g, '/')
+  const trimmed = collapsed === '/' ? collapsed : collapsed.replace(/\/$/, '')
+  return isAbsolute ? trimmed || '/' : trimmed
+}
 
 export function isItemHidden(item) {
   return typeof item.hidden === 'function' ? item.hidden() : !!item.hidden
@@ -30,6 +38,14 @@ export function getItemTitle(item) {
   return title
 }
 
+// Browser-safe stand-in for path-browserify's path.resolve(basePath, childPath): when
+// neither argument is absolute, Node's path.resolve falls back to process.cwd(), which
+// doesn't exist in this browser bundle (no Node-global polyfill) - that bare `process`
+// reference throws ReferenceError: process is not defined, crashing whatever component
+// triggered the sidebar/tag computation (seen live as "Cannot read properties of null" and
+// "process is not defined" errors). This only ever needs to join route path segments, so it
+// never needs OS cwd semantics - an absolute childPath wins outright, otherwise childPath is
+// appended to basePath (even if basePath itself is relative/empty), never touching `process`.
 export function resolveChildPath(basePath, childPath) {
   if (isExternal(childPath)) {
     return childPath
@@ -37,7 +53,13 @@ export function resolveChildPath(basePath, childPath) {
   if (isExternal(basePath)) {
     return basePath
   }
-  return path.resolve(basePath, childPath)
+  if (!childPath) {
+    return normalizeRoutePath(basePath || '/')
+  }
+  if (childPath[0] === '/') {
+    return normalizeRoutePath(childPath)
+  }
+  return normalizeRoutePath(`${basePath || ''}/${childPath}`)
 }
 
 // Recursively flattens a route tree into a flat list of sidebar rows - a group-title row

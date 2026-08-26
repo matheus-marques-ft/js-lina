@@ -81,13 +81,9 @@ export default {
     },
     // Was nested one level inside a generic "/console/more" (ConsoleMore) wrapper that
     // existed solely to hold this one child - hoisted to a direct top-level entry, wrapper
-    // removed. Needs the same absolute-path override as every other promoted sibling above:
-    // left as the bare relative `path: 'labels'` from labels.js, SidebarItem's resolvePath()
-    // falls through to path-browserify's path.resolve(), which calls process.cwd() when no
-    // segment is absolute - process isn't defined in this browser bundle, so that throws and
-    // silently drops just this one sidebar entry from the render (no console crash, no trace
-    // in the DOM - every other sibling here already has an absolute path, so none of them
-    // hit this code path).
+    // removed. Needs the same absolute-path override as every other promoted sibling above,
+    // for consistency with them (see sidebarMenu.js's resolveChildPath - it no longer breaks
+    // on a bare relative `path: 'labels'` either way, but every sibling here is absolute).
     ...LabelMenus.map((route) => ({ ...route, path: `/console/${route.path}` }))
   ]
 }
