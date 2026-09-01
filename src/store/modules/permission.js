@@ -111,8 +111,17 @@ function cleanRoute(tmp, parent) {
   }
   // Identify which resource (Model) the route belongs to
   if (!tmp.meta.resource && tmp.meta.level >= 3) {
-    const resource = getResourceNameByPath(pathValue)
-    tmp.meta.resource = tmp.meta.level === 3 ? resource : parent.meta?.resource
+    // A dynamic segment (':id') isn't a resource name - deriving one from it
+    // literally (getResourceNameByPath(':id') -> ':id') produced a bogus
+    // permission like 'terminal.view_:id' that's always false, silently
+    // dropping the route from registration while $hasPerm at render time
+    // (checking the real permission) still rendered a router-link to it -
+    // e.g. SessionDetail (path: ':id') vs its sibling list route. Inherit
+    // from the parent instead, same as any level above 3 already does.
+    const isDynamicSegment = pathValue.startsWith(':')
+    tmp.meta.resource = (tmp.meta.level === 3 && !isDynamicSegment)
+      ? getResourceNameByPath(pathValue)
+      : parent.meta?.resource
   }
   // Identify the route's action
   if (!tmp.meta.action) {
