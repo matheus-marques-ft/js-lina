@@ -166,5 +166,9 @@
   "Passkeys": "Passkeys",
   "BuiltinVariable": "Built-in variable",
   "WatermarkVariableHelpText": "Variables available for use in the watermark:",
-  "TemplateVariablesHelpText": "Variables available for use in this template:"
+  "TemplateVariablesHelpText": "Variables available for use in this template:",
+  "Secrets": "Secrets",
+  "SecretList": "Secret list",
+  "SecretCreate": "Create secret",
+  "SecretUpdate": "Update secret"
 }

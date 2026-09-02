@@ -164,5 +164,9 @@
   "Passkeys": "Passkeys",
   "BuiltinVariable": "Variável integrada",
   "WatermarkVariableHelpText": "Variáveis ​​disponíveis para uso na marca d'água:",
-  "TemplateVariablesHelpText": "Variáveis ​​disponíveis para uso neste modelo:"
+  "TemplateVariablesHelpText": "Variáveis ​​disponíveis para uso neste modelo:",
+  "Secrets": "Segredos",
+  "SecretList": "Lista de segredos",
+  "SecretCreate": "Criar segredo",
+  "SecretUpdate": "Editar segredo"
 }

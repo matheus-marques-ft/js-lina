@@ -14,8 +14,25 @@ export function isItemHidden(item) {
   return typeof item.hidden === 'function' ? item.hidden() : !!item.hidden
 }
 
+// True when `item` (or, recursively, at least one of its descendants) will actually paint a
+// menu row. A route can survive RBAC filtering (filterPermedRoutes in
+// store/modules/permission.js) with `children: []` whenever the route itself carries an
+// always-passing meta.permissions (e.g. every `component: empty` app-tier wrapper) while every
+// one of its children got stripped out for lacking permission - that route isn't `hidden`, it's
+// just hollow. Used to keep section/group titles (NavLeft/index.vue, SidebarItem.vue) from
+// rendering over zero surviving children.
+export function hasVisibleContent(item) {
+  if (isItemHidden(item)) {
+    return false
+  }
+  if (!item.children) {
+    return true
+  }
+  return item.children.some((child) => hasVisibleContent(child))
+}
+
 export function getVisibleChildren(item) {
-  return (item.children || []).filter((child) => !isItemHidden(child))
+  return (item.children || []).filter((child) => hasVisibleContent(child))
 }
 
 // True when a route would render as a real multi-child group (title + list) rather than

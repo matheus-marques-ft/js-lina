@@ -9,6 +9,7 @@ import PermsMenu from './perms'
 import { CmdAclsRoute } from './acls'
 import AccountMenus from './accounts'
 import LabelMenus from './labels'
+import KeyVaultMenus from './keyvault'
 
 export default {
   path: '/console',
@@ -84,6 +85,7 @@ export default {
     // removed. Needs the same absolute-path override as every other promoted sibling above,
     // for consistency with them (see sidebarMenu.js's resolveChildPath - it no longer breaks
     // on a bare relative `path: 'labels'` either way, but every sibling here is absolute).
-    ...LabelMenus.map((route) => ({ ...route, path: `/console/${route.path}` }))
+    ...LabelMenus.map((route) => ({ ...route, path: `/console/${route.path}` })),
+    ...KeyVaultMenus.map((route) => ({ ...route, path: `/console/${route.path}` }))
   ]
 }

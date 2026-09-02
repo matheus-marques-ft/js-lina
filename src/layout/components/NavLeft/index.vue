@@ -69,6 +69,7 @@ import Organization from '../NavHeader/Organization'
 import {
   flattenSidebarRows,
   getVisibleChildren,
+  hasVisibleContent,
   isGroupRoute,
   resolveChildPath
 } from '@/utils/vue/sidebarMenu'
@@ -153,11 +154,16 @@ export default {
           byCategory[cat].push(route)
         }
       }
-      return CATEGORY_ORDER.filter((cat) => byCategory[cat]?.length).map((cat) => ({
-        category: cat,
-        title: this.$t(CATEGORY_I18N_KEYS[cat]),
-        items: flattenSidebarRows(byCategory[cat])
-      }))
+      // .length alone isn't enough here: a route can survive RBAC filtering with
+      // children: [] (see hasVisibleContent's doc comment) and still land in this bucket,
+      // which would otherwise leave the category title rendered above zero real menu rows.
+      return CATEGORY_ORDER.filter((cat) => byCategory[cat]?.some(hasVisibleContent)).map(
+        (cat) => ({
+          category: cat,
+          title: this.$t(CATEGORY_I18N_KEYS[cat]),
+          items: flattenSidebarRows(byCategory[cat].filter(hasVisibleContent))
+        })
+      )
     },
     activeMenu() {
       const route = this.$route

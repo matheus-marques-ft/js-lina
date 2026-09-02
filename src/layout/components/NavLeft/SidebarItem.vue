@@ -43,6 +43,7 @@ import Item from './Item'
 import AppLink from './Link'
 import {
   getItemTitle as computeItemTitle,
+  hasVisibleContent,
   isItemHidden,
   resolveChildPath
 } from '@/utils/vue/sidebarMenu'
@@ -83,12 +84,12 @@ export default {
       if (!item.children) {
         return false
       }
-      for (const child of item.children) {
-        if (!this.allChildrenHidden(child)) {
-          return false
-        }
-      }
-      return true
+      // hasVisibleContent (not a raw item.hidden/allChildrenHidden(child) recursion) - a leaf
+      // child has no .children, so the old per-child allChildrenHidden(child) recursion always
+      // returned false for it (treated as "visible") even when that leaf was itself hidden or a
+      // hollow permission-emptied container, leaving this group's own title rendered above zero
+      // real rows.
+      return !item.children.some((child) => hasVisibleContent(child))
     },
     getItemTitle(item) {
       return computeItemTitle(item)
