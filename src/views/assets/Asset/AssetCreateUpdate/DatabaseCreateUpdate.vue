@@ -6,6 +6,7 @@
 import BaseAssetCreateUpdate from './BaseAssetCreateUpdate'
 import { UploadKey } from '@/components'
 import rules from '@/components/Form/DataForm/rules'
+import Select2 from '@/components/Form/FormFields/Select2.vue'
 
 export default {
   name: 'DatabaseCreateUpdate',
@@ -14,7 +15,11 @@ export default {
     return {
       url: `/api/v1/assets/databases/`,
       addFields: this.getAddFields(),
-      addFieldsMeta: this.getAddFieldsMeta()
+      addFieldsMeta: this.getAddFieldsMeta(),
+      updateInitial(initial) {
+        initial['applet_balance'] = true
+        return initial
+      }
     }
   },
   methods: {
@@ -36,6 +41,11 @@ export default {
         const secureField = [this.$t('Secure'), tlsFields, 2]
         baseFields.push(secureField)
       }
+      baseFields.push([
+        this.$t('Remote host'),
+        ['applet_balance', 'applet_host', 'applet_excluded_hosts'],
+        5
+      ])
       return baseFields
     },
     getAddFieldsMeta() {
@@ -43,6 +53,35 @@ export default {
       const fieldsMeta = {
         db_name: {
           label: this.$t('DefaultDatabase')
+        },
+        applet_balance: {
+          label: this.$t('Balance across applet hosts'),
+          component: 'el-switch',
+          helpText: this.$t('When disabled, an applet host must be selected')
+        },
+        applet_host: {
+          label: this.$t('Applet host'),
+          component: Select2,
+          hidden: (form) => form.applet_balance !== false,
+          el: {
+            multiple: false,
+            clearable: true,
+            ajax: {
+              url: '/api/v1/terminal/applet-hosts/',
+              transformOption: (item) => ({ label: item.name, value: item.id })
+            }
+          }
+        },
+        applet_excluded_hosts: {
+          label: this.$t('Excluded applet hosts'),
+          component: Select2,
+          el: {
+            multiple: true,
+            url: '/api/v1/terminal/applet-hosts/',
+            ajax: {
+              transformOption: (item) => ({ label: item.name, value: item.id })
+            }
+          }
         },
         use_ssl: {
           label: this.$t('UseSSL'),
