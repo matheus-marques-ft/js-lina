@@ -163,5 +163,15 @@
   "Passkeys": "Claves de acceso (Passkeys)",
   "BuiltinVariable": "Variable integrada",
   "WatermarkVariableHelpText": "Variables disponibles para usar en la marca de agua:",
-  "TemplateVariablesHelpText": "Variables disponibles para usar en esta plantilla:"
+  "TemplateVariablesHelpText": "Variables disponibles para usar en esta plantilla:",
+  "RemoteHost": "Host remoto",
+  "BalanceAcrossAppletHosts": "Balancear entre publicadores de aplicaciones",
+  "AppletHostRequiredWhenNotBalanced": "Si está desactivado, debe seleccionar un publicador de aplicaciones",
+  "AppletHost": "Publicador de aplicaciones",
+  "ExcludedAppletHosts": "Publicadores de aplicaciones excluidos",
+  "AppletHosts": "Publicadores de aplicaciones",
+  "AppletHostsAclHelp": "Publicadores de aplicaciones que esta regla permite (aceptar) o deniega (rechazar) para los métodos de conexión seleccionados. Déjelo vacío para aplicar la regla a todo el método de conexión.",
+  "MfaSecret": "Secreto MFA",
+  "MfaSecretHelp": "Opcional. Secreto TOTP usado para generar el código de un solo uso al iniciar sesión. Se almacena cifrado y no se vuelve a mostrar.",
+  "HasMfaSecret": "Secreto MFA configurado"
 }

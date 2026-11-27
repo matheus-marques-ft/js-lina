@@ -170,5 +170,15 @@
   "Secrets": "Secrets",
   "SecretList": "Secret list",
   "SecretCreate": "Create secret",
-  "SecretUpdate": "Update secret"
+  "SecretUpdate": "Update secret",
+  "RemoteHost": "Remote host",
+  "BalanceAcrossAppletHosts": "Balance across applet hosts",
+  "AppletHostRequiredWhenNotBalanced": "When disabled, an applet host must be selected",
+  "AppletHost": "Applet host",
+  "ExcludedAppletHosts": "Excluded applet hosts",
+  "AppletHosts": "Applet hosts",
+  "AppletHostsAclHelp": "Applet hosts this rule allows (accept) or denies (reject) for the selected connect methods. Leave empty to apply the rule to the whole connect method.",
+  "MfaSecret": "MFA secret",
+  "MfaSecretHelp": "Optional. TOTP secret used to generate the one-time code at login. Stored encrypted and never shown again.",
+  "HasMfaSecret": "MFA secret configured"
 }

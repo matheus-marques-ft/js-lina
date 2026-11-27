@@ -173,6 +173,19 @@ export const accountFieldsMeta = (vm) => {
         return formValue.secret_type !== 'password' || vm.addTemplate
       }
     },
+    mfa_secret: {
+      label: vm.$t('MfaSecret'),
+      helpText: vm.$t('MfaSecretHelp'),
+      component: UpdateToken,
+      el: {
+        get disabled() {
+          return vm.isDisabled
+        }
+      },
+      hidden: (formValue) => {
+        return formValue.secret_type !== 'password' || vm.addTemplate
+      }
+    },
     ssh_key: {
       label: vm.$t('PrivateKey'),
       component: UploadSecret,

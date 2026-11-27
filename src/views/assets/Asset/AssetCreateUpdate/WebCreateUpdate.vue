@@ -19,7 +19,7 @@ export default {
           1
         ],
         [
-          this.$t('Remote host'),
+          this.$t('RemoteHost'),
           ['applet_balance', 'applet_host', 'applet_excluded_hosts'],
           5
         ]
@@ -30,12 +30,12 @@ export default {
       },
       addFieldsMeta: {
         applet_balance: {
-          label: this.$t('Balance across applet hosts'),
+          label: this.$t('BalanceAcrossAppletHosts'),
           component: 'el-switch',
-          helpText: this.$t('When disabled, an applet host must be selected')
+          helpText: this.$t('AppletHostRequiredWhenNotBalanced')
         },
         applet_host: {
-          label: this.$t('Applet host'),
+          label: this.$t('AppletHost'),
           component: Select2,
           hidden: (form) => form.applet_balance !== false,
           el: {
@@ -48,7 +48,7 @@ export default {
           }
         },
         applet_excluded_hosts: {
-          label: this.$t('Excluded applet hosts'),
+          label: this.$t('ExcludedAppletHosts'),
           component: Select2,
           el: {
             multiple: true,

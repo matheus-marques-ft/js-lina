@@ -72,6 +72,7 @@ export default {
           [
             'secret_type',
             'password',
+            'mfa_secret',
             'ssh_key',
             'token',
             'access_key',
@@ -166,6 +167,14 @@ export default {
 
       if (!form.secret) {
         delete form['secret']
+      }
+
+      // mfa_secret is write-only and optional: only send it when a new value was typed
+      // (for secret_type 'password'), otherwise drop the key so the stored seed is untouched
+      if (secretType === 'password' && form.mfa_secret) {
+        form.mfa_secret = this.encryptPassword ? encryptPassword(form.mfa_secret) : form.mfa_secret
+      } else {
+        delete form.mfa_secret
       }
       if (this.account?.name) {
         if (this.account.payload && this.account.payload === 'pam_account_clone') {

@@ -21,6 +21,7 @@ export default {
         [this.$t('Basic'), ['name']],
         [this.$t('Users'), ['users']],
         [this.$t('ConnectMethod'), ['connect_methods']],
+        [this.$t('AppletHosts'), ['applet_hosts']],
         [this.$t('Action'), ['action', 'reviewers']],
         [this.$t('Other'), ['is_active', 'comment']]
       ],
@@ -38,6 +39,18 @@ export default {
                   more: false
                 }
               }
+            }
+          }
+        },
+        applet_hosts: {
+          label: this.$t('AppletHosts'),
+          helpText: this.$t('AppletHostsAclHelp'),
+          component: Select2,
+          el: {
+            multiple: true,
+            url: '/api/v1/terminal/applet-hosts/',
+            ajax: {
+              transformOption: (item) => ({ label: item.name, value: item.id })
             }
           }
         },

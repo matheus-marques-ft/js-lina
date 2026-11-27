@@ -168,5 +168,15 @@
   "Secrets": "Segredos",
   "SecretList": "Lista de segredos",
   "SecretCreate": "Criar segredo",
-  "SecretUpdate": "Editar segredo"
+  "SecretUpdate": "Editar segredo",
+  "RemoteHost": "Host remoto",
+  "BalanceAcrossAppletHosts": "Balancear entre máquinas de publicação",
+  "AppletHostRequiredWhenNotBalanced": "Quando desativado, é obrigatório selecionar uma máquina de publicação",
+  "AppletHost": "Máquina de publicação",
+  "ExcludedAppletHosts": "Máquinas de publicação excluídas",
+  "AppletHosts": "Máquinas de publicação",
+  "AppletHostsAclHelp": "Máquinas de publicação que esta regra permite (aceitar) ou nega (rejeitar) para os métodos de conexão selecionados. Deixe vazio para aplicar a regra ao método de conexão inteiro.",
+  "MfaSecret": "Segredo MFA",
+  "MfaSecretHelp": "Opcional. Segredo TOTP usado para gerar o código de uso único no login. Armazenado criptografado e nunca exibido novamente.",
+  "HasMfaSecret": "Segredo MFA configurado"
 }
