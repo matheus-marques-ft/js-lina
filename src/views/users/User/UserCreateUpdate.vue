@@ -14,7 +14,12 @@ import store from '@/store'
 import { mapGetters } from 'vuex'
 import { Select2 } from '@/components'
 import { GenericCreateUpdatePage } from '@/layout/components'
-import { PhoneInput, ResourceSelect, UserPassword } from '@/components/Form/FormFields'
+import {
+  PhoneInput,
+  ResetMFAButton,
+  ResourceSelect,
+  UserPassword
+} from '@/components/Form/FormFields'
 import rules from '@/components/Form/DataForm/rules'
 import { MFALevel, MFASystemSetting } from '../const'
 export default {
@@ -43,6 +48,7 @@ export default {
             'password',
             'need_update_password',
             'mfa_level',
+            'mfa_reset',
             'source'
           ]
         ],
@@ -67,6 +73,17 @@ export default {
         },
         mfa_level: {
           disabled: false
+        },
+        // Pseudo-field: a Reset MFA button, not a model value (never submitted)
+        mfa_reset: {
+          label: '',
+          component: ResetMFAButton,
+          hidden: () => !this.$context.get('id'),
+          el: {
+            userId: '',
+            disabled: true,
+            tip: ''
+          }
         },
         email: {
           rules: [rules.EmailCheck, rules.Required],
@@ -225,6 +242,7 @@ export default {
         if (value.source !== 'local') {
           delete value.need_update_password
         }
+        delete value.mfa_reset
         if ([MFALevel.allUsers, MFALevel.onlyAdminUsers].indexOf(value.mfa_level) > -1) {
           delete value.mfa_level
         }
@@ -257,6 +275,7 @@ export default {
         })
       }
       this.fieldsMeta.password.el.userIsOrgAdmin = user['is_org_admin']
+      this.updateMFAResetField(user)
       if (this.$context.get('clone_from')) {
         this.user.groups = []
       }
@@ -270,6 +289,19 @@ export default {
       this.initial.org_roles = roles
         .filter((role) => role.name === 'OrgUser')
         .map((role) => role.id)
+    },
+    updateMFAResetField(user) {
+      // mfa_level is {value, label} from the API; 0 means MFA is not enabled for this user
+      const mfaLevel = user?.mfa_level?.value ?? user?.mfa_level
+      // MFA tambem vale quando a configuracao global o exige de todos os usuarios
+      const forcedForAll =
+        store.getters.publicSettings['SECURITY_MFA_AUTH'] === MFASystemSetting.allUsers
+      const mfaEnabled = Number(mfaLevel) > 0 || forcedForAll
+      this.fieldsMeta.mfa_reset.el = {
+        userId: String(user?.id || this.$context.get('id') || ''),
+        disabled: !this.$hasPerm('users.change_user') || !mfaEnabled,
+        tip: mfaEnabled ? '' : this.$t('ResetMFANotEnabled')
+      }
     },
     disableMFAFieldIfNeed(user) {
       let options = null

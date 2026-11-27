@@ -20,6 +20,7 @@ import NestedObjectSelect2 from './NestedObjectSelect2.vue'
 import DatetimeRangePicker from './DatetimeRangePicker.vue'
 import JSONManyToManySelect from './JSONManyToManySelect/index.vue'
 import PasswordRule from './PasswordRule.vue'
+import ResetMFAButton from './ResetMFAButton.vue'
 import ResourceSelect from './ResourceSelect/index.vue'
 import TreeResourceSelect from './TreeResourceSelect/index.vue'
 
@@ -40,6 +41,7 @@ export default {
   PasswordInput,
   UploadSecret,
   PasswordRule,
+  ResetMFAButton,
   TextReadonly,
   WeekCronSelect,
   BoolTextReadonly,
@@ -67,6 +69,7 @@ export {
   PasswordInput,
   UploadSecret,
   PasswordRule,
+  ResetMFAButton,
   TextReadonly,
   WeekCronSelect,
   BoolTextReadonly,
